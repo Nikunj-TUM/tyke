@@ -1,0 +1,3161 @@
+[
+  {
+    "company_name": "AAA Vehicleades Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 104.10 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-AAA-Vehicleades-25sep25.pdf"
+  },
+  {
+    "company_name": "AAA Vehicleades Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 36.90 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-AAA-Vehicleades-25sep25.pdf"
+  },
+  {
+    "company_name": "AFP Manufacturing Co Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 58.00 Cr. (including proposed limit of Rs. 5.64 Cr.)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-AFP-Manufacturing-25sep25.pdf"
+  },
+  {
+    "company_name": "AFP Manufacturing Co Private Limited",
+    "instrument_category": "Long-term/ Short-term Bank Facilities",
+    "rating": "IVR BBB-/IVR A3; (Reaffirmed)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 14.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-AFP-Manufacturing-25sep25.pdf"
+  },
+  {
+    "company_name": "AFP Manufacturing Co Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "-",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-AFP-Manufacturing-25sep25.pdf"
+  },
+  {
+    "company_name": "Ajay Prakash Associates Construction Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 26.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-AjayPrakash-Construction-25sep25.pdf"
+  },
+  {
+    "company_name": "Ardee Engineering Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 121.00 Cr. (enhanced from Rs. 118.00 Cr.)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ardee-engineering-25sep25.pdf"
+  },
+  {
+    "company_name": "Ardee Engineering Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 198.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ardee-engineering-25sep25.pdf"
+  },
+  {
+    "company_name": "Blue Water Logistics Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 25.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-blue-water-25sep25.pdf"
+  },
+  {
+    "company_name": "Carya Chemicals & Fertilizers Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 186.89 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-carya-chemicals-25sep25.pdf"
+  },
+  {
+    "company_name": "Commercial Motor Sales Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 75.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-commercial-motor-25sep25.pdf"
+  },
+  {
+    "company_name": "Deoghar Industries Private Limited",
+    "instrument_category": "Long Term Facilities - Cash Credit",
+    "rating": "IVR BB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 25.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-deoghar-industries-25sep25.pdf"
+  },
+  {
+    "company_name": "Deoghar Industries Private Limited",
+    "instrument_category": "Long Term Facilities - Term Loans",
+    "rating": "IVR BB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 5.02 Cr. (Reduced from Rs. 7.78 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-deoghar-industries-25sep25.pdf"
+  },
+  {
+    "company_name": "Deoghar Industries Private Limited",
+    "instrument_category": "Long Term Facilities - Term Loan (GECL)",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (Reduced from Rs. 0.31 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-deoghar-industries-25sep25.pdf"
+  },
+  {
+    "company_name": "Ganga Iron & Steel Trading Company Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 43.35 Cr. (reduced from Rs. 45.14 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ganga-ironsteel-25sep25.pdf"
+  },
+  {
+    "company_name": "IIFL Finance Limited",
+    "instrument_category": "Perpetual Debt Instrument (PDI)",
+    "rating": "IVR AA (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 500.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-IIFL-Finance-25sep25.pdf"
+  },
+  {
+    "company_name": "J&K Vehicleades Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 43.38 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-JK-Vehicleades-25sep25.pdf"
+  },
+  {
+    "company_name": "J&K Vehicleades Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 6.62 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-JK-Vehicleades-25sep25.pdf"
+  },
+  {
+    "company_name": "Jamkash Vehicleades Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 117.04 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jamkash-vehicleades-25seep25.pdf"
+  },
+  {
+    "company_name": "Jamkash Vehicleades Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 22.96 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jamkash-vehicleades-25seep25.pdf"
+  },
+  {
+    "company_name": "Mahima Fibres Private Limited",
+    "instrument_category": "Long Term Bank Facilities - Term Loan",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 150.58 Cr. (Reduced from 165.22 Cr.)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-mahima-fibres-25sep25.pdf"
+  },
+  {
+    "company_name": "Mahima Fibres Private Limited",
+    "instrument_category": "Long Term Bank Facilities - Cash Credit",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 65.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-mahima-fibres-25sep25.pdf"
+  },
+  {
+    "company_name": "Mahima Fibres Private Limited",
+    "instrument_category": "Short Term Bank Facilities - LER",
+    "rating": "IVR A2 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 13.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-mahima-fibres-25sep25.pdf"
+  },
+  {
+    "company_name": "Pathankot Vehicleades Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 75.99 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Pathankot-Vehicleades-25sep25.pdf"
+  },
+  {
+    "company_name": "Pathankot Vehicleades Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 24.01 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Pathankot-Vehicleades-25sep25.pdf"
+  },
+  {
+    "company_name": "Rupitol Finance Private Limited",
+    "instrument_category": "Long Term Fund Based Facility - Term Loans",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 28.91 Cr. (Reduced from Rs. 38.61 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rupitol-finance-25sep25.pdf"
+  },
+  {
+    "company_name": "Rupitol Finance Private Limited",
+    "instrument_category": "Long Term Fund Based Facility - Proposed Term Loans",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 81.09 Cr. (Enhanced from Rs. 71.39 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rupitol-finance-25sep25.pdf"
+  },
+  {
+    "company_name": "Rusan Pharma Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Rating Watch with Developing Implications",
+    "instrument_amount": "Rs. 90.20 Cr. (Enhanced from Rs. 82.18 Cr.)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rusan-pharma-25sep25.pdf"
+  },
+  {
+    "company_name": "Rusan Pharma Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2+ (Reaffirmed)",
+    "outlook": "Rating Watch with Developing Implications",
+    "instrument_amount": "Rs. 11.02 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rusan-pharma-25sep25.pdf"
+  },
+  {
+    "company_name": "Rusan Pharma Limited",
+    "instrument_category": "Long Term /Short Term Bank Facilities",
+    "rating": "IVR A-/IVR A2+; (Reaffirmed)",
+    "outlook": "Rating Watch with Developing Implications",
+    "instrument_amount": "Rs. 40.00 Cr. (Reduced from Rs. 50.00 Cr.)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rusan-pharma-25sep25.pdf"
+  },
+  {
+    "company_name": "Sangita Sales Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 112.33 Cr. (enhanced from Rs. 74.62 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sangita-sales-25sep25.pdf"
+  },
+  {
+    "company_name": "Sangita Sales Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 110.29 Cr. (enhanced from Rs. 30.00 crore) (includes proposed limit of Rs. 0.29 crores)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sangita-sales-25sep25.pdf"
+  },
+  {
+    "company_name": "Sunstar Extraction Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 60.92 Cr. (Reduced from Rs. 65.00 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sunstar-extraction-25sep25.pdf"
+  },
+  {
+    "company_name": "Tam India Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 5.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-tam-india-25sep25.pdf"
+  },
+  {
+    "company_name": "Tam India Private Limited",
+    "instrument_category": "Long Term Bank Facilities (Proposed)",
+    "rating": "IVR BB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 15.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-tam-india-25sep25.pdf"
+  },
+  {
+    "company_name": "Tam India Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 2.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-tam-india-25sep25.pdf"
+  },
+  {
+    "company_name": "Tam India Private Limited",
+    "instrument_category": "Short Term Bank Facilities (Proposed)",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 25.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-tam-india-25sep25.pdf"
+  },
+  {
+    "company_name": "West Bengal State Electricity Transmission Company Limited",
+    "instrument_category": "Long Term Bank Facilities - Term Loan",
+    "rating": "IVR A+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 2861.85 Cr. (enhanced from Rs. 2529.85 Crore)",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-WBSETCL-25sep25.pdf"
+  },
+  {
+    "company_name": "West Bengal State Electricity Transmission Company Limited",
+    "instrument_category": "Long Term Bank Facilities - Cash Credit",
+    "rating": "IVR A+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 325.00 Cr.",
+    "date": "Sep 25, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-WBSETCL-25sep25.pdf"
+  },
+  {
+    "company_name": "Kashvi International Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Rating Watch with Developing Implications",
+    "instrument_amount": "Rs. 281.48 Cr. (Enhanced from Rs. 59.50 Crore)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kashvi-international-24sep25.pdf"
+  },
+  {
+    "company_name": "Kashvi International Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Rating Watch with Developing Implications",
+    "instrument_amount": "Rs. 7.50 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kashvi-international-24sep25.pdf"
+  },
+  {
+    "company_name": "Esteemed Developers & Builders Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB-",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 20.06 Cr. (reduced from Rs. 60.00 Cr.)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-esteemed-developers-24sep25.pdf"
+  },
+  {
+    "company_name": "Esteemed Developers & Builders Private Limited",
+    "instrument_category": "Long Term Bank Facilities (including proposed term loan of Rs. 6.94 Crore)",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 39.94 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-esteemed-developers-24sep25.pdf"
+  },
+  {
+    "company_name": "Esteemed Developers & Builders Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "-",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-esteemed-developers-24sep25.pdf"
+  },
+  {
+    "company_name": "G R N Constructions Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 30.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GRN-Constructions-24sep25.pdf"
+  },
+  {
+    "company_name": "G R N Constructions Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 120.00 Cr. (includes proposed limit of Rs. 50.00 Crore)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GRN-Constructions-24sep25.pdf"
+  },
+  {
+    "company_name": "Galaxy Agro Industries Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 97.80 Cr. (enhanced from Rs. 48.63 Cr.)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GalaxyAgro-Industries-24sep25.pdf"
+  },
+  {
+    "company_name": "Galaxy Agro Industries Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 0.30 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GalaxyAgro-Industries-24sep25.pdf"
+  },
+  {
+    "company_name": "Galaxy Food Industries Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 131.94 Cr. (enhanced from Rs. 74.26 Cr.)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GalaxyFood-Industries-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Fine Linen Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 141.14 Cr. (Enhanced from Rs. 98.28 Crore)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-Finelinen-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Fine Linen Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 254.00 Cr. (Enhanced from Rs. 105.00 Crore)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-Finelinen-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Garments Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "-",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-Garments-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Hi Tech Weaving India Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "-",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-HiTech-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Spinning Mills Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 214.55 Cr. (Enhanced from Rs. 189.01 Crore)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-SpinningMills-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Spinning Mills Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 16.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-SpinningMills-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Weaving and Processing Mills Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 62.94 Cr. (Enhanced from Rs. 50.94 Crore)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-weaving-24sep25.pdf"
+  },
+  {
+    "company_name": "K K P Weaving and Processing Mills Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 3.06 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-KKP-weaving-24sep25.pdf"
+  },
+  {
+    "company_name": "Lalchnd Jewellers Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 162.00 Cr. (enhanced from Rs. 86.50 Cr.)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-lalchnd-jewellers-24sep25.pdf"
+  },
+  {
+    "company_name": "Nymphea Developers Private Limited",
+    "instrument_category": "NCD (Proposed)",
+    "rating": "IVR BB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 500.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-nymphea-developers-24sep25.pdf"
+  },
+  {
+    "company_name": "Prem Cables Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 65.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Prem-Cables-24sep25.pdf"
+  },
+  {
+    "company_name": "Prem Cables Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2+ (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 120.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Prem-Cables-24sep25.pdf"
+  },
+  {
+    "company_name": "Satwik Steel Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 110.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-satwik-steel-24sep25.pdf"
+  },
+  {
+    "company_name": "Shree Ishan Equipment Private Limited",
+    "instrument_category": "Long Term Instruments/ Facilities",
+    "rating": "IVR B (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 25.72 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ShreeIshan-Equipment-24sep25.pdf"
+  },
+  {
+    "company_name": "Shree Ishan Equipment Private Limited",
+    "instrument_category": "Short Term Instruments/ Facilities",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 22.50 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ShreeIshan-Equipment-24sep25.pdf"
+  },
+  {
+    "company_name": "Simplex Infrastructures Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 2600.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-simplex-infra-24sep25.pdf"
+  },
+  {
+    "company_name": "Simplex Infrastructures Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 75.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-simplex-infra-24sep25.pdf"
+  },
+  {
+    "company_name": "Swati Menthol and Allied Chemicals Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 71.54 Cr. (Reduced from Rs. 76.17 Cr.)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-swati-menthol-24sep25.pdf"
+  },
+  {
+    "company_name": "Swati Menthol and Allied Chemicals Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 287.90 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-swati-menthol-24sep25.pdf"
+  },
+  {
+    "company_name": "Trust Investment Advisors Private Limited",
+    "instrument_category": "Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 825.00 Cr. (Enhanced from Rs. 790.00 crore)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Trust-Investment-24sep25.pdf"
+  },
+  {
+    "company_name": "Trust Investment Advisors Private Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 200.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Trust-Investment-24sep25.pdf"
+  },
+  {
+    "company_name": "Trust Investment Advisors Private Limited",
+    "instrument_category": "Commercial Paper (CP)",
+    "rating": "IVR A1+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 500.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Trust-Investment-24sep25.pdf"
+  },
+  {
+    "company_name": "Trust Investment Advisors Private Limited",
+    "instrument_category": "Commercial Paper (CP)",
+    "rating": "IVR A1+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 150.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-Trust-Investment-24sep25.pdf"
+  },
+  {
+    "company_name": "Vellum Papers Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 23.00 Cr. (Reduced from Rs. 25.34 Cr.)",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vellum-papers-24sep25.pdf"
+  },
+  {
+    "company_name": "Vellum Papers Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 7.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vellum-papers-24sep25.pdf"
+  },
+  {
+    "company_name": "Agrawal Channel Mills Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 55.32 Cr. (enhanced from Rs. 44.90 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-agrawal-channelmills-23sep25.pdf"
+  },
+  {
+    "company_name": "Andhra Pradesh Power Development Company Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR C (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 900.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-andhrapradesh-powerdevelopment-23sep25.pdf"
+  },
+  {
+    "company_name": "Andhra Pradesh Power Development Company Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 200.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-andhrapradesh-powerdevelopment-23sep25.pdf"
+  },
+  {
+    "company_name": "Barota Finance Limited",
+    "instrument_category": "Long Term Facilities - Term Loans",
+    "rating": "IVR A- (CE)(Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 93.85 Cr. (Increased from Rs. 87.75 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-barota-finance-23sep25.pdf"
+  },
+  {
+    "company_name": "Capacite Infraprojects Limited",
+    "instrument_category": "Non-Convertible Debentures",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 64.29 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Capacite-Infraprojects-23sept25.pdf"
+  },
+  {
+    "company_name": "Capacite Infraprojects Limited",
+    "instrument_category": "Non-Convertible Debentures",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 69.37 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Capacite-Infraprojects-23sept25.pdf"
+  },
+  {
+    "company_name": "Capacite Infraprojects Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 307.49 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Capacite-Infraprojects-23sept25.pdf"
+  },
+  {
+    "company_name": "Capacite Infraprojects Limited",
+    "instrument_category": "Proposed Long Term Facilities",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 135.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Capacite-Infraprojects-23sept25.pdf"
+  },
+  {
+    "company_name": "Capacite Infraprojects Limited",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 30.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Capacite-Infraprojects-23sept25.pdf"
+  },
+  {
+    "company_name": "Capacite Infraprojects Limited",
+    "instrument_category": "Long Term/Short Term Facilities",
+    "rating": "IVR BBB/ IVR A3+ (Reaffirmed)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 1153.98 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Capacite-Infraprojects-23sept25.pdf"
+  },
+  {
+    "company_name": "Capacite Infraprojects Limited",
+    "instrument_category": "Proposed Long Term / Short Term Facilities",
+    "rating": "IVR BBB/ IVR A3+ (Reaffirmed)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 492.75 Cr. (Enhanced from Rs. 255.56 crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Capacite-Infraprojects-23sept25.pdf"
+  },
+  {
+    "company_name": "Deccan Cements Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCD�s)",
+    "rating": "IVR BBB+ (Assigned)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 25.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-deccan-cements-23sep25.pdf"
+  },
+  {
+    "company_name": "Green Fuels Global Trading Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Downgraded)",
+    "outlook": "Rating Watch with Developing Implications",
+    "instrument_amount": "Rs. 42.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GreenFuels-GlobalTrading-23sep25.pdf"
+  },
+  {
+    "company_name": "Green Fuels Global Trading Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (Downgraded)",
+    "outlook": "Rating Watch with Developing Implications",
+    "instrument_amount": "Rs. 7.73 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GreenFuels-GlobalTrading-23sep25.pdf"
+  },
+  {
+    "company_name": "Gupta Hair Products Private Limited",
+    "instrument_category": "Long Term/ Short Term Bank Facilities",
+    "rating": "IVR B-/IVR A4; (INC)(Downgraded)",
+    "outlook": "Negative/-",
+    "instrument_amount": "Rs. 12.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-guptahair-products-23sep25.pdf"
+  },
+  {
+    "company_name": "Inditrade Microfinance Limited",
+    "instrument_category": "Long Term Fund-Based Term loan",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 41.19 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-inditrade-microfinance-23sep25.pdf"
+  },
+  {
+    "company_name": "Inditrade Microfinance Limited",
+    "instrument_category": "Non-Convertible Debentures",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 9.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-inditrade-microfinance-23sep25.pdf"
+  },
+  {
+    "company_name": "Inditrade Microfinance Limited",
+    "instrument_category": "Short Term Fund Based - Term Loan",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 8.75 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-inditrade-microfinance-23sep25.pdf"
+  },
+  {
+    "company_name": "Inditrade Microfinance Limited",
+    "instrument_category": "Long Term/Short Term Bank Facilities - Proposed Facilities",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 1.06 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-inditrade-microfinance-23sep25.pdf"
+  },
+  {
+    "company_name": "Om Sree Builders & Developers LLP",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 391.51 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-OmSree-Builders-23sep25.pdf"
+  },
+  {
+    "company_name": "Om Sree Builders & Developers LLP",
+    "instrument_category": "Long Term Proposed Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-OmSree-Builders-23sep25.pdf"
+  },
+  {
+    "company_name": "Prince Gold and Diamonds India Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 235.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-princegold-diamonds-23sep25.pdf"
+  },
+  {
+    "company_name": "Servotech Renewable Power System Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 228.86 Cr. (enhanced from Rs. 123.64 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-servotech-renewable-23sep25.pdf"
+  },
+  {
+    "company_name": "Servotech Renewable Power System Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 70.00 Cr. (Enhanced from Rs. 45.00 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-servotech-renewable-23sep25.pdf"
+  },
+  {
+    "company_name": "Shrigopal Rameshkumar Sales Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 76.46 Cr. (Increased from Rs. 57.96 Cr.)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shrigopal-rameshkumar-23sep25.pdf"
+  },
+  {
+    "company_name": "Shrigopal Rameshkumar Sales Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 25.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shrigopal-rameshkumar-23sep25.pdf"
+  },
+  {
+    "company_name": "Subaya Constructions Company Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 35.00 Cr. (Enhanced from Rs. 25.00 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-subaya-constructions-23sep25.pdf"
+  },
+  {
+    "company_name": "Subaya Constructions Company Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 89.50 Cr. (Reduced from Rs. 93.50 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-subaya-constructions-23sep25.pdf"
+  },
+  {
+    "company_name": "Suguna Foods Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR A- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 1383.64 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sugunafoods-23sep25.pdf"
+  },
+  {
+    "company_name": "Suguna Foods Private Limited",
+    "instrument_category": "Proposed Long Term Facilities",
+    "rating": "IVR A- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 84.36 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sugunafoods-23sep25.pdf"
+  },
+  {
+    "company_name": "Suguna Foods Private Limited",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A2+ (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 432.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sugunafoods-23sep25.pdf"
+  },
+  {
+    "company_name": "Suguna Foods Private Limited",
+    "instrument_category": "Non-Convertible Debentures",
+    "rating": "IVR A- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 120.16 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sugunafoods-23sep25.pdf"
+  },
+  {
+    "company_name": "Sunbourne Developers Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR AA- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 1485.12 Cr. (Reduced from Rs. 1490.78 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sunbourne-developers-23sep25.pdf"
+  },
+  {
+    "company_name": "Sunil Sponge Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 35.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sunil-sponge-23sep25.pdf"
+  },
+  {
+    "company_name": "Sunil Sponge Private Limited",
+    "instrument_category": "Long Term/ Short Term Bank Facilities",
+    "rating": "IVR BBB/IVR A3+; (Reaffirmed)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 15.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sunil-sponge-23sep25.pdf"
+  },
+  {
+    "company_name": "Uttranchal Ispat Private Limited",
+    "instrument_category": "Long Term Bank Facility",
+    "rating": "IVR B (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 21.00 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-uttranchal-ispat-23sep25.pdf"
+  },
+  {
+    "company_name": "Vittal Cashew Industries Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR D (Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 68.00 Cr. (Increased from Rs. 64.00 Cr.)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vittal-cashew-23sep25.pdf"
+  },
+  {
+    "company_name": "Vittal Cashew Industries Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR D (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 4.50 Cr.",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vittal-cashew-23sep25.pdf"
+  },
+  {
+    "company_name": "Wellcon Constructions Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 5.00 Cr. (Reduced from Rs. 10.00 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-wellcon-constructions-23sep25.pdf"
+  },
+  {
+    "company_name": "Wellcon Constructions Private Limited",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 20.00 Cr. (Reduced from Rs. 35.00 Crore)",
+    "date": "Sep 23, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-wellcon-constructions-23sep25.pdf"
+  },
+  {
+    "company_name": "Ambuja Neotia Teesta Development Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 200.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ambuja-neotia-22sep25.pdf"
+  },
+  {
+    "company_name": "Ambuja Neotia Teesta Development Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs 1.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ambuja-neotia-22sep25.pdf"
+  },
+  {
+    "company_name": "Ambuja Neotia Teesta Development Private Limited",
+    "instrument_category": "Long/ Short Term Bank Facilities",
+    "rating": "IVR A-/IVR A2+; (Reaffirmed)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 7.51 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ambuja-neotia-22sep25.pdf"
+  },
+  {
+    "company_name": "Armee Infotech Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 49.60 Cr. (Enhanced from Rs. 18.27 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ArMee-Infotech-22sep25.pdf"
+  },
+  {
+    "company_name": "Armee Infotech Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 125.40 Cr. (Enhanced from Rs. 55.40 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ArMee-Infotech-22sep25.pdf"
+  },
+  {
+    "company_name": "Chokshi Texlen Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Downgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 48.11 Cr. (reduced from Rs. 57.14 Cr.)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-chokshi-texlen-22sep25.pdf"
+  },
+  {
+    "company_name": "Gem Sugars Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR B (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 303.80 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-gem-sugars-22sept25.pdf"
+  },
+  {
+    "company_name": "Gem Sugars Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 9.13 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-gem-sugars-22sept25.pdf"
+  },
+  {
+    "company_name": "Indo Unique Flame Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR D (INC) (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 28.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Indo-Unique-Flame-22sept25.pdf"
+  },
+  {
+    "company_name": "Indo Unique Flame Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR D (INC) (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 39.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Indo-Unique-Flame-22sept25.pdf"
+  },
+  {
+    "company_name": "Intex Technologies (India) Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR C (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 51.04 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-intex-techno-22sep25.pdf"
+  },
+  {
+    "company_name": "Intex Technologies (India) Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 95.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-intex-techno-22sep25.pdf"
+  },
+  {
+    "company_name": "Isprout Business Centre Private Limited",
+    "instrument_category": "Non-Convertible Debentures",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (Reduced from Rs. 32.25 Cr.)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-isprout-business-22sep25.pdf"
+  },
+  {
+    "company_name": "Jagruti Sugar & Allied Industries Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 240.20 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jagruti-sugar-22sep25.pdf"
+  },
+  {
+    "company_name": "Janki Newsprint Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 56.22 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-janki-newsprint-22sep25.pdf"
+  },
+  {
+    "company_name": "Janki Newsprint Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 10.78 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-janki-newsprint-22sep25.pdf"
+  },
+  {
+    "company_name": "Jasmer Foods Private Limited",
+    "instrument_category": "Long Term / Short Term Facilities",
+    "rating": "IVR BBB-/IVR A3; (Reaffirmed)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 65.00 Cr. (enhanced from Rs. 43.00 Cr.)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jasmer-foods-22sep25.pdf"
+  },
+  {
+    "company_name": "Kuber Texlen Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Downgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 18.86 Cr. (reduced from Rs. 21.16 Cr.)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kuber-texlen-22sep25.pdf"
+  },
+  {
+    "company_name": "Kuber Texlen Private Limited",
+    "instrument_category": "Short Term Bank Facility",
+    "rating": "IVR A4+ (Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 0.25 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kuber-texlen-22sep25.pdf"
+  },
+  {
+    "company_name": "Laxmi Solar Power Systems Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR B (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 48.38 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-laxmi-solarpower-22sep25.pdf"
+  },
+  {
+    "company_name": "Maheshwari Logistics Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 200.20 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-maheshwari-logistics-22sep25.pdf"
+  },
+  {
+    "company_name": "Maheshwari Logistics Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 92.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-maheshwari-logistics-22sep25.pdf"
+  },
+  {
+    "company_name": "Mani Square Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 197.78 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-mani-square-22sep25.pdf"
+  },
+  {
+    "company_name": "Rajasthan Vikas Sansthan Company",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 405.17 Cr. (Enhanced from Rs. 297.61 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rajasthanvikas-sansthancompany-22sep25.pdf"
+  },
+  {
+    "company_name": "Rajasthan Vikas Sansthan Company",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 13.00 Cr. (Enhanced from Rs. 3.00 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rajasthanvikas-sansthancompany-22sep25.pdf"
+  },
+  {
+    "company_name": "Rupa Renaissance Limited",
+    "instrument_category": "Long Term Facilities - Term Loan (Lease Rental Discounting)",
+    "rating": "IVR BBB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 485.90 Cr. (enhanced from Rs. 436.30 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rupa-renaissance-22sep25.pdf"
+  },
+  {
+    "company_name": "Rupa Renaissance Limited",
+    "instrument_category": "Long Term Facilities - Term Loan (Loan Against Property)",
+    "rating": "IVR BBB+ (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 121.15 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rupa-renaissance-22sep25.pdf"
+  },
+  {
+    "company_name": "Rupa Renaissance Limited",
+    "instrument_category": "Short Term Facilities - Overdraft",
+    "rating": "IVR A2 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 5.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rupa-renaissance-22sep25.pdf"
+  },
+  {
+    "company_name": "Rupa Renaissance Limited",
+    "instrument_category": "Long Term Facilities - Term Loan",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (reduced from Rs. 105.00 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rupa-renaissance-22sep25.pdf"
+  },
+  {
+    "company_name": "S.G.S Motors Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 30.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-SGS-Motors-22spet25.pdf"
+  },
+  {
+    "company_name": "Sandhya Chemplast Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (Reaffirmed and Withdrawn)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 7.50 Cr. (reduced from Rs. 50.24 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sandhya-chemplast-22sep25.pdf"
+  },
+  {
+    "company_name": "Sandhya Chemplast Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (reduced from Rs. 11.00 Crore)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sandhya-chemplast-22sep25.pdf"
+  },
+  {
+    "company_name": "Share India Securities Limited",
+    "instrument_category": "Proposed Commercial Paper Programme",
+    "rating": "IVR A4+ (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 200.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Share-India-Securities-22sept25.pdf"
+  },
+  {
+    "company_name": "Share India Securities Limited",
+    "instrument_category": "Short term - non-fund-based limit - Bank Guarantee",
+    "rating": "IVR A4+ (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 1513.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Share-India-Securities-22sept25.pdf"
+  },
+  {
+    "company_name": "Share India Securities Limited",
+    "instrument_category": "Proposed Short term - non-fund-based limit",
+    "rating": "IVR A4+ (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 87.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Share-India-Securities-22sept25.pdf"
+  },
+  {
+    "company_name": "Sruti Filatex Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Downgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 28.79 Cr. (reduced from Rs. 31.50 Cr.)",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sruti-filatex-22sep25.pdf"
+  },
+  {
+    "company_name": "Tristar Lifesciences Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR D (ISSUER NOT COOPERATING)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 63.62 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-tristar-lifesciences-22sep25.pdf"
+  },
+  {
+    "company_name": "Tristar Lifesciences Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR D (ISSUER NOT COOPERATING)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 3.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-tristar-lifesciences-22sep25.pdf"
+  },
+  {
+    "company_name": "Vishwa Samudra Vaishnodevi Expressway Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 756.50 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vishwasamudra-vaishnodevi-22sep25.pdf"
+  },
+  {
+    "company_name": "Vrisa Minerals Private Limited",
+    "instrument_category": "Long Term Bank Facilities (Proposed)",
+    "rating": "IVR BB+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 10.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vrisa-minerals-22sep25.pdf"
+  },
+  {
+    "company_name": "Zandros Granito LLP",
+    "instrument_category": "Long Term Facility - Fund-Based - Term Loan",
+    "rating": "IVR B- (INC)(Reaffirmed)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 9.85 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Zandros-Granito-22sept25.pdf"
+  },
+  {
+    "company_name": "Zandros Granito LLP",
+    "instrument_category": "Long Term Facility - Fund-Based - Cash Credit",
+    "rating": "IVR B- (INC)(Reaffirmed)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 6.50 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Zandros-Granito-22sept25.pdf"
+  },
+  {
+    "company_name": "Zandros Granito LLP",
+    "instrument_category": "Short Term Facility - Non-Fund Based - Bank Guarantee",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 2.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Zandros-Granito-22sept25.pdf"
+  },
+  {
+    "company_name": "Aravind Ceramic Industries Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 136.29 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-aravind-ceramic-19sep25.pdf"
+  },
+  {
+    "company_name": "Chicago Constructions International Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 40.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-chicago-constructions-19sep25.pdf"
+  },
+  {
+    "company_name": "Chicago Constructions International Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 30.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-chicago-constructions-19sep25.pdf"
+  },
+  {
+    "company_name": "DCX Systems Limited (Erstwhile DCX Cable Assemblies Private Limited)",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BB+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 480.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-DCX-Systems-19sep25.pdf"
+  },
+  {
+    "company_name": "DCX Systems Limited (Erstwhile DCX Cable Assemblies Private Limited)",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A4+ (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 530.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-DCX-Systems-19sep25.pdf"
+  },
+  {
+    "company_name": "Designtree.com Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR B+ (CE)(INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 87.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-designtree-19sep25.pdf"
+  },
+  {
+    "company_name": "Ganesh Infraworld Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 127.00 Cr. (includes proposed facility of Rs. 77.00 Cr.) (enhanced from Rs. 47.00 Cr.)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ganesh-infraworld-19sep25.pdf"
+  },
+  {
+    "company_name": "Ganesh Infraworld Limited",
+    "instrument_category": "Short Term Bank Facility",
+    "rating": "IVR A2 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 3.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ganesh-infraworld-19sep25.pdf"
+  },
+  {
+    "company_name": "Hardik Agritrade Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 119.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-hardik-agritrade-19sep25.pdf"
+  },
+  {
+    "company_name": "Hardik Agritrade Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 56.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-hardik-agritrade-19sep25.pdf"
+  },
+  {
+    "company_name": "JMV Polymer Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR C+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 23.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jmv-polymer-19sep25.pdf"
+  },
+  {
+    "company_name": "Krishna CorpIndia Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 54.30 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-krishna-corpindia-19sep25.pdf"
+  },
+  {
+    "company_name": "Krishna CorpIndia Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 162.90 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-krishna-corpindia-19sep25.pdf"
+  },
+  {
+    "company_name": "Maruti Inox (India) Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 49.46 Cr. (Enhanced from Rs. 32.00 Crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-maruti-inox-19sep25.pdf"
+  },
+  {
+    "company_name": "Maruti Inox (India) Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 45.00 Cr. (Enhanced from Rs 11.90 Crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-maruti-inox-19sep25.pdf"
+  },
+  {
+    "company_name": "MDFC Financiers Private Limited",
+    "instrument_category": "Long Term Bank Facilities- Term Loan",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 45.23 Cr. (Enhanced from Rs.39.26 Crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-MDFC-Financiers-19sept25.pdf"
+  },
+  {
+    "company_name": "MDFC Financiers Private Limited",
+    "instrument_category": "Proposed Long Term Bank Facilities- Term Loan",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 68.77 Cr. (Reduced from Rs.74.54 Crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-MDFC-Financiers-19sept25.pdf"
+  },
+  {
+    "company_name": "MDFC Financiers Private Limited",
+    "instrument_category": "Long Term Bank Facilities- Cash Credit",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 0.50 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-MDFC-Financiers-19sept25.pdf"
+  },
+  {
+    "company_name": "MDFC Financiers Private Limited",
+    "instrument_category": "Proposed Long Term Bank Facilities- Cash Credit",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 0.50 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-MDFC-Financiers-19sept25.pdf"
+  },
+  {
+    "company_name": "MDFC Financiers Private Limited",
+    "instrument_category": "Long Term Bank Facilities- Term Loan",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-MDFC-Financiers-19sept25.pdf"
+  },
+  {
+    "company_name": "Onix Renewable Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 67.00 Cr. (Enhanced from Rs. 66.17 Crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-onix-renewable-19sep25.pdf"
+  },
+  {
+    "company_name": "Onix Renewable Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 49.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-onix-renewable-19sep25.pdf"
+  },
+  {
+    "company_name": "Ravi Vinyls India Limited",
+    "instrument_category": "Issuer Rating",
+    "rating": "IVR B+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "NA",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ravi-vinyls-19sep25.pdf"
+  },
+  {
+    "company_name": "Shree Jagdamba Agrico Exports Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 5.00 Cr. (enhanced from Rs. 2.00 Cr.)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ShreeJagdamba-AgricoExports-19sep25.pdf"
+  },
+  {
+    "company_name": "Shree Jagdamba Agrico Exports Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 183.00 Cr. (enhanced from Rs. 136.00 Cr.)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ShreeJagdamba-AgricoExports-19sep25.pdf"
+  },
+  {
+    "company_name": "Shree Jagdamba Agrico Products Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 23.97 Cr. (enhanced from Rs. 6.00 Cr.)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shreejagdamba-agricoproducts-19sep25.pdf"
+  },
+  {
+    "company_name": "Shree Jagdamba Agrico Products Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 63.03 Cr. (reduced from Rs. 64.00 Cr.)(including proposed limit of Rs. 1.03 Cr.)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shreejagdamba-agricoproducts-19sep25.pdf"
+  },
+  {
+    "company_name": "Sirsaliya Vinod Green Energy Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 98.49 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sirsaliya-vinod-19sep25.pdf"
+  },
+  {
+    "company_name": "Sree Murali Mohana Boiled and Raw Rice Mill Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 261.50 Cr. (Enhanced from Rs. 192.00 Crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sreemurali-mohana-19sep25.pdf"
+  },
+  {
+    "company_name": "Sree Murali Mohana Boiled and Raw Rice Mill Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 100.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sreemurali-mohana-19sep25.pdf"
+  },
+  {
+    "company_name": "SRK Constructions and Projects Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 60.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-SRK-constructions-19sep25.pdf"
+  },
+  {
+    "company_name": "SRK Constructions and Projects Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 237.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-SRK-constructions-19sep25.pdf"
+  },
+  {
+    "company_name": "Stalwart Projects Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 200.00 Cr. (including proposed limits of Rs. 46.25 Cr.) (reduced from Rs. 300.00 Cr.)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-stalwart-projects-19sep25.pdf"
+  },
+  {
+    "company_name": "Swiss Garnier Genexiaa Sciences Private Limited",
+    "instrument_category": "Long Term Fund Based Bank Facilities - Term Loan",
+    "rating": "IVR C- (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 29.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-swiss-garnier-19sep25.pdf"
+  },
+  {
+    "company_name": "Swiss Garnier Genexiaa Sciences Private Limited",
+    "instrument_category": "Long Term Fund Based Bank Facilities - Cash Credit",
+    "rating": "IVR C- (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 11.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-swiss-garnier-19sep25.pdf"
+  },
+  {
+    "company_name": "Syntex Trading & Agency Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR C- (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 374.20 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-syntex-trading-19sep25.pdf"
+  },
+  {
+    "company_name": "Thakkar Popatlal Velji Sales Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 44.72 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-thakkar-popatlal-19sept25.pdf"
+  },
+  {
+    "company_name": "Utkal Healthcare Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 100.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-utkal-healthcare-19sep25.pdf"
+  },
+  {
+    "company_name": "Valencia and Mishal Ventures Private Limited",
+    "instrument_category": "Non-Convertible Debentures (Proposed)",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-valencia-mishal-19sep25.pdf"
+  },
+  {
+    "company_name": "Zeal Aqua Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 158.00 Cr. (Reduced from Rs. 168.23 crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ZealAqua-19sep25.pdf"
+  },
+  {
+    "company_name": "Zeal Aqua Limited",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 68.00 Cr. (Enhanced from Rs. 31.77 Crore)",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ZealAqua-19sep25.pdf"
+  },
+  {
+    "company_name": "Apollo Green Energy Limited",
+    "instrument_category": "Long Term Bank Facilities (including proposed)",
+    "rating": "IVR C (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 221.83 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-apollogreen-18sept25.pdf"
+  },
+  {
+    "company_name": "Apollo Green Energy Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 101.00 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-apollogreen-18sept25.pdf"
+  },
+  {
+    "company_name": "Apollo Green Energy Limited",
+    "instrument_category": "Non-Convertible Debentures",
+    "rating": "IVR C (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 9.50 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-apollogreen-18sept25.pdf"
+  },
+  {
+    "company_name": "Apollo Green Energy Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures",
+    "rating": "IVR C (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 90.50 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-apollogreen-18sept25.pdf"
+  },
+  {
+    "company_name": "Brajendra Kumar Builders Private Limited",
+    "instrument_category": "Long-term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 143.00 Cr. (including proposed limit of Rs. 17.71 Cr.)",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-brajendra-18sep25.pdf"
+  },
+  {
+    "company_name": "Brajendra Kumar Builders Private Limited",
+    "instrument_category": "Short-term Bank Facilities",
+    "rating": "IVR A3 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 7.00 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-brajendra-18sep25.pdf"
+  },
+  {
+    "company_name": "Capron Vitrified Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR C+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 21.32 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-capron-vitrified-18sep25.pdf"
+  },
+  {
+    "company_name": "Capron Vitrified Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 3.00 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-capron-vitrified-18sep25.pdf"
+  },
+  {
+    "company_name": "Regency Fincorp Limited",
+    "instrument_category": "Long Term Proposed Fund Based Bank Facilities - Term Loan",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-regencyf-18sep25.pdf"
+  },
+  {
+    "company_name": "SafeFlex International Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 65.75 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-safeflex-international-18sep25.pdf"
+  },
+  {
+    "company_name": "SafeFlex International Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 2.50 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-safeflex-international-18sep25.pdf"
+  },
+  {
+    "company_name": "SafeFlex International Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 6.50 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-safeflex-international-18sep25.pdf"
+  },
+  {
+    "company_name": "SafeFlex International Limited",
+    "instrument_category": "Long/ Short Term Bank Facilities- Proposed",
+    "rating": "IVR BB+/IVR A4+; (Reaffirmed)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 5.25 Cr. (Enhanced from Rs. 1.75 Cr.)",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-safeflex-international-18sep25.pdf"
+  },
+  {
+    "company_name": "Shivababa Foods Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 24.00 Cr. (enhanced from Rs. 15.00 Cr.)",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Shivababa-Foods-18sept25.pdf"
+  },
+  {
+    "company_name": "Shivababa Foods Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 116.00 Cr. (enhanced from Rs. 73.00 Cr.)",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Shivababa-Foods-18sept25.pdf"
+  },
+  {
+    "company_name": "Veekayem Fashion and Apparels Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 99.92 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Veekayem-Fashion-18sep25.pdf"
+  },
+  {
+    "company_name": "VRV Foods Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR C (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 8.75 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-VRV-Foods-18sept25.pdf"
+  },
+  {
+    "company_name": "VRV Foods Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 16.25 Cr.",
+    "date": "Sep 18, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-VRV-Foods-18sept25.pdf"
+  },
+  {
+    "company_name": "Anthony Garments Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 15.47 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-anthony-garments-17sep25.pdf"
+  },
+  {
+    "company_name": "Anthony Garments Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 33.75 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-anthony-garments-17sep25.pdf"
+  },
+  {
+    "company_name": "Bihar Foundry & Casting Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 807.82 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-bihar-foundry-17sep25.pdf"
+  },
+  {
+    "company_name": "Bihar Foundry & Casting Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A2+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 282.53 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-bihar-foundry-17sep25.pdf"
+  },
+  {
+    "company_name": "Callac Poly Exim Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 24.90 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-callac-polyexim-17sep25.pdf"
+  },
+  {
+    "company_name": "Callac Poly Exim Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 10.00 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-callac-polyexim-17sep25.pdf"
+  },
+  {
+    "company_name": "Carabao Foods Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR B+ (Downgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 90.00 Cr. (Enhanced From Rs. 40.00 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-carabao-foods-17sep25.pdf"
+  },
+  {
+    "company_name": "Dwarka Lifestyle Resorts Private Limited",
+    "instrument_category": "Long Term Facility",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 27.00 Cr. (reduced from Rs. 30.00 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-dwarka-lifestyle-17sep25.pdf"
+  },
+  {
+    "company_name": "Monika Alcobev Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 136.10 Cr. (Enhanced from Rs. 133.00 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-monika-alcobev-17sep25.pdf"
+  },
+  {
+    "company_name": "Monika Alcobev Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 18.15 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-monika-alcobev-17sep25.pdf"
+  },
+  {
+    "company_name": "Monika Alcobev Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 18.75 Cr. (Enhanced from Rs. 15.00 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-monika-alcobev-17sep25.pdf"
+  },
+  {
+    "company_name": "Northernexpress Infradevelopers Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 15.98 Cr. (enhanced from Rs. 6.71 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-northernexpress-17sep25.pdf"
+  },
+  {
+    "company_name": "Northernexpress Infradevelopers Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 72.50 Cr. (enhanced from Rs. 43.29 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-northernexpress-17sep25.pdf"
+  },
+  {
+    "company_name": "Nuvo Aeon Diamond and Jewellery Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 19.00 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-nuvoaeon-diamond-17sep25.pdf"
+  },
+  {
+    "company_name": "Sadashiva Overseas Limited",
+    "instrument_category": "Long Term Bank Facility",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 100.00 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sadashiva-overseas-17sep25.pdf"
+  },
+  {
+    "company_name": "SSV Pharma Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 51.30 Cr. (reduced from Rs. 57.80 Cr.)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-SSV-Pharma-17sep25.pdf"
+  },
+  {
+    "company_name": "Sunrise Gilts and Securities Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 140.00 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sunrise-gilt-17sep25.pdf"
+  },
+  {
+    "company_name": "Sunrise Gilts and Securities Private Limited",
+    "instrument_category": "Commercial Paper (Proposed)",
+    "rating": "IVR A1 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sunrise-gilt-17sep25.pdf"
+  },
+  {
+    "company_name": "Sunrise Gilts and Securities Private Limited",
+    "instrument_category": "Commercial Paper (Proposed)",
+    "rating": "IVR A1 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sunrise-gilt-17sep25.pdf"
+  },
+  {
+    "company_name": "Vaishno Associates Vidyut Projects LLP",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 24.00 Cr. (Enhanced from Rs. 14.00 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vaishno-associates-17sep25.pdf"
+  },
+  {
+    "company_name": "Vaishno Associates Vidyut Projects LLP",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 231.00 Cr. (Enhanced from Rs. 201.00 Crore)",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vaishno-associates-17sep25.pdf"
+  },
+  {
+    "company_name": "Vetrivel Explosives Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 54.62 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vetrivel-explosives-17sep25.pdf"
+  },
+  {
+    "company_name": "Vetrivel Explosives Private Limited",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A4 (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 31.20 Cr.",
+    "date": "Sep 17, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-vetrivel-explosives-17sep25.pdf"
+  },
+  {
+    "company_name": "Asian Fab Tec Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 95.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-asian-fab-tac-16sept25.pdf"
+  },
+  {
+    "company_name": "Asian Fab Tec Limited",
+    "instrument_category": "Long Term Bank Facilities - Proposed",
+    "rating": "IVR BBB- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-asian-fab-tac-16sept25.pdf"
+  },
+  {
+    "company_name": "Asian Fab Tec Limited",
+    "instrument_category": "Short Term Bank Facilities - Bank Guarantee",
+    "rating": "IVR A3 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 275.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-asian-fab-tac-16sept25.pdf"
+  },
+  {
+    "company_name": "Asian Fab Tec Limited",
+    "instrument_category": "Short Term Bank Facilities - Proposed",
+    "rating": "IVR A3 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 100.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-asian-fab-tac-16sept25.pdf"
+  },
+  {
+    "company_name": "Capital Power Systems Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR B+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 25.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-capital-power-16sep25.pdf"
+  },
+  {
+    "company_name": "Capital Power Systems Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-capital-power-16sep25.pdf"
+  },
+  {
+    "company_name": "Capri Global Capital Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCDs) - Public issue",
+    "rating": "IVR AA (Assigned)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 200.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-CGCL-16sept2025.pdf"
+  },
+  {
+    "company_name": "Capri Global Capital Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCDs) - Public issue",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 200.00 Cr. (Increased from Rs. 180.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-CGCL-16sept2025.pdf"
+  },
+  {
+    "company_name": "Capri Global Capital Limited",
+    "instrument_category": "Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 320.00 Cr. (Increased from Rs. 170.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-CGCL-16sept2025.pdf"
+  },
+  {
+    "company_name": "Capri Global Capital Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 180.00 Cr. (Reduced from Rs. 350.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-CGCL-16sept2025.pdf"
+  },
+  {
+    "company_name": "Capri Global Capital Limited",
+    "instrument_category": "Long Term Bank Facilities - Term Loans",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 7163.82 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-CGCL-16sept2025.pdf"
+  },
+  {
+    "company_name": "Capri Global Capital Limited",
+    "instrument_category": "Long term Bank Facilities - Proposed Term Loans",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 336.18 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-CGCL-16sept2025.pdf"
+  },
+  {
+    "company_name": "Capri Global Capital Limited",
+    "instrument_category": "Long term Bank Facilities - Cash Credit",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Positive",
+    "instrument_amount": "Rs. 595.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-CGCL-16sept2025.pdf"
+  },
+  {
+    "company_name": "Century Extrusions Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 48.11 Cr. (Reduced from Rs. 52.40 crore)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Century-Extrusions-16sept25.pdf"
+  },
+  {
+    "company_name": "Century Extrusions Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 25.50 Cr. (Reduced from Rs. 26.50 crore)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Century-Extrusions-16sept25.pdf"
+  },
+  {
+    "company_name": "Dia Precious Jewellery Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 10.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-diaprecious-16sep25.pdf"
+  },
+  {
+    "company_name": "Enerlite Solar Films India Private Limited",
+    "instrument_category": "Long term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (reduced from Rs. 57.59 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Enerlite-Solar-Films-16spet25.pdf"
+  },
+  {
+    "company_name": "Enerlite Solar Films India Private Limited",
+    "instrument_category": "Short term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (reduced from Rs. 10.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Enerlite-Solar-Films-16spet25.pdf"
+  },
+  {
+    "company_name": "Enerlite Solar Films India Private Limited",
+    "instrument_category": "Proposed Long /Short Term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (reduced from Rs. 2.41 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Enerlite-Solar-Films-16spet25.pdf"
+  },
+  {
+    "company_name": "Enerlite Solar Films India Private Limited",
+    "instrument_category": "Proposed Long Term Bank Facilities",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (reduced from Rs. 5.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Enerlite-Solar-Films-16spet25.pdf"
+  },
+  {
+    "company_name": "Mobile Communications (India) Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 18.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-mobile-communications-16sep25.pdf"
+  },
+  {
+    "company_name": "Mobile Communications (India) Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 48.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-mobile-communications-16sep25.pdf"
+  },
+  {
+    "company_name": "NHC Foods Limited",
+    "instrument_category": "Long Term Bank Facilities - Term Loan",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 3.19 Cr. (Reduced from Rs. 3.70 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-NHC-foods-16sep25.pdf"
+  },
+  {
+    "company_name": "NHC Foods Limited",
+    "instrument_category": "Long Term Bank Facilities - Cash Credit",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 25.00 Cr. (Enhanced from Rs. 22.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-NHC-foods-16sep25.pdf"
+  },
+  {
+    "company_name": "NHC Foods Limited",
+    "instrument_category": "Long Term Bank Facilities - Export Packing Credit (EPC)/ Pre-shipment Credit in Foreign Currency (PCFC)",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 11.00 Cr. (Reduced from Rs. 22.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-NHC-foods-16sep25.pdf"
+  },
+  {
+    "company_name": "NHC Foods Limited",
+    "instrument_category": "Proposed Long Term Bank Facilities - Cash Credit",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 20.81 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-NHC-foods-16sep25.pdf"
+  },
+  {
+    "company_name": "Orito Polyfab Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 60.66 Cr. (Including proposed limit of Rs. 3.51 crore)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-orito-polyfab-16sep25.pdf"
+  },
+  {
+    "company_name": "Orito Polyfab Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 3.50 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-orito-polyfab-16sep25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 3181.89 Cr. (Increased from Rs. 2663.81 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Proposed Long Term Bank Facilities",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 418.11 Cr. (Reduced from Rs. 936.19 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 186.75 Cr. (Increased from Rs. 164.75 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 25.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCDs)",
+    "rating": "IVR AA (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 248.25 Cr. (Reduced from Rs. 282.25 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Commercial Paper (CPs)",
+    "rating": "IVR A1+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 75.00 Cr. (Reduced from Rs. 103.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Paisalo Digital Limited",
+    "instrument_category": "Proposed Commercial Paper (CPs)",
+    "rating": "IVR A1+ (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 465.00 Cr. (Increased from Rs. 437.00 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Paisalo-Digital-16sept25.pdf"
+  },
+  {
+    "company_name": "Rama Motocorp Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 70.00 Cr. (includes proposed facility of Rs. 9.49 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rama-motocorp-16sep25.pdf"
+  },
+  {
+    "company_name": "Rewa Ultra Mega Solar Limited",
+    "instrument_category": "Proposed Long Term Bank Facilities",
+    "rating": "IVR A (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 500.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-rewaultra-16sep25.pdf"
+  },
+  {
+    "company_name": "Ronak Rocks Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 9.72 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ronak-rocks-16sep25.pdf"
+  },
+  {
+    "company_name": "Ronak Rocks Private Limited",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A3 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 58.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ronak-rocks-16sep25.pdf"
+  },
+  {
+    "company_name": "Saisidha Engineering Industries Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 46.13 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-saisidha-engineering-16sep25.pdf"
+  },
+  {
+    "company_name": "Saisidha Engineering Industries Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 20.50 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-saisidha-engineering-16sep25.pdf"
+  },
+  {
+    "company_name": "Saisidha Engineering Industries Private Limited",
+    "instrument_category": "Proposed Bank Guarantee",
+    "rating": "IVR A3 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 13.87 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-saisidha-engineering-16sep25.pdf"
+  },
+  {
+    "company_name": "Scasa Nutrients Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR D (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 24.37 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-scasa-nutrients-16sep25.pdf"
+  },
+  {
+    "company_name": "Sheetal Cool Products Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR B+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sheetal-cool-16sep25.pdf"
+  },
+  {
+    "company_name": "Shree Durga Syntex Private Limited",
+    "instrument_category": "Non-Convertible Debentures - Proposed",
+    "rating": "IVR A (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shreedurga-syntex-16sep25.pdf"
+  },
+  {
+    "company_name": "Shri Mahavir Iron & Steel Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 59.98 Cr. (includes proposed facility of Rs. 2.78 Cr.)",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ShriMahavir-Iron-16sep25.pdf"
+  },
+  {
+    "company_name": "Shri Mahavir Iron & Steel Private Limited",
+    "instrument_category": "Short Term Bank Facility",
+    "rating": "IVR A4+ (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 0.02 Cr.",
+    "date": "Sep 16, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ShriMahavir-Iron-16sep25.pdf"
+  },
+  {
+    "company_name": "Atal Realtech Limited",
+    "instrument_category": "Long Term Bank Facilities - Cash Credit",
+    "rating": "IVR BB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 15.00 Cr. (Enhanced from Rs. 10.50 Cr.)",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-atal-realtech-15sep25.pdf"
+  },
+  {
+    "company_name": "Atal Realtech Limited",
+    "instrument_category": "Short Term Bank Facilities - Bank Guarantee",
+    "rating": "IVR A4+ (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 15.00 Cr. (Enhanced from Rs. 14.00 Cr.)",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-atal-realtech-15sep25.pdf"
+  },
+  {
+    "company_name": "Divine Motors Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR B+ (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 48.41 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-divine-motors-15sep25.pdf"
+  },
+  {
+    "company_name": "GS Auto International Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR C- (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 32.25 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GSAuto-International-15sep25.pdf"
+  },
+  {
+    "company_name": "GS Auto International Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 5.50 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-GSAuto-International-15sep25.pdf"
+  },
+  {
+    "company_name": "Indel Money Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCDs) - Public Issue",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 300.00 Cr.",
+    "date": "Sep 19, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-indel-money-19sept25.pdf"
+  },
+  {
+    "company_name": "Indel Money Limited",
+    "instrument_category": "Proposed Non-Convertible Debentures (NCDs) - Public Issue",
+    "rating": "IVR A- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 300.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-indel-money-15sept2025.pdf"
+  },
+  {
+    "company_name": "Jaswant Singh Oberoi Construction Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 60.28 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Jaswant-Singh-Oberoi-15sept25.pdf"
+  },
+  {
+    "company_name": "Jaswant Singh Oberoi Construction Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 67.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Jaswant-Singh-Oberoi-15sept25.pdf"
+  },
+  {
+    "company_name": "Jaswant Singh Oberoi Construction Private Limited",
+    "instrument_category": "Proposed Long Term Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 2.72 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-Jaswant-Singh-Oberoi-15sept25.pdf"
+  },
+  {
+    "company_name": "Jiwanram Sheoduttrai Industries Private Limited",
+    "instrument_category": "Long Term/ Short Term Bank Facilities",
+    "rating": "IVR C-/IVR A4; (INC)(Reaffirmed)",
+    "outlook": "Negative/-",
+    "instrument_amount": "Rs. 15.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jiwanram-sheoduttrai-15sep25.pdf"
+  },
+  {
+    "company_name": "Jiwanram Sheoduttrai Industries Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 1.25 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jiwanram-sheoduttrai-15sep25.pdf"
+  },
+  {
+    "company_name": "Kanoria Energy and Infrastructure Limited (erstwhile A Infrastructure Limited)",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 99.99 Cr. (Reduced from Rs. 106.19 Crore)",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kanoria-energy-15sep25.pdf"
+  },
+  {
+    "company_name": "Kanoria Energy and Infrastructure Limited (erstwhile A Infrastructure Limited)",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 30.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kanoria-energy-15sep25.pdf"
+  },
+  {
+    "company_name": "Khaitan Winding Wire Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (INC)(Downgraded)",
+    "outlook": "Negative",
+    "instrument_amount": "Rs. 44.29 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-khaitan-winding-15sep25.pdf"
+  },
+  {
+    "company_name": "Khaitan Winding Wire Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 13.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-khaitan-winding-15sep25.pdf"
+  },
+  {
+    "company_name": "Marathon Realty Private Limited",
+    "instrument_category": "Long Term Facilities - Term Loan (LRD)",
+    "rating": "IVR BBB (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 355.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-marathon-realty-15sep25.pdf"
+  },
+  {
+    "company_name": "Marathon Realty Private Limited",
+    "instrument_category": "Long Term Facilities - Term Loans",
+    "rating": "IVR BBB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 150.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-marathon-realty-15sep25.pdf"
+  },
+  {
+    "company_name": "Shree Pandurang Sahakari Sakhar karkhana Limited",
+    "instrument_category": "Long Term Bank Facilities - Term Loan",
+    "rating": "IVR BBB- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 165.86 Cr. (Reduced from Rs. 200.72 Crore)",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shree-pandurang-15sep25.pdf"
+  },
+  {
+    "company_name": "Shree Pandurang Sahakari Sakhar karkhana Limited",
+    "instrument_category": "Long Term Bank Facilities - Sugar Hypothecation",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 41.49 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shree-pandurang-15sep25.pdf"
+  },
+  {
+    "company_name": "Shree Pandurang Sahakari Sakhar karkhana Limited",
+    "instrument_category": "Short Term Bank Facilities - Sugar Pledge",
+    "rating": "IVR A3 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 275.00 Cr. (Enhanced from Rs. 200 Crore)",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shree-pandurang-15sep25.pdf"
+  },
+  {
+    "company_name": "Sona Beverages Private Limited (SBPL)",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB (Upgraded and Withdrawn)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 88.76 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sona-beverages-15sep25.pdf"
+  },
+  {
+    "company_name": "Spar Agrotech Farmer Producer Company Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 50.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-spar-agrotech-15sep25.pdf"
+  },
+  {
+    "company_name": "Spar Agrotech Farmer Producer Company Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 2.00 Cr.",
+    "date": "Sep 15, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-spar-agrotech-15sep25.pdf"
+  },
+  {
+    "company_name": "Ahar Foods and Fats Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB (Reaffirmed and Withdrawn)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 39.62 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-aharfoods-12sep25.pdf"
+  },
+  {
+    "company_name": "Ahar Foods and Fats Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Reaffirmed and Withdrawn)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 12.88 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-aharfoods-12sep25.pdf"
+  },
+  {
+    "company_name": "Ankur Biochem Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB+ (Upgraded and Withdrawn)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 413.08 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ankur-biochem-12sept25.pdf"
+  },
+  {
+    "company_name": "Ankur Biochem Private Limited",
+    "instrument_category": "Long Term/ Short Term Bank Facilities",
+    "rating": "IVR BBB+/IVR A2; (Upgraded and Withdrawn)",
+    "outlook": "Stable/-",
+    "instrument_amount": "Rs. 30.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ankur-biochem-12sept25.pdf"
+  },
+  {
+    "company_name": "Bhairaveshwara Cool Point Private Limited",
+    "instrument_category": "Long Term Bank Facilities - LRD Facility",
+    "rating": "IVR D (Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 44.46 Cr. (Reduced from Rs. 46.00 Crore)",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-bhairaveshwara-cool-12sep25.pdf"
+  },
+  {
+    "company_name": "BLN Infra Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 19.72 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-BLN-infra-12sep25.pdf"
+  },
+  {
+    "company_name": "BLN Infra Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 3.26 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-BLN-infra-12sep25.pdf"
+  },
+  {
+    "company_name": "IGREL Mahidad Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 125.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-IGREL-Mahidad-22sept25.pdf"
+  },
+  {
+    "company_name": "IGREL Mahidad Limited",
+    "instrument_category": "Long Term Bank Facilities - Proposed",
+    "rating": "IVR A- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 35.00 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-IGREL-Mahidad-22sept25.pdf"
+  },
+  {
+    "company_name": "IGREL Mahidad Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 192.02 Cr.",
+    "date": "Sep 22, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/Pr-IGREL-Mahidad-22sept25.pdf"
+  },
+  {
+    "company_name": "IGREL Mahidad Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 125.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-IGREL-mahidad-12sep25.pdf"
+  },
+  {
+    "company_name": "IGREL Mahidad Limited",
+    "instrument_category": "Long Term Bank Facilities - Proposed",
+    "rating": "IVR A- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 35.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-IGREL-mahidad-12sep25.pdf"
+  },
+  {
+    "company_name": "Jijau Constructions Road Builder Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 12.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jijau-constructions-12sep25.pdf"
+  },
+  {
+    "company_name": "Jijau Constructions Road Builder Private Limited",
+    "instrument_category": "Short Term Bank Facility",
+    "rating": "IVR A3 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 58.00 Cr. (includes proposed limit of Rs. 30.90 Crore)",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jijau-constructions-12sep25.pdf"
+  },
+  {
+    "company_name": "Lahoty Buildcon Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Downgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 21.05 Cr. (Reduced from Rs. 21.65 Crore)",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-lahoty-buildcon-12sep25.pdf"
+  },
+  {
+    "company_name": "Lahoty Buildcon Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 210.50 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-lahoty-buildcon-12sep25.pdf"
+  },
+  {
+    "company_name": "Magadh Metal Industries Private Limited",
+    "instrument_category": "Long Term Bank Facilities (enhanced from Rs. 150.00 Crore)",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 185.00 Cr.",
+    "date": "Sep 24, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-magadh-metal-24sep25.pdf"
+  },
+  {
+    "company_name": "Magadh Metal Industries Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 150.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-magadh-metal-12sep25.pdf"
+  },
+  {
+    "company_name": "Ornate Mercantile Private Limited",
+    "instrument_category": "Long Term Bank Facility",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 30.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ornate-mercantile-12sep25.pdf"
+  },
+  {
+    "company_name": "Ornate Mercantile Private Limited",
+    "instrument_category": "Short Term Bank Facility",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 10.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-ornate-mercantile-12sep25.pdf"
+  },
+  {
+    "company_name": "SA Trading Company",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 19.00 Cr.",
+    "date": "Sep 12, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-SA-Trading-12sep25.pdf"
+  },
+  {
+    "company_name": "Cool Caps Industries Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 55.86 Cr. (Reduced from Rs. 59.24 Crore)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-cool-caps-11sep25.pdf"
+  },
+  {
+    "company_name": "Cool Caps Industries Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A3 (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 12.58 Cr. (Enhanced from Rs. 9.20 Crore)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-cool-caps-11sep25.pdf"
+  },
+  {
+    "company_name": "Heavy Metal and Tubes (India) Private Limited",
+    "instrument_category": "Long Term Bank Facilities - Term Loan",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 64.91 Cr. (Enhanced from Rs. 60.76 Cr.)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-heavymetal-tubes-11sep25.pdf"
+  },
+  {
+    "company_name": "Heavy Metal and Tubes (India) Private Limited",
+    "instrument_category": "Long Term Bank Facilities - Cash Credit",
+    "rating": "IVR BBB- (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 65.00 Cr. (Enhanced from Rs. 40.00 Cr.)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-heavymetal-tubes-11sep25.pdf"
+  },
+  {
+    "company_name": "Heavy Metal and Tubes (India) Private Limited",
+    "instrument_category": "Long Term Bank Facilities - Line of Credit",
+    "rating": "Withdrawn",
+    "outlook": "Nil",
+    "instrument_amount": "0.00 (Previously Rs. 10.00 Cr.)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-heavymetal-tubes-11sep25.pdf"
+  },
+  {
+    "company_name": "Heavy Metal and Tubes (India) Private Limited",
+    "instrument_category": "Short Term Bank Facilities - Bank Guarantee",
+    "rating": "IVR A3 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 5.00 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-heavymetal-tubes-11sep25.pdf"
+  },
+  {
+    "company_name": "Heavy Metal and Tubes (India) Private Limited",
+    "instrument_category": "Short Term Bank Facilities - Purchase Invoice Discounting",
+    "rating": "IVR A3 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 5.00 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-heavymetal-tubes-11sep25.pdf"
+  },
+  {
+    "company_name": "Indospun Yarn Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR BB (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 88.80 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-indospun-yarn-11sep25.pdf"
+  },
+  {
+    "company_name": "Indospun Yarn Private Limited",
+    "instrument_category": "Short Term Facilities",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 5.00 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-indospun-yarn-11sep25.pdf"
+  },
+  {
+    "company_name": "Jindal Worldwide Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR A (Reaffirmed)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 311.03 Cr. (Reduced from Rs. 360.45 Crore)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jindal-worldwide-11sep25.pdf"
+  },
+  {
+    "company_name": "Jindal Worldwide Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A1 (Reaffirmed)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 159.00 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-jindal-worldwide-11sep25.pdf"
+  },
+  {
+    "company_name": "Kanaiya Exports Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 10.28 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kanaiya-exports-11sep25.pdf"
+  },
+  {
+    "company_name": "Kanaiya Exports Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4 (Assigned)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 28.00 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-kanaiya-exports-11sep25.pdf"
+  },
+  {
+    "company_name": "Lekh Raj Autoplaza Private Limited",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BB+ (Upgraded)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 15.70 Cr. (Reduced from Rs. 16.31 Cr.)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-lekhraj-autoplaza-11sep25.pdf"
+  },
+  {
+    "company_name": "Lekh Raj Autoplaza Private Limited",
+    "instrument_category": "Short Term Bank Facilities",
+    "rating": "IVR A4+ (Upgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 57.75 Cr. (Enhanced from Rs. 41.25 Cr.)",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-lekhraj-autoplaza-11sep25.pdf"
+  },
+  {
+    "company_name": "Mocha 08 2025 (Originator: Aristo Securities Private Limited)",
+    "instrument_category": "Long Term - Series A1 PTCs",
+    "rating": "Provisional IVR A- (SO)(Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 13.18 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-mocha-aristo-11sep25.pdf"
+  },
+  {
+    "company_name": "Shaligram Space LLP",
+    "instrument_category": "Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 92.90 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shaligram-space-11sep25.pdf"
+  },
+  {
+    "company_name": "Shaligram Space LLP",
+    "instrument_category": "Proposed Long Term Bank Facilities",
+    "rating": "IVR BBB- (Assigned)",
+    "outlook": "Stable",
+    "instrument_amount": "Rs. 120.00 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-shaligram-space-11sep25.pdf"
+  },
+  {
+    "company_name": "Sumatichand Gouti Jewellers Private Limited",
+    "instrument_category": "Long Term Facilities",
+    "rating": "IVR D (INC)(Downgraded)",
+    "outlook": "Nil",
+    "instrument_amount": "Rs. 382.00 Cr.",
+    "date": "Sep 11, 2025",
+    "url": "https://www.infomerics.com/admin/uploads/pr-sumatichand-gouti-11sep25.pdf"
+  }
+]
