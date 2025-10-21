@@ -1,0 +1,357 @@
+{
+    "tables": [
+        {
+            "id": "tblRlxbOYMW8Rag7f",
+            "name": "Credit Ratings",
+            "primaryFieldId": "fldSpB8HZzBmBnEWF",
+            "fields": [
+                {
+                    "type": "singleLineText",
+                    "id": "fldSpB8HZzBmBnEWF",
+                    "name": "Rating"
+                },
+                {
+                    "type": "singleLineText",
+                    "id": "fld08LuG5ZRF7Jgfv",
+                    "name": "Instrument"
+                },
+                {
+                    "type": "multipleRecordLinks",
+                    "options": {
+                        "linkedTableId": "tblMsZnCUfG783lWI",
+                        "isReversed": false,
+                        "prefersSingleRecordLink": true,
+                        "inverseLinkFieldId": "fldQsAcLrqtH1QTYy"
+                    },
+                    "id": "fldcxMFTfVq07v0M3",
+                    "name": "Company"
+                },
+                {
+                    "type": "singleSelect",
+                    "options": {
+                        "choices": [
+                            {
+                                "id": "selJgNVsK2MNgfF4A",
+                                "name": "Nil",
+                                "color": "blueLight2"
+                            },
+                            {
+                                "id": "selfKhNMmd2NdC7Ne",
+                                "name": "Positive",
+                                "color": "cyanLight2"
+                            },
+                            {
+                                "id": "selYWaGXQe4wlZgp1",
+                                "name": "Stable",
+                                "color": "tealLight2"
+                            },
+                            {
+                                "id": "selb72T1HNL3RtNSl",
+                                "name": "Negative",
+                                "color": "greenLight2"
+                            },
+                            {
+                                "id": "selPLis5mg7aeu13S",
+                                "name": "Not Available",
+                                "color": "yellowLight2"
+                            },
+                            {
+                                "id": "sel8VyQNr7SWVv3c9",
+                                "name": "Stable/-",
+                                "color": "orangeLight2"
+                            },
+                            {
+                                "id": "sel0UC6pLwMX6D8H4",
+                                "name": "Positive/-",
+                                "color": "redLight2"
+                            },
+                            {
+                                "id": "selqmUmFOJBqrW7yP",
+                                "name": "Rating Watch with Developing Implications",
+                                "color": "pinkLight2"
+                            },
+                            {
+                                "id": "selqRjLB2dngZgiS6",
+                                "name": "Negative/-",
+                                "color": "purpleLight2"
+                            },
+                            {
+                                "id": "selF0wQJGE92ETUjS",
+                                "name": "Rating Watch with Negative Implications",
+                                "color": "grayLight2"
+                            }
+                        ]
+                    },
+                    "id": "fldlf9qBVFrMeI0Rl",
+                    "name": "Outlook"
+                },
+                {
+                    "type": "singleLineText",
+                    "id": "fldewPpbT6sF8S9Nn",
+                    "name": "Instrument Amount"
+                },
+                {
+                    "type": "date",
+                    "options": {
+                        "dateFormat": {
+                            "name": "local",
+                            "format": "l"
+                        }
+                    },
+                    "id": "fldqNybvYqOAX7JQV",
+                    "name": "Date"
+                },
+                {
+                    "type": "singleLineText",
+                    "id": "fldDVfbyjxd2nTuE1",
+                    "name": "Source URL"
+                }
+            ],
+            "views": [
+                {
+                    "id": "viwgxeSiyxysYo4h6",
+                    "name": "Grid view",
+                    "type": "grid"
+                }
+            ]
+        },
+        {
+            "id": "tblMsZnCUfG783lWI",
+            "name": "Companies",
+            "primaryFieldId": "fld5nhRH2hcspLfzl",
+            "fields": [
+                {
+                    "type": "singleLineText",
+                    "id": "fld5nhRH2hcspLfzl",
+                    "name": "Company Name"
+                },
+                {
+                    "type": "multipleRecordLinks",
+                    "options": {
+                        "linkedTableId": "tblRlxbOYMW8Rag7f",
+                        "isReversed": false,
+                        "prefersSingleRecordLink": false,
+                        "inverseLinkFieldId": "fldcxMFTfVq07v0M3"
+                    },
+                    "id": "fldQsAcLrqtH1QTYy",
+                    "name": "Credit Ratings"
+                },
+                {
+                    "type": "singleLineText",
+                    "id": "fldX7qZ4kobyZwBM0",
+                    "name": "Instruments"
+                },
+                {
+                    "type": "rollup",
+                    "options": {
+                        "isValid": true,
+                        "recordLinkFieldId": "fldQsAcLrqtH1QTYy",
+                        "fieldIdInLinkedTable": "fldqNybvYqOAX7JQV",
+                        "referencedFieldIds": [],
+                        "result": {
+                            "type": "date",
+                            "options": {
+                                "dateFormat": {
+                                    "name": "us",
+                                    "format": "M/D/YYYY"
+                                }
+                            }
+                        }
+                    },
+                    "id": "fldwpPyFql2i0y6U1",
+                    "name": "Latest Credit Rating"
+                },
+                {
+                    "type": "rollup",
+                    "options": {
+                        "isValid": true,
+                        "recordLinkFieldId": "fldQsAcLrqtH1QTYy",
+                        "fieldIdInLinkedTable": "fldSpB8HZzBmBnEWF",
+                        "referencedFieldIds": [],
+                        "result": {
+                            "type": "singleLineText"
+                        }
+                    },
+                    "id": "fldJkBW1F2KN6s2fF",
+                    "name": "Most Recent Rating"
+                },
+                {
+                    "type": "multipleRecordLinks",
+                    "options": {
+                        "linkedTableId": "tbljbYRWsRBb85X5y",
+                        "isReversed": false,
+                        "prefersSingleRecordLink": false,
+                        "inverseLinkFieldId": "fldt6TiCCLO4hULhj"
+                    },
+                    "id": "fldwPKmqXBwsWB9Cr",
+                    "name": "Table 4"
+                }
+            ],
+            "views": [
+                {
+                    "id": "viwkt9ziYPGtRrzE3",
+                    "name": "Grid view",
+                    "type": "grid"
+                }
+            ]
+        },
+        {
+            "id": "tbljbYRWsRBb85X5y",
+            "name": "Contacts",
+            "primaryFieldId": "fldsqlKBMA9WDRims",
+            "fields": [
+                {
+                    "type": "singleLineText",
+                    "id": "fldsqlKBMA9WDRims",
+                    "name": "Name"
+                },
+                {
+                    "type": "phoneNumber",
+                    "id": "fldqxhVjiYLoaWPaZ",
+                    "name": "Phone Number"
+                },
+                {
+                    "type": "multipleLookupValues",
+                    "options": {
+                        "isValid": true,
+                        "recordLinkFieldId": "fldt6TiCCLO4hULhj",
+                        "fieldIdInLinkedTable": "fld5nhRH2hcspLfzl",
+                        "result": {
+                            "type": "singleLineText"
+                        }
+                    },
+                    "id": "fldf3uwDkfftw1UXv",
+                    "name": "Company Name (from Notes)"
+                },
+                {
+                    "type": "multipleRecordLinks",
+                    "options": {
+                        "linkedTableId": "tblMsZnCUfG783lWI",
+                        "isReversed": false,
+                        "prefersSingleRecordLink": true,
+                        "inverseLinkFieldId": "fldwPKmqXBwsWB9Cr"
+                    },
+                    "id": "fldt6TiCCLO4hULhj",
+                    "name": "Company"
+                },
+                {
+                    "type": "singleSelect",
+                    "options": {
+                        "choices": [
+                            {
+                                "id": "selBptpohwi8HCP82",
+                                "name": "To Contact",
+                                "color": "yellowLight2"
+                            },
+                            {
+                                "id": "seloKtIpkIGU4g3qq",
+                                "name": "Contacted",
+                                "color": "greenLight2"
+                            },
+                            {
+                                "id": "selEnWeklcKQqBIlE",
+                                "name": "Not on WhatsApp",
+                                "color": "redLight2"
+                            }
+                        ]
+                    },
+                    "id": "fldyRxOEZCVcKooDm",
+                    "name": "Status"
+                },
+                {
+                    "type": "multilineText",
+                    "id": "fldxuRrdd1AV0Qv2h",
+                    "name": "Messsage"
+                },
+                {
+                    "type": "button",
+                    "id": "fldhTuIOLoMM0ardo",
+                    "name": "Send Message",
+                    "description": "Inserts a placeholder string for future message URL customization."
+                }
+            ],
+            "views": [
+                {
+                    "id": "viwFg7W7ed3zH8i7D",
+                    "name": "Grid view",
+                    "type": "grid"
+                }
+            ]
+        },
+        {
+            "id": "tbliVxZjw5Uzpfxc5",
+            "name": "Infomerics Scraper",
+            "primaryFieldId": "fld4tbhwH1qAnHd6j",
+            "fields": [
+                {
+                    "type": "autoNumber",
+                    "id": "fld4tbhwH1qAnHd6j",
+                    "name": "Name"
+                },
+                {
+                    "type": "date",
+                    "options": {
+                        "dateFormat": {
+                            "name": "local",
+                            "format": "l"
+                        }
+                    },
+                    "id": "fld4XYcSexOnzkguL",
+                    "name": "Start Date"
+                },
+                {
+                    "type": "date",
+                    "options": {
+                        "dateFormat": {
+                            "name": "local",
+                            "format": "l"
+                        }
+                    },
+                    "id": "fldCk6M7ndzHBYo80",
+                    "name": "End Date"
+                },
+                {
+                    "type": "singleSelect",
+                    "options": {
+                        "choices": [
+                            {
+                                "id": "selsCo1i1R0M87G8Q",
+                                "name": "Todo",
+                                "color": "blueLight2"
+                            },
+                            {
+                                "id": "selAeuO6uY1JyPmyK",
+                                "name": "In progress",
+                                "color": "yellowLight2"
+                            },
+                            {
+                                "id": "selg2QAvv4vVS0eza",
+                                "name": "Done",
+                                "color": "greenLight2"
+                            },
+                            {
+                                "id": "selegp5UNq1Mvkrs6",
+                                "name": "Error",
+                                "color": "redLight2"
+                            }
+                        ]
+                    },
+                    "id": "fldNA94yFmnT8zFdx",
+                    "name": "Status"
+                },
+                {
+                    "type": "button",
+                    "id": "fldHZnDGxSUP8gDWL",
+                    "name": "Scrape"
+                }
+            ],
+            "views": [
+                {
+                    "id": "viw51EoaPXP8QrJUC",
+                    "name": "Grid view",
+                    "type": "grid"
+                }
+            ]
+        }
+    ]
+}

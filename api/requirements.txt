@@ -1,0 +1,24 @@
+# FastAPI and web server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+
+# HTTP requests and HTML parsing
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+urllib3>=2.0.0
+
+# Airtable integration
+pyairtable>=2.1.0
+
+# Configuration and environment
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# Rate limiting
+slowapi>=0.1.9
+
+# Logging and utilities
+python-json-logger>=2.0.7
+
