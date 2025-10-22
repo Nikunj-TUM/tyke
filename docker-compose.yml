@@ -1,6 +1,44 @@
 version: '3.8'
 
 services:
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:4.1-management-alpine
+    container_name: infomerics-rabbitmq
+    ports:
+      - "5672:5672"      # AMQP port
+      - "15672:15672"    # Management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - infomerics-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Result Backend
+  redis:
+    image: redis:7-alpine
+    container_name: infomerics-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - infomerics-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: redis-server --appendonly yes
+
+  # FastAPI Application
   api:
     build:
       context: .
@@ -14,8 +52,16 @@ services:
       - API_KEY=${API_KEY}
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - USE_CELERY=true
     env_file:
       - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health', timeout=5)"]
@@ -28,6 +74,181 @@ services:
       - ./api:/app/api:ro
     networks:
       - infomerics-network
+
+  # Celery Worker - Scraping Queue
+  celery-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Use %h (hostname) for unique worker names when scaling
+    # Each container gets a unique hostname from Docker Compose
+    command: sh -c "celery -A api.celery_app worker -Q scraping --loglevel=info --concurrency=$${CELERY_SCRAPER_CONCURRENCY:-5} -n scraper@%h --max-tasks-per-child=1000"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - USE_CELERY=true
+      - CELERY_SCRAPER_CONCURRENCY=${CELERY_SCRAPER_CONCURRENCY:-5}
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./api:/app/api:ro
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_SCRAPER_REPLICAS:-1}
+
+  # Celery Worker - Extraction Queue
+  celery-extractor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Use %h (hostname) for unique worker names when scaling
+    command: sh -c "celery -A api.celery_app worker -Q extraction --loglevel=info --concurrency=$${CELERY_EXTRACTOR_CONCURRENCY:-3} -n extractor@%h --max-tasks-per-child=500"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - USE_CELERY=true
+      - CELERY_EXTRACTOR_CONCURRENCY=${CELERY_EXTRACTOR_CONCURRENCY:-3}
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./api:/app/api:ro
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_EXTRACTOR_REPLICAS:-1}
+
+  # Celery Worker - Upload Queue
+  celery-uploader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Use %h (hostname) for unique worker names when scaling
+    command: sh -c "celery -A api.celery_app worker -Q uploading --loglevel=info --concurrency=$${CELERY_UPLOADER_CONCURRENCY:-10} -n uploader@%h --max-tasks-per-child=2000"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - USE_CELERY=true
+      - CELERY_UPLOADER_CONCURRENCY=${CELERY_UPLOADER_CONCURRENCY:-10}
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./api:/app/api:ro
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_UPLOADER_REPLICAS:-1}
+
+  # Celery Worker - General Queue (Orchestrator)
+  celery-general:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Use %h (hostname) for unique worker names when scaling
+    command: sh -c "celery -A api.celery_app worker -Q celery --loglevel=info --concurrency=$${CELERY_GENERAL_CONCURRENCY:-4} -n general@%h --max-tasks-per-child=1000"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - USE_CELERY=true
+      - CELERY_GENERAL_CONCURRENCY=${CELERY_GENERAL_CONCURRENCY:-4}
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./api:/app/api:ro
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_GENERAL_REPLICAS:-1}
+
+  # Flower Monitoring Dashboard
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: infomerics-flower
+    # Flower auto-discovers workers through RabbitMQ broker
+    # persistent=true stores state, broker_api enables real-time worker discovery
+    command: celery -A api.celery_app --broker=amqp://guest:guest@rabbitmq:5672// flower --port=5555 --broker_api=http://guest:guest@rabbitmq:15672/api/ --persistent=true --auto_refresh=true --max_tasks=10000
+    ports:
+      - "5555:5555"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      celery-scraper:
+        condition: service_started
+      celery-extractor:
+        condition: service_started
+      celery-uploader:
+        condition: service_started
+      celery-general:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    volumes:
+      - ./api:/app/api:ro
+      # Mount for persistent data
+      - flower_data:/data
+    networks:
+      - infomerics-network
+
+volumes:
+  rabbitmq_data:
+  redis_data:
+  flower_data:
 
 networks:
   infomerics-network:

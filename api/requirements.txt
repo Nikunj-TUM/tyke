@@ -22,3 +22,9 @@ slowapi>=0.1.9
 # Logging and utilities
 python-json-logger>=2.0.7
 
+# Celery and message queue
+celery[redis]>=5.3.0
+redis>=5.0.0
+flower>=2.0.0
+kombu>=5.3.0
+

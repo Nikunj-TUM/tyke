@@ -27,6 +27,10 @@ from .jobs import job_manager, Job
 from .airtable_client import AirtableClient
 from .scraper_service import ScraperService
 
+# Import Celery tasks if enabled
+if settings.USE_CELERY:
+    from .tasks import process_scrape_job_orchestrator
+
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL),
@@ -199,8 +203,18 @@ async def scrape_infomerics(
         
         logger.info(f"Created job {job.job_id} for date range {scrape_request.start_date} to {scrape_request.end_date}")
         
-        # Start background task
-        asyncio.create_task(process_scrape_job(job))
+        # Dispatch task based on configuration
+        if settings.USE_CELERY:
+            # Use Celery for distributed task processing
+            logger.info(f"Dispatching Celery task for job {job.job_id}")
+            process_scrape_job_orchestrator.apply_async(
+                args=[job.job_id, scrape_request.start_date, scrape_request.end_date],
+                task_id=job.job_id
+            )
+        else:
+            # Fallback to asyncio background task
+            logger.info(f"Using asyncio for job {job.job_id}")
+            asyncio.create_task(process_scrape_job(job))
         
         return ScrapeResponse(
             job_id=job.job_id,
