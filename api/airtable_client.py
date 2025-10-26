@@ -322,72 +322,17 @@ class AirtableClient:
         
         raise Exception(f"Failed to create rating after {max_retries} retries")
     
-    def check_duplicate_rating(
-        self,
-        company_record_id: str,
-        instrument: str,
-        rating: str,
-        date: str
-    ) -> bool:
-        """
-        Check if a rating already exists to prevent duplicates
-        
-        CRITICAL: This now properly checks by company_record_id to avoid false positives
-        when different companies have the same instrument/rating/date combination.
-        
-        Args:
-            company_record_id: Airtable record ID of the company (NOT the name)
-            instrument: Instrument category
-            rating: Credit rating
-            date: Date string
-            
-        Returns:
-            True if duplicate exists, False otherwise
-        """
-        try:
-            # Parse the date for comparison
-            parsed_date = self._parse_date(date)
-            if not parsed_date:
-                # If we can't parse the date, we can't reliably check for duplicates
-                return False
-            
-            # Build a formula that includes the company link
-            # This ensures we only find duplicates for THIS specific company
-            formula = (
-                f"AND("
-                f"RECORD_ID({{Company}}) = '{company_record_id}', "
-                f"{{Rating}} = '{rating}', "
-                f"{{Instrument}} = '{instrument}', "
-                f"{{Date}} = '{parsed_date}'"
-                f")"
-            )
-            
-            existing_records = self.credit_ratings_table.all(formula=formula, max_records=1)
-            
-            if existing_records:
-                logger.info(f"Duplicate rating found: {instrument} - {rating} on {parsed_date} for company {company_record_id}")
-                return True
-            
-            return False
-            
-        except Exception as e:
-            logger.warning(f"Error checking for duplicate: {str(e)}")
-            # If we can't check, assume it's not a duplicate to avoid losing data
-            return False
-    
     def batch_create_ratings(
         self,
         ratings_data: List[Dict[str, Any]],
         use_batch_api: bool = True
     ) -> tuple[int, int]:
         """
-        Create multiple credit ratings with optimized batch operations
+        Create multiple credit ratings - LEGACY METHOD for backward compatibility
         
-        Improvements:
-        1. Uses corrected duplicate check with company_record_id
-        2. Batches company upserts first to maximize cache hits
-        3. Uses Airtable's batch API to reduce API calls by ~75%
-        4. Continues on error instead of failing entire batch
+        This method is only used when USE_POSTGRES_DEDUPLICATION=False.
+        When PostgreSQL deduplication is enabled, use the new workflow:
+        save_to_postgres_task -> sync_postgres_to_airtable_task
         
         Args:
             ratings_data: List of rating data dictionaries with keys:
@@ -410,15 +355,13 @@ class AirtableClient:
             return (0, 0)
         
         # Step 1: Collect all unique companies and upsert them first
-        # This maximizes cache hits for subsequent ratings
         unique_companies = {r.get('company_name') for r in ratings_data if r.get('company_name')}
         company_id_map = {}
         
-        logger.info(f"Processing {len(unique_companies)} unique companies for {len(ratings_data)} ratings")
+        logger.info(f"Processing {len(unique_companies)} unique companies for {len(ratings_data)} ratings (LEGACY mode)")
         
         for company_name in unique_companies:
             try:
-                # Check if company was already in cache before upsert
                 was_cached = self._get_cached_company_id(company_name) is not None
                 company_id = self.upsert_company(company_name)
                 company_id_map[company_name] = company_id
@@ -427,11 +370,11 @@ class AirtableClient:
                     companies_created += 1
             except Exception as e:
                 logger.error(f"Error upserting company '{company_name}': {e}")
-                # Continue processing other companies
                 continue
         
+        # Step 2: Batch create all ratings without duplicate checking
+        # (In legacy mode, we don't have PostgreSQL deduplication, so duplicates may occur)
         if use_batch_api:
-            # Step 2: Prepare records for batch creation (after deduplication)
             records_to_create = []
             
             for rating_data in ratings_data:
@@ -440,16 +383,6 @@ class AirtableClient:
                     continue
                 
                 company_record_id = company_id_map[company_name]
-                
-                # Check for duplicates using the CORRECTED method with company_record_id
-                if self.check_duplicate_rating(
-                    company_record_id,  # FIX: Now passing record ID, not name
-                    rating_data.get('instrument_category', ''),
-                    rating_data.get('rating', ''),
-                    rating_data.get('date', '')
-                ):
-                    logger.debug(f"Skipping duplicate rating for {company_name}")
-                    continue
                 
                 # Prepare record fields
                 fields = {
@@ -477,30 +410,27 @@ class AirtableClient:
                 
                 records_to_create.append(fields)
             
-            # Step 3: Batch create all ratings (up to 10 at a time per Airtable limit)
+            # Batch create (up to 10 at a time per Airtable limit)
             batch_size = 10
             
             for i in range(0, len(records_to_create), batch_size):
                 batch = records_to_create[i:i + batch_size]
                 try:
-                    # Use Airtable's batch_create method (creates up to 10 records in 1 API call)
                     created_records = self.credit_ratings_table.batch_create(batch)
                     ratings_created += len(created_records)
                     logger.info(f"Batch created {len(created_records)} ratings ({i+1}-{i+len(batch)} of {len(records_to_create)})")
                 except Exception as e:
                     logger.error(f"Error in batch create: {str(e)}")
-                    # Fallback: Try creating records individually for this batch
-                    logger.warning("Falling back to individual creates for this batch")
+                    # Fallback: Try creating records individually
                     for record_fields in batch:
                         try:
                             self.credit_ratings_table.create(record_fields)
                             ratings_created += 1
                         except Exception as create_error:
                             logger.error(f"Failed to create individual rating: {create_error}")
-                            # Continue with next record
                             continue
         else:
-            # Fallback: Create ratings one by one (old method)
+            # Create ratings one by one
             for rating_data in ratings_data:
                 try:
                     company_name = rating_data.get('company_name')
@@ -509,17 +439,6 @@ class AirtableClient:
                     
                     company_record_id = company_id_map[company_name]
                     
-                    # Check for duplicates (CORRECTED)
-                    if self.check_duplicate_rating(
-                        company_record_id,  # FIX: Now passing record ID
-                        rating_data.get('instrument_category', ''),
-                        rating_data.get('rating', ''),
-                        rating_data.get('date', '')
-                    ):
-                        logger.debug(f"Skipping duplicate rating for {company_name}")
-                        continue
-                    
-                    # Create credit rating
                     self.create_credit_rating(
                         company_record_id=company_record_id,
                         instrument=rating_data.get('instrument_category', ''),
@@ -533,13 +452,13 @@ class AirtableClient:
                     
                 except Exception as e:
                     logger.error(f"Error creating rating for {rating_data.get('company_name')}: {str(e)}")
-                    # Continue with next rating instead of failing entire batch
                     continue
         
-        logger.info(f"Batch complete: {companies_created} companies created, {ratings_created} ratings created")
+        logger.info(f"Batch complete (LEGACY): {companies_created} companies created, {ratings_created} ratings created")
         return companies_created, ratings_created
     
     def clear_cache(self) -> None:
-        """Clear the company cache"""
+        """Clear company cache"""
         self._company_cache.clear()
+        logger.info("Cleared company cache")
 

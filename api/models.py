@@ -67,6 +67,10 @@ class JobStatusResponse(BaseModel):
     uploaded_to_airtable: int = 0
     companies_created: int = 0
     ratings_created: int = 0
+    total_scraped: int = 0
+    new_records: int = 0
+    duplicate_records_skipped: int = 0
+    sync_failures: int = 0
     errors: List[JobError] = []
     created_at: str
     updated_at: str

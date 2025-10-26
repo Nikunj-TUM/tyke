@@ -46,6 +46,13 @@ class Settings(BaseSettings):
     REDIS_DB: int = 0
     REDIS_PASSWORD: Optional[str] = None
     
+    # PostgreSQL Configuration
+    POSTGRES_HOST: str = "postgres"
+    POSTGRES_PORT: int = 5432
+    POSTGRES_DB: str = "infomerics"
+    POSTGRES_USER: str = "infomerics_user"
+    POSTGRES_PASSWORD: str = "infomerics_password"
+    
     # Celery Configuration
     CELERY_TASK_TRACK_STARTED: bool = True
     CELERY_TASK_TIME_LIMIT: int = 3600  # 1 hour max per task
@@ -60,6 +67,12 @@ class Settings(BaseSettings):
     
     # Feature Flags
     USE_CELERY: bool = True
+    USE_POSTGRES_DEDUPLICATION: bool = True
+    
+    @property
+    def postgres_url(self) -> str:
+        """Construct PostgreSQL connection URL"""
+        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     @property
     def celery_broker_url(self) -> str:

@@ -1,4 +1,26 @@
 services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: infomerics-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    networks:
+      - infomerics-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   # RabbitMQ Message Broker
   rabbitmq:
     image: rabbitmq:4.1-management-alpine
@@ -53,10 +75,13 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
       - USE_CELERY=true
     env_file:
       - .env
     depends_on:
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
@@ -89,11 +114,14 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
       - USE_CELERY=true
       - CELERY_SCRAPER_CONCURRENCY=${CELERY_SCRAPER_CONCURRENCY:-5}
     env_file:
       - .env
     depends_on:
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
@@ -120,11 +148,14 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
       - USE_CELERY=true
       - CELERY_EXTRACTOR_CONCURRENCY=${CELERY_EXTRACTOR_CONCURRENCY:-3}
     env_file:
       - .env
     depends_on:
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
@@ -151,11 +182,14 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
       - USE_CELERY=true
       - CELERY_UPLOADER_CONCURRENCY=${CELERY_UPLOADER_CONCURRENCY:-10}
     env_file:
       - .env
     depends_on:
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
@@ -182,11 +216,14 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
       - USE_CELERY=true
       - CELERY_GENERAL_CONCURRENCY=${CELERY_GENERAL_CONCURRENCY:-4}
     env_file:
       - .env
     depends_on:
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
@@ -213,11 +250,14 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
       - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
       - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
     env_file:
       - .env
     depends_on:
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
@@ -245,6 +285,7 @@ services:
       - infomerics-network
 
 volumes:
+  postgres_data:
   rabbitmq_data:
   redis_data:
   flower_data:

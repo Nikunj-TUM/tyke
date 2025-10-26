@@ -25,6 +25,10 @@ class Job:
         self.uploaded_to_airtable = 0
         self.companies_created = 0
         self.ratings_created = 0
+        self.total_scraped = 0
+        self.new_records = 0
+        self.duplicate_records_skipped = 0
+        self.sync_failures = 0
         self.errors: List[JobError] = []
         self.created_at = datetime.now().isoformat()
         self.updated_at = datetime.now().isoformat()
@@ -63,6 +67,10 @@ class Job:
             "uploaded_to_airtable": self.uploaded_to_airtable,
             "companies_created": self.companies_created,
             "ratings_created": self.ratings_created,
+            "total_scraped": self.total_scraped,
+            "new_records": self.new_records,
+            "duplicate_records_skipped": self.duplicate_records_skipped,
+            "sync_failures": self.sync_failures,
             "errors": [error.model_dump() for error in self.errors],
             "created_at": self.created_at,
             "updated_at": self.updated_at,
@@ -82,6 +90,10 @@ class Job:
         job.uploaded_to_airtable = data.get("uploaded_to_airtable", 0)
         job.companies_created = data.get("companies_created", 0)
         job.ratings_created = data.get("ratings_created", 0)
+        job.total_scraped = data.get("total_scraped", 0)
+        job.new_records = data.get("new_records", 0)
+        job.duplicate_records_skipped = data.get("duplicate_records_skipped", 0)
+        job.sync_failures = data.get("sync_failures", 0)
         job.errors = [JobError(**err) for err in data.get("errors", [])]
         job.created_at = data["created_at"]
         job.updated_at = data["updated_at"]

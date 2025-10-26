@@ -16,6 +16,17 @@ from .config import settings
 
 logger = logging.getLogger(__name__)
 
+# Import database functions if PostgreSQL is enabled
+if settings.USE_POSTGRES_DEDUPLICATION:
+    from .database import (
+        batch_insert_ratings,
+        get_unsynced_ratings,
+        get_company_airtable_id,
+        update_company_airtable_id,
+        update_ratings_airtable_ids,
+        mark_ratings_sync_failed
+    )
+
 
 def split_date_range(start_date: str, end_date: str, chunk_days: int = 30) -> List[Tuple[str, str]]:
     """
@@ -123,6 +134,365 @@ def extract_instruments_task(self, scrape_result: Dict[str, Any]) -> List[Dict[s
         
     except Exception as e:
         logger.error(f"Task {self.request.id}: Error in extract_instruments_task: {str(e)}")
+        raise
+
+
+@celery_app.task(bind=True, name='api.tasks.save_to_postgres_task')
+def save_to_postgres_task(
+    self,
+    instruments_data: List[Dict[str, Any]],
+    job_id: str
+) -> Dict[str, int]:
+    """
+    Save scraped instruments to PostgreSQL with automatic deduplication
+    
+    Uses INSERT ... ON CONFLICT DO NOTHING for atomic duplicate detection.
+    This is the core of the new deduplication strategy.
+    
+    Args:
+        instruments_data: List of instrument dictionaries from extraction
+        job_id: Job ID for tracking
+        
+    Returns:
+        Dictionary with new_records and duplicate_records counts
+    """
+    try:
+        logger.info(f"Task {self.request.id}: Saving {len(instruments_data)} instruments to PostgreSQL")
+        
+        if not instruments_data:
+            logger.warning(f"Task {self.request.id}: No instruments to save")
+            return {'new_records': 0, 'duplicate_records': 0}
+        
+        # Batch insert with deduplication
+        new_records, duplicate_records = batch_insert_ratings(instruments_data, job_id)
+        
+        logger.info(f"Task {self.request.id}: PostgreSQL save complete")
+        logger.info(f"  - New records: {new_records}")
+        logger.info(f"  - Duplicates skipped: {duplicate_records}")
+        
+        return {
+            'new_records': new_records,
+            'duplicate_records': duplicate_records
+        }
+        
+    except Exception as e:
+        logger.error(f"Task {self.request.id}: Error in save_to_postgres_task: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise self.retry(exc=e, countdown=30, max_retries=3)
+
+
+@celery_app.task(bind=True, name='api.tasks.sync_postgres_to_airtable_task')
+def sync_postgres_to_airtable_task(
+    self,
+    save_result: Dict[str, int],
+    job_id: str
+) -> Dict[str, int]:
+    """
+    Sync new records from PostgreSQL to Airtable
+    
+    This task:
+    1. Queries PostgreSQL for unsynced ratings
+    2. Groups by company and resolves/creates Airtable company records
+    3. Batch uploads ratings to Airtable
+    4. Updates PostgreSQL with Airtable record IDs
+    
+    Args:
+        save_result: Result from save_to_postgres_task (for chaining)
+        job_id: Job ID
+        
+    Returns:
+        Dictionary with companies_created and ratings_created counts
+    """
+    try:
+        logger.info(f"Task {self.request.id}: Starting Airtable sync for job {job_id}")
+        
+        # Get unsynced ratings from PostgreSQL
+        unsynced_ratings = get_unsynced_ratings(job_id)
+        
+        if not unsynced_ratings:
+            logger.info(f"Task {self.request.id}: No new records to sync")
+            return {'companies_created': 0, 'ratings_created': 0}
+        
+        logger.info(f"Task {self.request.id}: Syncing {len(unsynced_ratings)} ratings to Airtable")
+        
+        airtable_client = AirtableClient()
+        
+        # Step 1: Resolve company Airtable IDs
+        company_airtable_map = {}
+        unique_companies = set(r['company_name'] for r in unsynced_ratings)
+        companies_created = 0
+        
+        for company_name in unique_companies:
+            # Check PostgreSQL first
+            airtable_id = get_company_airtable_id(company_name)
+            
+            if airtable_id:
+                company_airtable_map[company_name] = airtable_id
+                logger.debug(f"  Company '{company_name}' already has Airtable ID: {airtable_id}")
+            else:
+                # Create/get from Airtable
+                try:
+                    airtable_id = airtable_client.upsert_company(company_name)
+                    company_airtable_map[company_name] = airtable_id
+                    
+                    # Save to PostgreSQL
+                    update_company_airtable_id(company_name, airtable_id)
+                    companies_created += 1
+                    logger.info(f"  Created/found company in Airtable: {company_name} ({airtable_id})")
+                except Exception as e:
+                    logger.error(f"  Failed to upsert company '{company_name}': {e}")
+                    # Continue with other companies
+                    continue
+        
+        # Step 2: Batch upload ratings to Airtable
+        batch_size = 10
+        ratings_created = 0
+        failed_rating_ids = []
+        rating_airtable_mapping = []  # (rating_id, airtable_record_id) tuples
+        
+        for i in range(0, len(unsynced_ratings), batch_size):
+            batch = unsynced_ratings[i:i + batch_size]
+            records_to_create = []
+            batch_rating_ids = []
+            
+            for rating in batch:
+                company_name = rating['company_name']
+                
+                # Skip if company couldn't be resolved
+                if company_name not in company_airtable_map:
+                    failed_rating_ids.append(rating['id'])
+                    continue
+                
+                company_airtable_id = company_airtable_map[company_name]
+                
+                # Prepare Airtable record
+                fields = {
+                    "Company": [company_airtable_id],
+                    "Instrument": rating['instrument'],
+                    "Rating": rating['rating'],
+                }
+                
+                if rating.get('outlook'):
+                    fields["Outlook"] = airtable_client._map_outlook(rating['outlook'])
+                if rating.get('instrument_amount'):
+                    fields["Instrument Amount"] = rating['instrument_amount']
+                if rating.get('date'):
+                    fields["Date"] = rating['date'].strftime('%Y-%m-%d')
+                if rating.get('source_url'):
+                    fields["Source URL"] = rating['source_url']
+                
+                records_to_create.append(fields)
+                batch_rating_ids.append(rating['id'])
+            
+            if not records_to_create:
+                continue
+            
+            # Batch create in Airtable with retry logic
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    created_records = airtable_client.credit_ratings_table.batch_create(records_to_create)
+                    ratings_created += len(created_records)
+                    
+                    # Map rating IDs to Airtable record IDs
+                    for j, airtable_record in enumerate(created_records):
+                        if j < len(batch_rating_ids):
+                            rating_airtable_mapping.append((
+                                batch_rating_ids[j],
+                                airtable_record['id']
+                            ))
+                    
+                    logger.info(f"Task {self.request.id}: Synced batch {i//batch_size + 1}: {len(created_records)} ratings")
+                    break  # Success, exit retry loop
+                    
+                except Exception as e:
+                    error_msg = str(e).lower()
+                    is_rate_limit = '429' in error_msg or 'rate limit' in error_msg
+                    
+                    if is_rate_limit and attempt < max_retries - 1:
+                        wait_time = 2 ** attempt
+                        logger.warning(f"  Rate limit hit, retrying in {wait_time}s (attempt {attempt + 1}/{max_retries})")
+                        time.sleep(wait_time)
+                        continue
+                    else:
+                        logger.error(f"  Failed to sync batch after {max_retries} attempts: {e}")
+                        failed_rating_ids.extend(batch_rating_ids)
+                        break
+        
+        # Step 3: Update PostgreSQL with Airtable record IDs
+        if rating_airtable_mapping:
+            updated_count = update_ratings_airtable_ids(rating_airtable_mapping)
+            logger.info(f"Task {self.request.id}: Updated {updated_count} ratings with Airtable IDs")
+        
+        # Step 4: Mark failed ratings
+        if failed_rating_ids:
+            mark_ratings_sync_failed(failed_rating_ids, "Failed to sync to Airtable")
+            logger.warning(f"Task {self.request.id}: {len(failed_rating_ids)} ratings failed to sync")
+        
+        logger.info(f"Task {self.request.id}: Airtable sync complete")
+        logger.info(f"  - Companies created: {companies_created}")
+        logger.info(f"  - Ratings synced: {ratings_created}")
+        logger.info(f"  - Sync failures: {len(failed_rating_ids)}")
+        
+        return {
+            'companies_created': companies_created,
+            'ratings_created': ratings_created,
+            'sync_failures': len(failed_rating_ids)
+        }
+        
+    except Exception as e:
+        logger.error(f"Task {self.request.id}: Error in sync_postgres_to_airtable_task: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise self.retry(exc=e, countdown=60, max_retries=3)
+
+
+@celery_app.task(bind=True, name='api.tasks.finalize_postgres_job_task')
+def finalize_postgres_job_task(
+    self,
+    sync_result: Dict[str, int],
+    job_id: str
+) -> Dict[str, Any]:
+    """
+    Finalize job by updating job status with PostgreSQL metrics
+    
+    Args:
+        sync_result: Result from sync_postgres_to_airtable_task
+        job_id: Job ID
+        
+    Returns:
+        Final job statistics
+    """
+    try:
+        logger.info(f"Task {self.request.id}: Finalizing job {job_id}")
+        
+        # Update job with final statistics
+        job_manager.update_job(
+            job_id,
+            status=JobStatus.COMPLETED,
+            progress=100,
+            companies_created=sync_result.get('companies_created', 0),
+            ratings_created=sync_result.get('ratings_created', 0),
+            uploaded_to_airtable=sync_result.get('ratings_created', 0),
+            sync_failures=sync_result.get('sync_failures', 0)
+        )
+        
+        logger.info(f"Task {self.request.id}: Job {job_id} finalized successfully")
+        
+        return {
+            'status': 'completed',
+            'job_id': job_id,
+            **sync_result
+        }
+        
+    except Exception as e:
+        logger.error(f"Task {self.request.id}: Error finalizing job: {e}")
+        job_manager.update_job(job_id, status=JobStatus.FAILED)
+        raise
+
+
+@celery_app.task(bind=True, name='api.tasks.process_scrape_results_with_postgres_task')
+def process_scrape_results_with_postgres_task(
+    self,
+    scrape_results: List[Dict[str, Any]],
+    job_id: str,
+    is_chunked: bool = False
+) -> Dict[str, int]:
+    """
+    Process scrape results using PostgreSQL deduplication workflow
+    
+    This combines extraction, PostgreSQL save, and Airtable sync for chunked scraping
+    
+    Args:
+        scrape_results: List of scrape results from parallel scraping
+        job_id: Job ID for tracking
+        is_chunked: Whether this came from chunked processing
+        
+    Returns:
+        Processing results
+    """
+    try:
+        logger.info(f"Task {self.request.id}: Processing {len(scrape_results)} scrape results with PostgreSQL")
+        
+        # Combine all HTML from chunks and extract
+        all_instruments = []
+        
+        for i, result in enumerate(scrape_results):
+            if result and result.get('body'):
+                html_content = result['body']
+                extractor = HTMLCreditRatingExtractor(html_content)
+                extracted_data = extractor.extract_company_data()
+                
+                # Convert to dictionaries
+                for item in extracted_data:
+                    all_instruments.append({
+                        'company_name': item.company_name,
+                        'instrument_category': item.instrument_category,
+                        'rating': item.rating,
+                        'outlook': item.outlook,
+                        'instrument_amount': item.instrument_amount,
+                        'date': item.date,
+                        'url': item.url
+                    })
+                
+                logger.info(f"Task {self.request.id}: Chunk {i+1} extracted {len(extracted_data)} instruments")
+        
+        logger.info(f"Task {self.request.id}: Total extracted: {len(all_instruments)} instruments")
+        
+        if not all_instruments:
+            job_manager.update_job(
+                job_id,
+                status=JobStatus.COMPLETED,
+                progress=100,
+                total_extracted=0
+            )
+            return {'status': 'completed', 'total_extracted': 0}
+        
+        # Update progress
+        job_manager.update_job(job_id, total_extracted=len(all_instruments), progress=50)
+        
+        # Save to PostgreSQL
+        new_records, duplicate_records = batch_insert_ratings(all_instruments, job_id)
+        
+        job_manager.update_job(
+            job_id,
+            total_scraped=new_records + duplicate_records,
+            new_records=new_records,
+            duplicate_records_skipped=duplicate_records,
+            progress=70
+        )
+        
+        # Sync to Airtable
+        sync_result = sync_postgres_to_airtable_task(
+            {'new_records': new_records, 'duplicate_records': duplicate_records},
+            job_id
+        )
+        
+        # Finalize job
+        job_manager.update_job(
+            job_id,
+            status=JobStatus.COMPLETED,
+            progress=100,
+            companies_created=sync_result.get('companies_created', 0),
+            ratings_created=sync_result.get('ratings_created', 0),
+            uploaded_to_airtable=sync_result.get('ratings_created', 0),
+            sync_failures=sync_result.get('sync_failures', 0)
+        )
+        
+        logger.info(f"Task {self.request.id}: Job {job_id} completed successfully")
+        
+        return {
+            'status': 'completed',
+            'total_extracted': len(all_instruments),
+            'new_records': new_records,
+            'duplicate_records': duplicate_records,
+            **sync_result
+        }
+        
+    except Exception as e:
+        logger.error(f"Task {self.request.id}: Error processing scrape results: {str(e)}")
+        job_manager.update_job(job_id, status=JobStatus.FAILED)
         raise
 
 
@@ -341,6 +711,9 @@ def process_scrape_job_orchestrator(self, job_id: str, start_date: str, end_date
         # Build the workflow using Celery canvas primitives
         # This avoids blocking .get() calls within tasks
         
+        # Choose workflow based on PostgreSQL deduplication flag
+        use_postgres = settings.USE_POSTGRES_DEDUPLICATION
+        
         if date_range_days > settings.MAX_DATE_CHUNK_DAYS:
             logger.info(f"Task {self.request.id}: Splitting date range into chunks")
             chunks = split_date_range(start_date, end_date, settings.MAX_DATE_CHUNK_DAYS)
@@ -351,20 +724,38 @@ def process_scrape_job_orchestrator(self, job_id: str, start_date: str, end_date
                 for chunk_start, chunk_end in chunks
             ])
             
-            # Chain: scrape (parallel) -> process results -> extract -> upload
-            workflow = chain(
-                scrape_tasks,
-                process_scrape_results_task.s(job_id, is_chunked=True)
-            )
+            # Chain: scrape (parallel) -> process results -> extract -> save/upload
+            if use_postgres:
+                workflow = chain(
+                    scrape_tasks,
+                    process_scrape_results_with_postgres_task.s(job_id, is_chunked=True)
+                )
+            else:
+                workflow = chain(
+                    scrape_tasks,
+                    process_scrape_results_task.s(job_id, is_chunked=True)
+                )
         else:
             logger.info(f"Task {self.request.id}: Processing single date range")
             
-            # Chain: scrape -> extract -> batch upload -> finalize
-            workflow = chain(
-                scrape_date_range_task.s(start_date, end_date),
-                extract_instruments_task.s(),
-                batch_and_upload_task.s(job_id)
-            )
+            if use_postgres:
+                # NEW PostgreSQL workflow: scrape -> extract -> save to postgres -> sync to airtable
+                logger.info(f"Task {self.request.id}: Using PostgreSQL deduplication")
+                workflow = chain(
+                    scrape_date_range_task.s(start_date, end_date),
+                    extract_instruments_task.s(),
+                    save_to_postgres_task.s(job_id),
+                    sync_postgres_to_airtable_task.s(job_id),
+                    finalize_postgres_job_task.s(job_id)
+                )
+            else:
+                # OLD workflow: scrape -> extract -> batch upload to airtable
+                logger.info(f"Task {self.request.id}: Using legacy Airtable deduplication")
+                workflow = chain(
+                    scrape_date_range_task.s(start_date, end_date),
+                    extract_instruments_task.s(),
+                    batch_and_upload_task.s(job_id)
+                )
         
         # Execute the workflow asynchronously
         workflow.apply_async()

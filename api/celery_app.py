@@ -84,17 +84,29 @@ celery_app.conf.task_queues = (
 
 # Task routing rules
 celery_app.conf.task_routes = {
+    # Scraping tasks
     'api.tasks.scrape_date_range_task': {'queue': 'scraping'},
+    
+    # Extraction tasks
     'api.tasks.extract_instruments_task': {'queue': 'extraction'},
+    
+    # Upload/sync tasks - PostgreSQL and Airtable operations
+    'api.tasks.save_to_postgres_task': {'queue': 'uploading'},
+    'api.tasks.sync_postgres_to_airtable_task': {'queue': 'uploading'},
     'api.tasks.upload_batch_to_airtable_task': {'queue': 'uploading'},
+    
+    # Orchestrator and coordination tasks
     'api.tasks.batch_and_upload_task': {'queue': 'celery'},
     'api.tasks.aggregate_upload_results': {'queue': 'celery'},
     'api.tasks.process_scrape_results_task': {'queue': 'celery'},
+    'api.tasks.process_scrape_results_with_postgres_task': {'queue': 'celery'},
+    'api.tasks.finalize_postgres_job_task': {'queue': 'celery'},
     'api.tasks.process_scrape_job_orchestrator': {'queue': 'celery'},
 }
 
 # Task annotations for rate limiting and retries
 celery_app.conf.task_annotations = {
+    # Airtable upload tasks - rate limited to avoid hitting API limits
     'api.tasks.upload_batch_to_airtable_task': {
         'rate_limit': '5/s',  # Max 5 concurrent Airtable uploads per second
         'max_retries': 3,
@@ -102,6 +114,20 @@ celery_app.conf.task_annotations = {
         'retry_backoff_max': 600,
         'retry_jitter': True,
     },
+    'api.tasks.sync_postgres_to_airtable_task': {
+        'rate_limit': '5/s',  # Max 5 concurrent Airtable syncs per second
+        'max_retries': 3,
+        'retry_backoff': True,
+        'retry_backoff_max': 600,
+        'retry_jitter': True,
+    },
+    # PostgreSQL save tasks - no rate limit needed (local database)
+    'api.tasks.save_to_postgres_task': {
+        'max_retries': 3,
+        'retry_backoff': True,
+        'retry_backoff_max': 300,
+    },
+    # Scraping tasks
     'api.tasks.scrape_date_range_task': {
         'max_retries': 3,
         'retry_backoff': True,

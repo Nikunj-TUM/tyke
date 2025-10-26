@@ -47,7 +47,27 @@ async def lifespan(app: FastAPI):
     """Lifespan context manager for startup/shutdown events"""
     logger.info("Starting Infomerics Scraper API")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
+    
+    # Initialize PostgreSQL database if enabled
+    if settings.USE_POSTGRES_DEDUPLICATION:
+        try:
+            from .database import init_database, close_connection_pool
+            logger.info("Initializing PostgreSQL database...")
+            init_database()
+        except Exception as e:
+            logger.error(f"Failed to initialize PostgreSQL: {e}")
+            logger.warning("Continuing without PostgreSQL deduplication")
+    
     yield
+    
+    # Cleanup on shutdown
+    if settings.USE_POSTGRES_DEDUPLICATION:
+        try:
+            from .database import close_connection_pool
+            close_connection_pool()
+        except Exception as e:
+            logger.error(f"Error closing PostgreSQL connection pool: {e}")
+    
     logger.info("Shutting down Infomerics Scraper API")
 
 
