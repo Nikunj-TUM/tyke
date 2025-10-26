@@ -6,7 +6,7 @@ import asyncio
 import traceback
 from datetime import datetime
 from contextlib import asynccontextmanager
-from typing import Dict
+from typing import Dict, Any
 
 from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -281,6 +281,68 @@ async def list_jobs(
     return {
         "jobs": [job.to_dict() for job in jobs]
     }
+
+
+@app.get("/infomerics/stats", response_model=Dict[str, Any])
+async def get_statistics(
+    api_key: str = Depends(verify_api_key)
+):
+    """
+    Get statistics about the system including cache and database counts
+    
+    Args:
+        api_key: API key for authentication
+        
+    Returns:
+        Dictionary with system statistics
+    """
+    try:
+        airtable_client = AirtableClient()
+        
+        # Get cache stats
+        cache_stats = airtable_client.get_cache_stats()
+        
+        # Get Airtable counts
+        try:
+            companies_in_airtable = len(airtable_client.companies_table.all())
+            ratings_in_airtable = len(airtable_client.credit_ratings_table.all())
+        except Exception as e:
+            logger.error(f"Error getting Airtable counts: {e}")
+            companies_in_airtable = -1
+            ratings_in_airtable = -1
+        
+        # Get job statistics (cumulative across all jobs)
+        jobs = job_manager.list_jobs(limit=1000)  # Get more jobs for accurate stats
+        total_companies_created_in_jobs = sum(job.companies_created for job in jobs)
+        total_ratings_created_in_jobs = sum(job.ratings_created for job in jobs)
+        completed_jobs = sum(1 for job in jobs if job.status == JobStatus.COMPLETED)
+        failed_jobs = sum(1 for job in jobs if job.status == JobStatus.FAILED)
+        
+        return {
+            "cache": cache_stats,
+            "airtable": {
+                "companies_count": companies_in_airtable,
+                "ratings_count": ratings_in_airtable
+            },
+            "jobs": {
+                "total_jobs": len(jobs),
+                "completed_jobs": completed_jobs,
+                "failed_jobs": failed_jobs,
+                "cumulative_companies_created": total_companies_created_in_jobs,
+                "cumulative_ratings_created": total_ratings_created_in_jobs,
+                "note": "Job counts are cumulative across all jobs and may include duplicates"
+            },
+            "explanation": {
+                "cache_vs_airtable": "Redis cache may have fewer entries due to TTL expiration (1 hour)",
+                "jobs_vs_airtable": "Job counts are cumulative and don't reflect actual unique entities in Airtable"
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error getting statistics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get statistics: {str(e)}"
+        )
 
 
 if __name__ == "__main__":

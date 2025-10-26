@@ -30,7 +30,6 @@ celery_app.conf.update(
     task_track_started=settings.CELERY_TASK_TRACK_STARTED,
     task_time_limit=settings.CELERY_TASK_TIME_LIMIT,
     task_soft_time_limit=settings.CELERY_TASK_SOFT_TIME_LIMIT,
-    worker_prefetch_multiplier=settings.CELERY_WORKER_PREFETCH_MULTIPLIER,
     
     # Result backend settings
     result_expires=settings.CELERY_RESULT_EXPIRES,
@@ -40,6 +39,12 @@ celery_app.conf.update(
     broker_connection_retry=True,
     broker_connection_max_retries=10,
     
+    # RabbitMQ 4.x compatibility - disable deprecated features
+    # Fix for: global_qos deprecated warning - use per-consumer QoS instead
+    worker_disable_rate_limits=False,
+    task_acks_late=True,
+    worker_prefetch_multiplier=1,  # Use 1 to avoid global QoS
+    
     # Worker settings
     worker_log_format='[%(asctime)s: %(levelname)s/%(processName)s] %(message)s',
     worker_task_log_format='[%(asctime)s: %(levelname)s/%(processName)s][%(task_name)s(%(task_id)s)] %(message)s',
@@ -48,11 +53,33 @@ celery_app.conf.update(
 )
 
 # Define task queues with routing
+# RabbitMQ 4.x: Use durable queues instead of transient queues
+# This fixes the "transient_nonexcl_queues" deprecated warning
 celery_app.conf.task_queues = (
-    Queue('celery', Exchange('celery'), routing_key='celery'),
-    Queue('scraping', Exchange('scraping'), routing_key='scraping'),
-    Queue('extraction', Exchange('extraction'), routing_key='extraction'),
-    Queue('uploading', Exchange('uploading'), routing_key='uploading'),
+    Queue('celery', 
+          Exchange('celery', type='direct', durable=True), 
+          routing_key='celery',
+          durable=True,  # Make queue durable (persistent)
+          auto_delete=False,  # Don't auto-delete
+          exclusive=False),  # Not exclusive
+    Queue('scraping', 
+          Exchange('scraping', type='direct', durable=True), 
+          routing_key='scraping',
+          durable=True,
+          auto_delete=False,
+          exclusive=False),
+    Queue('extraction', 
+          Exchange('extraction', type='direct', durable=True), 
+          routing_key='extraction',
+          durable=True,
+          auto_delete=False,
+          exclusive=False),
+    Queue('uploading', 
+          Exchange('uploading', type='direct', durable=True), 
+          routing_key='uploading',
+          durable=True,
+          auto_delete=False,
+          exclusive=False),
 )
 
 # Task routing rules
