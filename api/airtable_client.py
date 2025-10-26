@@ -4,7 +4,7 @@ Airtable API integration for Companies and Credit Ratings tables
 import logging
 import time
 import redis
-from typing import Optional, Dict, Any, List, Set
+from typing import Optional, Dict, Any, List
 from datetime import datetime
 from pyairtable import Api
 from .config import settings
@@ -327,23 +327,19 @@ class AirtableClient:
         company_record_id: str,
         instrument: str,
         rating: str,
-        date: str,
-        seen_in_batch: Optional[Set[tuple]] = None
+        date: str
     ) -> bool:
         """
         Check if a rating already exists to prevent duplicates
         
         CRITICAL: This now properly checks by company_record_id to avoid false positives
         when different companies have the same instrument/rating/date combination.
-        Also checks against a local set for duplicates within the current batch.
         
         Args:
             company_record_id: Airtable record ID of the company (NOT the name)
             instrument: Instrument category
             rating: Credit rating
             date: Date string
-            seen_in_batch: Optional set of tuples (company_id, instrument, rating, date) 
-                          to track duplicates within the current batch
             
         Returns:
             True if duplicate exists, False otherwise
@@ -355,23 +351,13 @@ class AirtableClient:
                 # If we can't parse the date, we can't reliably check for duplicates
                 return False
             
-            # Create a unique key for this rating
-            rating_key = (company_record_id, instrument, rating, parsed_date)
-            
-            # FIRST check: query Airtable for existing records
-            # This catches duplicates from previous jobs/requests
-            # Escape single quotes in values to prevent formula injection
-            safe_rating = rating.replace("'", "\\'")
-            safe_instrument = instrument.replace("'", "\\'")
-            
             # Build a formula that includes the company link
             # This ensures we only find duplicates for THIS specific company
-            # Note: Company is a linked record field (array), so we use FIND to check if the ID is in the array
             formula = (
                 f"AND("
-                f"FIND('{company_record_id}', ARRAYJOIN({{Company}})), "
-                f"{{Rating}} = '{safe_rating}', "
-                f"{{Instrument}} = '{safe_instrument}', "
+                f"RECORD_ID({{Company}}) = '{company_record_id}', "
+                f"{{Rating}} = '{rating}', "
+                f"{{Instrument}} = '{instrument}', "
                 f"{{Date}} = '{parsed_date}'"
                 f")"
             )
@@ -379,19 +365,9 @@ class AirtableClient:
             existing_records = self.credit_ratings_table.all(formula=formula, max_records=1)
             
             if existing_records:
-                logger.info(f"Duplicate rating found in Airtable: {instrument} - {rating} on {parsed_date} for company {company_record_id}")
+                logger.info(f"Duplicate rating found: {instrument} - {rating} on {parsed_date} for company {company_record_id}")
                 return True
             
-            # SECOND check: is this a duplicate within the current batch?
-            # This prevents creating duplicates within the same batch before they're written to Airtable
-            if seen_in_batch is not None:
-                if rating_key in seen_in_batch:
-                    logger.info(f"Duplicate rating found in current batch: {instrument} - {rating} on {parsed_date} for company {company_record_id}")
-                    return True
-                # Not a duplicate - add to seen set for future checks in this batch
-                seen_in_batch.add(rating_key)
-            
-            # Not a duplicate - safe to create
             return False
             
         except Exception as e:
@@ -412,7 +388,6 @@ class AirtableClient:
         2. Batches company upserts first to maximize cache hits
         3. Uses Airtable's batch API to reduce API calls by ~75%
         4. Continues on error instead of failing entire batch
-        5. Tracks seen ratings within batch to prevent duplicate creation
         
         Args:
             ratings_data: List of rating data dictionaries with keys:
@@ -438,34 +413,18 @@ class AirtableClient:
         # This maximizes cache hits for subsequent ratings
         unique_companies = {r.get('company_name') for r in ratings_data if r.get('company_name')}
         company_id_map = {}
-        companies_already_existed = set()  # Track which companies already existed in Airtable
         
         logger.info(f"Processing {len(unique_companies)} unique companies for {len(ratings_data)} ratings")
         
         for company_name in unique_companies:
             try:
-                # Check if company exists in Airtable (not just cache)
-                formula = f"{{Company Name}} = '{company_name}'"
-                existing_records = self.companies_table.all(formula=formula)
-                
-                if existing_records:
-                    # Company already exists
-                    company_id = existing_records[0]['id']
-                    companies_already_existed.add(company_name)
-                    self._set_cached_company_id(company_name, company_id)
-                    logger.info(f"Found existing company: {company_name} (ID: {company_id})")
-                else:
-                    # Create new company
-                    new_record = self.companies_table.create({
-                        "Company Name": company_name
-                    })
-                    company_id = new_record['id']
-                    self._set_cached_company_id(company_name, company_id)
-                    companies_created += 1
-                    logger.info(f"Created new company: {company_name} (ID: {company_id})")
-                
+                # Check if company was already in cache before upsert
+                was_cached = self._get_cached_company_id(company_name) is not None
+                company_id = self.upsert_company(company_name)
                 company_id_map[company_name] = company_id
                 
+                if not was_cached:
+                    companies_created += 1
             except Exception as e:
                 logger.error(f"Error upserting company '{company_name}': {e}")
                 # Continue processing other companies
@@ -474,7 +433,6 @@ class AirtableClient:
         if use_batch_api:
             # Step 2: Prepare records for batch creation (after deduplication)
             records_to_create = []
-            seen_in_batch = set()  # Track ratings we've seen in this batch
             
             for rating_data in ratings_data:
                 company_name = rating_data.get('company_name')
@@ -484,15 +442,13 @@ class AirtableClient:
                 company_record_id = company_id_map[company_name]
                 
                 # Check for duplicates using the CORRECTED method with company_record_id
-                # AND track within-batch duplicates using seen_in_batch
                 if self.check_duplicate_rating(
                     company_record_id,  # FIX: Now passing record ID, not name
                     rating_data.get('instrument_category', ''),
                     rating_data.get('rating', ''),
-                    rating_data.get('date', ''),
-                    seen_in_batch=seen_in_batch  # NEW: Track within-batch duplicates
+                    rating_data.get('date', '')
                 ):
-                    logger.info(f"Skipping duplicate rating for {company_name}: {rating_data.get('instrument_category')} - {rating_data.get('rating')}")
+                    logger.debug(f"Skipping duplicate rating for {company_name}")
                     continue
                 
                 # Prepare record fields
@@ -545,8 +501,6 @@ class AirtableClient:
                             continue
         else:
             # Fallback: Create ratings one by one (old method)
-            seen_in_batch = set()  # Track ratings we've seen in this batch
-            
             for rating_data in ratings_data:
                 try:
                     company_name = rating_data.get('company_name')
@@ -555,15 +509,14 @@ class AirtableClient:
                     
                     company_record_id = company_id_map[company_name]
                     
-                    # Check for duplicates (CORRECTED + tracking within-batch duplicates)
+                    # Check for duplicates (CORRECTED)
                     if self.check_duplicate_rating(
                         company_record_id,  # FIX: Now passing record ID
                         rating_data.get('instrument_category', ''),
                         rating_data.get('rating', ''),
-                        rating_data.get('date', ''),
-                        seen_in_batch=seen_in_batch  # NEW: Track within-batch duplicates
+                        rating_data.get('date', '')
                     ):
-                        logger.info(f"Skipping duplicate rating for {company_name}: {rating_data.get('instrument_category')} - {rating_data.get('rating')}")
+                        logger.debug(f"Skipping duplicate rating for {company_name}")
                         continue
                     
                     # Create credit rating
@@ -589,31 +542,4 @@ class AirtableClient:
     def clear_cache(self) -> None:
         """Clear the company cache"""
         self._company_cache.clear()
-    
-    def get_cache_stats(self) -> Dict[str, Any]:
-        """
-        Get statistics about the company cache
-        
-        Returns:
-            Dictionary with cache statistics including:
-            - local_cache_size: Number of companies in local cache
-            - redis_cache_size: Number of companies in Redis cache (if enabled)
-            - redis_enabled: Whether Redis caching is enabled
-        """
-        stats = {
-            "local_cache_size": len(self._company_cache),
-            "redis_enabled": self.use_redis_cache,
-            "redis_cache_size": 0
-        }
-        
-        if self.use_redis_cache and self.redis_client:
-            try:
-                # Count keys matching the company cache pattern
-                cache_keys = self.redis_client.keys("company:*")
-                stats["redis_cache_size"] = len(cache_keys) if cache_keys else 0
-            except Exception as e:
-                logger.warning(f"Error getting Redis cache stats: {e}")
-                stats["redis_cache_size"] = -1  # Indicate error
-        
-        return stats
 
