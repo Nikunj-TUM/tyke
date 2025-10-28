@@ -62,3 +62,4 @@ api/.env
 .plan.md
 
 .md/
+test_scripts/*

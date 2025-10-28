@@ -30,6 +30,12 @@ class Settings(BaseSettings):
     MAX_DATE_RANGE_DAYS: int = 90
     AIRTABLE_BATCH_SIZE: int = 10
     
+    # Airtable Batching Configuration
+    COMPANY_BATCH_SIZE: int = 10  # Airtable batch limit
+    RATING_BATCH_SIZE: int = 10   # Airtable batch limit
+    AIRTABLE_MAX_RETRIES: int = 3
+    AIRTABLE_RETRY_BACKOFF: int = 2  # Exponential backoff base
+    
     # CORS Configuration
     CORS_ORIGINS: str = "*"  # Configure for production (comma-separated or "*")
     

@@ -279,7 +279,7 @@ def batch_insert_ratings(
     job_id: str
 ) -> Tuple[int, int]:
     """
-    Batch insert credit ratings with deduplication
+    Batch insert credit ratings with deduplication using execute_batch for performance
     
     Args:
         ratings_data: List of rating dictionaries
@@ -288,28 +288,75 @@ def batch_insert_ratings(
     Returns:
         Tuple of (new_records_count, duplicate_records_count)
     """
+    if not ratings_data:
+        return (0, 0)
+    
     new_records = 0
     duplicate_records = 0
     
-    for rating in ratings_data:
-        is_new, record_id = insert_rating_with_deduplication(
-            company_name=rating.get('company_name', ''),
-            instrument=rating.get('instrument_category', ''),
-            rating=rating.get('rating', ''),
-            outlook=rating.get('outlook'),
-            instrument_amount=rating.get('instrument_amount'),
-            date=rating.get('date', ''),
-            source_url=rating.get('url'),
-            job_id=job_id
-        )
-        
-        if is_new:
-            new_records += 1
-        else:
-            duplicate_records += 1
-    
-    logger.info(f"Batch insert complete: {new_records} new, {duplicate_records} duplicates")
-    return (new_records, duplicate_records)
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor() as cursor:
+                # Prepare batch data
+                batch_data = []
+                for rating in ratings_data:
+                    parsed_date = parse_date_for_db(rating.get('date', ''))
+                    if not parsed_date:
+                        duplicate_records += 1
+                        continue
+                    
+                    company_name = rating.get('company_name', '')
+                    if not company_name:
+                        duplicate_records += 1
+                        continue
+                    
+                    # Get or create company
+                    cursor.execute(
+                        "SELECT get_or_create_company(%s);",
+                        (company_name,)
+                    )
+                    company_id = cursor.fetchone()[0]
+                    
+                    batch_data.append((
+                        company_id,
+                        company_name,
+                        rating.get('instrument_category', ''),
+                        rating.get('rating', ''),
+                        rating.get('outlook') if rating.get('outlook') and rating.get('outlook') != "Not found" else None,
+                        rating.get('instrument_amount') if rating.get('instrument_amount') and rating.get('instrument_amount') != "Not found" else None,
+                        parsed_date,
+                        rating.get('url') if rating.get('url') and rating.get('url') != "Not found" else None,
+                        job_id
+                    ))
+                
+                # Batch insert with deduplication
+                if batch_data:
+                    for data in batch_data:
+                        cursor.execute("""
+                            INSERT INTO credit_ratings 
+                            (company_id, company_name, instrument, rating, outlook, 
+                             instrument_amount, date, source_url, job_id)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            ON CONFLICT (company_name, instrument, rating, date) 
+                            DO NOTHING
+                            RETURNING id;
+                        """, data)
+                        
+                        result = cursor.fetchone()
+                        if result:
+                            new_records += 1
+                        else:
+                            duplicate_records += 1
+                
+                conn.commit()
+                logger.info(f"Batch insert complete: {new_records} new, {duplicate_records} duplicates")
+                return (new_records, duplicate_records)
+                
+    except Exception as e:
+        logger.error(f"Error in batch_insert_ratings: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise
 
 
 def get_unsynced_ratings(job_id: str) -> List[Dict[str, Any]]:
@@ -372,7 +419,7 @@ def get_company_airtable_id(company_name: str) -> Optional[str]:
 
 def update_company_airtable_id(company_name: str, airtable_record_id: str) -> bool:
     """
-    Update Airtable record ID for a company
+    Update Airtable record ID for a single company
     
     Args:
         company_name: Name of the company
@@ -395,6 +442,76 @@ def update_company_airtable_id(company_name: str, airtable_record_id: str) -> bo
     except Exception as e:
         logger.error(f"Error updating company Airtable ID: {e}")
         return False
+
+
+def get_companies_without_airtable_id(job_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    """
+    Get companies that need to be synced to Airtable
+    
+    Args:
+        job_id: Optional job ID to filter companies from a specific job
+        
+    Returns:
+        List of company dictionaries with 'company_name'
+    """
+    try:
+        with get_db_cursor(dict_cursor=True) as cursor:
+            if job_id:
+                cursor.execute("""
+                    SELECT DISTINCT c.company_name
+                    FROM companies c
+                    INNER JOIN credit_ratings cr ON c.company_name = cr.company_name
+                    WHERE c.airtable_record_id IS NULL
+                      AND cr.job_id = %s
+                    ORDER BY c.company_name
+                """, (job_id,))
+            else:
+                cursor.execute("""
+                    SELECT company_name
+                    FROM companies
+                    WHERE airtable_record_id IS NULL
+                    ORDER BY company_name
+                """)
+            
+            return cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error getting companies without Airtable ID: {e}")
+        return []
+
+
+def batch_update_company_airtable_ids(
+    company_mapping: Dict[str, str]
+) -> int:
+    """
+    Batch update Airtable record IDs for multiple companies
+    
+    Args:
+        company_mapping: Dictionary mapping company_name -> airtable_record_id
+        
+    Returns:
+        Number of records updated
+    """
+    if not company_mapping:
+        return 0
+    
+    try:
+        with get_db_cursor() as cursor:
+            # Use execute_batch for efficient batch updates
+            data = [(airtable_id, company_name) for company_name, airtable_id in company_mapping.items()]
+            execute_batch(cursor, """
+                INSERT INTO companies (company_name, airtable_record_id)
+                VALUES (%s, %s)
+                ON CONFLICT (company_name)
+                DO UPDATE SET
+                    airtable_record_id = EXCLUDED.airtable_record_id,
+                    updated_at = CURRENT_TIMESTAMP;
+            """, [(company_name, airtable_id) for company_name, airtable_id in company_mapping.items()])
+            
+            logger.info(f"Batch updated {len(company_mapping)} companies with Airtable IDs")
+            return len(company_mapping)
+    except Exception as e:
+        logger.error(f"Error batch updating company Airtable IDs: {e}")
+        return 0
 
 
 def update_ratings_airtable_ids(rating_airtable_mapping: List[Tuple[int, str]]) -> int:

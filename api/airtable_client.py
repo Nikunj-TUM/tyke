@@ -1,10 +1,11 @@
 """
 Airtable API integration for Companies and Credit Ratings tables
+
+Simplified client that only handles API calls. No caching - Postgres is source of truth.
 """
 import logging
 import time
-import redis
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Tuple
 from datetime import datetime
 from pyairtable import Api
 from .config import settings
@@ -33,15 +34,15 @@ OUTLOOK_MAPPING = {
 
 
 class AirtableClient:
-    """Client for interacting with Airtable API"""
+    """
+    Simplified Airtable API client.
     
-    def __init__(self, use_redis_cache: bool = True):
-        """
-        Initialize Airtable client with optional Redis caching
-        
-        Args:
-            use_redis_cache: Whether to use Redis for distributed caching (default: True)
-        """
+    This client only handles API calls. No caching or business logic.
+    Postgres is the single source of truth for data and mappings.
+    """
+    
+    def __init__(self):
+        """Initialize Airtable client with API credentials"""
         self.api = Api(settings.AIRTABLE_API_KEY)
         self.base = self.api.base(settings.AIRTABLE_BASE_ID)
         
@@ -49,29 +50,7 @@ class AirtableClient:
         self.companies_table = self.base.table(settings.COMPANIES_TABLE_ID)
         self.credit_ratings_table = self.base.table(settings.CREDIT_RATINGS_TABLE_ID)
         
-        # Local cache for company records (per-instance, fast)
-        self._company_cache: Dict[str, str] = {}  # company_name -> record_id
-        
-        # Redis cache for distributed caching across workers
-        self.use_redis_cache = use_redis_cache
-        self.redis_client: Optional[redis.Redis] = None
-        self.cache_ttl = 3600  # 1 hour TTL for cached company IDs
-        
-        if use_redis_cache:
-            try:
-                self.redis_client = redis.from_url(
-                    settings.redis_url,
-                    decode_responses=True,
-                    socket_connect_timeout=5,
-                    socket_timeout=5
-                )
-                # Test connection
-                self.redis_client.ping()
-                logger.info("Redis cache initialized successfully")
-            except Exception as e:
-                logger.warning(f"Failed to initialize Redis cache: {e}. Falling back to local cache only.")
-                self.redis_client = None
-                self.use_redis_cache = False
+        logger.info("AirtableClient initialized")
     
     def _parse_date(self, date_str: str) -> Optional[str]:
         """
@@ -133,332 +112,135 @@ class AirtableClient:
         logger.warning(f"Unknown outlook value: {outlook}, defaulting to 'Not Available'")
         return "Not Available"
     
-    def _get_cached_company_id(self, company_name: str) -> Optional[str]:
+    def create_company(self, company_name: str) -> str:
         """
-        Get company ID from cache (local memory + Redis)
+        Create a new company in Airtable.
         
-        This implements a two-tier caching strategy:
-        1. Check local in-memory cache first (fastest, per-worker)
-        2. Check Redis cache if not in local cache (shared across all workers)
+        No search/cache - caller (service layer) is responsible for checking
+        if company already exists in Postgres before calling this.
         
         Args:
             company_name: Name of the company
             
         Returns:
-            Airtable record ID if found in cache, None otherwise
-        """
-        # Tier 1: Check local in-memory cache (fastest)
-        if company_name in self._company_cache:
-            logger.debug(f"Company '{company_name}' found in local cache")
-            return self._company_cache[company_name]
-        
-        # Tier 2: Check Redis cache (shared across workers)
-        if self.use_redis_cache and self.redis_client:
-            try:
-                cache_key = f"company:{company_name}"
-                cached_id = self.redis_client.get(cache_key)
-                
-                if cached_id:
-                    logger.debug(f"Company '{company_name}' found in Redis cache")
-                    # Populate local cache for subsequent lookups
-                    self._company_cache[company_name] = cached_id
-                    return cached_id
-            except Exception as e:
-                logger.warning(f"Redis cache read error for '{company_name}': {e}")
-        
-        return None
-    
-    def _set_cached_company_id(self, company_name: str, record_id: str) -> None:
-        """
-        Set company ID in cache (local memory + Redis)
-        
-        Updates both cache tiers to ensure consistency:
-        1. Update local in-memory cache
-        2. Update Redis cache with TTL
-        
-        Args:
-            company_name: Name of the company
-            record_id: Airtable record ID
-        """
-        # Update local cache
-        self._company_cache[company_name] = record_id
-        
-        # Update Redis cache with TTL
-        if self.use_redis_cache and self.redis_client:
-            try:
-                cache_key = f"company:{company_name}"
-                self.redis_client.setex(
-                    cache_key,
-                    self.cache_ttl,  # Expire after 1 hour
-                    record_id
-                )
-                logger.debug(f"Company '{company_name}' cached in Redis (TTL: {self.cache_ttl}s)")
-            except Exception as e:
-                logger.warning(f"Redis cache write error for '{company_name}': {e}")
-    
-    def upsert_company(self, company_name: str) -> str:
-        """
-        Create or get existing company record with two-tier caching
-        
-        Uses local + Redis cache to minimize API calls across distributed workers.
-        
-        Args:
-            company_name: Name of the company
+            Airtable record ID of the created company
             
-        Returns:
-            Airtable record ID of the company
+        Raises:
+            Exception: If creation fails
         """
-        # Check cache first (local + Redis)
-        cached_id = self._get_cached_company_id(company_name)
-        if cached_id:
-            return cached_id
-        
         try:
-            # Search for existing company in Airtable
-            formula = f"{{Company Name}} = '{company_name}'"
-            existing_records = self.companies_table.all(formula=formula)
-            
-            if existing_records:
-                record_id = existing_records[0]['id']
-                self._set_cached_company_id(company_name, record_id)
-                logger.info(f"Found existing company: {company_name} (ID: {record_id})")
-                return record_id
-            
-            # Create new company
             new_record = self.companies_table.create({
                 "Company Name": company_name
             })
             record_id = new_record['id']
-            self._set_cached_company_id(company_name, record_id)
-            logger.info(f"Created new company: {company_name} (ID: {record_id})")
+            logger.info(f"Created company in Airtable: {company_name} (ID: {record_id})")
             return record_id
-            
         except Exception as e:
-            logger.error(f"Error upserting company '{company_name}': {str(e)}")
+            logger.error(f"Error creating company '{company_name}' in Airtable: {str(e)}")
             raise
     
-    def create_credit_rating(
-        self,
-        company_record_id: str,
-        instrument: str,
-        rating: str,
-        outlook: Optional[str],
-        instrument_amount: Optional[str],
-        date: Optional[str],
-        source_url: Optional[str],
-        max_retries: int = 3
-    ) -> str:
+    def batch_create_companies(self, company_names: List[str]) -> List[Dict[str, Any]]:
         """
-        Create a credit rating record with automatic retry on rate limits
-        
-        Implements exponential backoff when hitting Airtable rate limits (429 errors).
+        Batch create companies in Airtable.
         
         Args:
-            company_record_id: Airtable record ID of the company
-            instrument: Instrument category
-            rating: Credit rating
-            outlook: Rating outlook
-            instrument_amount: Instrument amount
-            date: Date in YYYY-MM-DD format
-            source_url: Source URL
-            max_retries: Maximum number of retry attempts (default: 3)
+            company_names: List of company names to create
             
         Returns:
-            Airtable record ID of the created rating
+            List of created records with 'id' and 'fields'
+            
+        Raises:
+            Exception: If batch creation fails
         """
-        for attempt in range(max_retries):
-            try:
-                # Prepare fields
-                fields = {
-                    "Company": [company_record_id],  # Link to company record
-                    "Instrument": instrument if instrument and instrument != "Not found" else None,
-                    "Rating": rating if rating and rating != "Not found" else None,
-                }
-                
-                # Add optional fields
-                if outlook and outlook != "Not found":
-                    mapped_outlook = self._map_outlook(outlook)
-                    if mapped_outlook:
-                        fields["Outlook"] = mapped_outlook
-                
-                if instrument_amount and instrument_amount != "Not found":
-                    fields["Instrument Amount"] = instrument_amount
-                
-                if date and date != "Not found":
-                    parsed_date = self._parse_date(date)
-                    if parsed_date:
-                        fields["Date"] = parsed_date
-                
-                if source_url and source_url != "Not found":
-                    fields["Source URL"] = source_url
-                
-                # Create the record
-                new_record = self.credit_ratings_table.create(fields)
-                logger.info(f"Created credit rating (ID: {new_record['id']}) for company {company_record_id}")
-                return new_record['id']
-                
-            except Exception as e:
-                error_msg = str(e).lower()
-                
-                # Check if it's a rate limit error (429 or explicit rate limit message)
-                is_rate_limit = '429' in error_msg or 'rate limit' in error_msg or 'too many requests' in error_msg
-                
-                if is_rate_limit and attempt < max_retries - 1:
-                    # Exponential backoff: 1s, 2s, 4s
-                    wait_time = 2 ** attempt
-                    logger.warning(
-                        f"Rate limit hit when creating rating, retrying in {wait_time}s "
-                        f"(attempt {attempt + 1}/{max_retries})"
-                    )
-                    time.sleep(wait_time)
-                    continue
-                elif is_rate_limit:
-                    logger.error(f"Rate limit exceeded after {max_retries} attempts")
-                    raise Exception(f"Airtable rate limit exceeded after {max_retries} retries")
-                else:
-                    # Not a rate limit error, raise immediately
-                    logger.error(f"Error creating credit rating: {str(e)}")
-                    raise
+        if not company_names:
+            return []
         
-        raise Exception(f"Failed to create rating after {max_retries} retries")
+        try:
+            records_to_create = [{"Company Name": name} for name in company_names]
+            created_records = self.companies_table.batch_create(records_to_create)
+            logger.info(f"Batch created {len(created_records)} companies in Airtable")
+            return created_records
+        except Exception as e:
+            logger.error(f"Error batch creating companies in Airtable: {str(e)}")
+            raise
     
     def batch_create_ratings(
         self,
         ratings_data: List[Dict[str, Any]],
-        use_batch_api: bool = True
-    ) -> tuple[int, int]:
+        max_retries: int = 3
+    ) -> List[Dict[str, Any]]:
         """
-        Create multiple credit ratings - LEGACY METHOD for backward compatibility
-        
-        This method is only used when USE_POSTGRES_DEDUPLICATION=False.
-        When PostgreSQL deduplication is enabled, use the new workflow:
-        save_to_postgres_task -> sync_postgres_to_airtable_task
+        Batch create credit ratings in Airtable with retry logic.
         
         Args:
-            ratings_data: List of rating data dictionaries with keys:
-                - company_name
-                - instrument_category
-                - rating
-                - outlook
-                - instrument_amount
-                - date
-                - url
-            use_batch_api: Whether to use Airtable's batch create API (default: True)
-        
+            ratings_data: List of rating dictionaries with keys:
+                - company_airtable_id: Airtable ID of the company
+                - instrument: Instrument category
+                - rating: Credit rating
+                - outlook: Rating outlook (optional)
+                - instrument_amount: Instrument amount (optional)
+                - date: Date string (optional)
+                - source_url: Source URL (optional)
+            max_retries: Maximum number of retry attempts
+            
         Returns:
-            Tuple of (companies_created, ratings_created)
+            List of created records with 'id' and 'fields'
+            
+        Raises:
+            Exception: If batch creation fails after retries
         """
-        companies_created = 0
-        ratings_created = 0
-        
         if not ratings_data:
-            return (0, 0)
+            return []
         
-        # Step 1: Collect all unique companies and upsert them first
-        unique_companies = {r.get('company_name') for r in ratings_data if r.get('company_name')}
-        company_id_map = {}
+        # Prepare records for batch creation
+        records_to_create = []
+        for rating in ratings_data:
+            fields = {
+                "Company": [rating['company_airtable_id']],
+                "Instrument": rating.get('instrument', ''),
+                "Rating": rating.get('rating', ''),
+            }
+            
+            # Add optional fields
+            if rating.get('outlook'):
+                mapped_outlook = self._map_outlook(rating['outlook'])
+                if mapped_outlook:
+                    fields["Outlook"] = mapped_outlook
+            
+            if rating.get('instrument_amount'):
+                fields["Instrument Amount"] = rating['instrument_amount']
+            
+            if rating.get('date'):
+                parsed_date = self._parse_date(rating['date'])
+                if parsed_date:
+                    fields["Date"] = parsed_date
+            
+            if rating.get('source_url'):
+                fields["Source URL"] = rating['source_url']
+            
+            records_to_create.append(fields)
         
-        logger.info(f"Processing {len(unique_companies)} unique companies for {len(ratings_data)} ratings (LEGACY mode)")
-        
-        for company_name in unique_companies:
+        # Batch create with retry logic for rate limits
+        for attempt in range(max_retries):
             try:
-                was_cached = self._get_cached_company_id(company_name) is not None
-                company_id = self.upsert_company(company_name)
-                company_id_map[company_name] = company_id
-                
-                if not was_cached:
-                    companies_created += 1
+                created_records = self.credit_ratings_table.batch_create(records_to_create)
+                logger.info(f"Batch created {len(created_records)} ratings in Airtable")
+                return created_records
             except Exception as e:
-                logger.error(f"Error upserting company '{company_name}': {e}")
-                continue
-        
-        # Step 2: Batch create all ratings without duplicate checking
-        # (In legacy mode, we don't have PostgreSQL deduplication, so duplicates may occur)
-        if use_batch_api:
-            records_to_create = []
-            
-            for rating_data in ratings_data:
-                company_name = rating_data.get('company_name')
-                if not company_name or company_name not in company_id_map:
-                    continue
+                error_msg = str(e).lower()
+                is_rate_limit = '429' in error_msg or 'rate limit' in error_msg
                 
-                company_record_id = company_id_map[company_name]
-                
-                # Prepare record fields
-                fields = {
-                    "Company": [company_record_id],
-                    "Instrument": rating_data.get('instrument_category', ''),
-                    "Rating": rating_data.get('rating', ''),
-                }
-                
-                # Add optional fields
-                if rating_data.get('outlook'):
-                    mapped_outlook = self._map_outlook(rating_data['outlook'])
-                    if mapped_outlook:
-                        fields["Outlook"] = mapped_outlook
-                
-                if rating_data.get('instrument_amount'):
-                    fields["Instrument Amount"] = rating_data['instrument_amount']
-                
-                if rating_data.get('date'):
-                    parsed_date = self._parse_date(rating_data['date'])
-                    if parsed_date:
-                        fields["Date"] = parsed_date
-                
-                if rating_data.get('url'):
-                    fields["Source URL"] = rating_data['url']
-                
-                records_to_create.append(fields)
-            
-            # Batch create (up to 10 at a time per Airtable limit)
-            batch_size = 10
-            
-            for i in range(0, len(records_to_create), batch_size):
-                batch = records_to_create[i:i + batch_size]
-                try:
-                    created_records = self.credit_ratings_table.batch_create(batch)
-                    ratings_created += len(created_records)
-                    logger.info(f"Batch created {len(created_records)} ratings ({i+1}-{i+len(batch)} of {len(records_to_create)})")
-                except Exception as e:
-                    logger.error(f"Error in batch create: {str(e)}")
-                    # Fallback: Try creating records individually
-                    for record_fields in batch:
-                        try:
-                            self.credit_ratings_table.create(record_fields)
-                            ratings_created += 1
-                        except Exception as create_error:
-                            logger.error(f"Failed to create individual rating: {create_error}")
-                            continue
-        else:
-            # Create ratings one by one
-            for rating_data in ratings_data:
-                try:
-                    company_name = rating_data.get('company_name')
-                    if not company_name or company_name not in company_id_map:
-                        continue
-                    
-                    company_record_id = company_id_map[company_name]
-                    
-                    self.create_credit_rating(
-                        company_record_id=company_record_id,
-                        instrument=rating_data.get('instrument_category', ''),
-                        rating=rating_data.get('rating', ''),
-                        outlook=rating_data.get('outlook'),
-                        instrument_amount=rating_data.get('instrument_amount'),
-                        date=rating_data.get('date'),
-                        source_url=rating_data.get('url')
+                if is_rate_limit and attempt < max_retries - 1:
+                    wait_time = 2 ** attempt
+                    logger.warning(
+                        f"Rate limit hit, retrying in {wait_time}s "
+                        f"(attempt {attempt + 1}/{max_retries})"
                     )
-                    ratings_created += 1
-                    
-                except Exception as e:
-                    logger.error(f"Error creating rating for {rating_data.get('company_name')}: {str(e)}")
+                    time.sleep(wait_time)
                     continue
+                else:
+                    logger.error(f"Error batch creating ratings: {str(e)}")
+                    raise
         
-        logger.info(f"Batch complete (LEGACY): {companies_created} companies created, {ratings_created} ratings created")
-        return companies_created, ratings_created
-    
-    def clear_cache(self) -> None:
-        """Clear company cache"""
-        self._company_cache.clear()
-        logger.info("Cleared company cache")
+        raise Exception(f"Failed to batch create ratings after {max_retries} retries")
 
