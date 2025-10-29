@@ -164,6 +164,25 @@ class AirtableClient:
             logger.error(f"Error batch creating companies in Airtable: {str(e)}")
             raise
     
+    def update_company_cin(self, airtable_record_id: str, cin: str) -> bool:
+        """
+        Update CIN field for a company in Airtable
+        
+        Args:
+            airtable_record_id: Airtable record ID of the company
+            cin: CIN value to update
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            self.companies_table.update(airtable_record_id, {"CIN": cin})
+            logger.info(f"Updated CIN for company {airtable_record_id}: {cin}")
+            return True
+        except Exception as e:
+            logger.error(f"Error updating CIN for company {airtable_record_id}: {str(e)}")
+            return False
+    
     def batch_create_ratings(
         self,
         ratings_data: List[Dict[str, Any]],

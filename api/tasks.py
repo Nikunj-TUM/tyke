@@ -149,6 +149,8 @@ def save_to_postgres_task(
     Uses INSERT ... ON CONFLICT DO NOTHING for atomic duplicate detection.
     This is the core of the new deduplication strategy.
     
+    After saving, triggers CIN lookup for newly created companies.
+    
     Args:
         instruments_data: List of instrument dictionaries from extraction
         job_id: Job ID for tracking
@@ -241,6 +243,21 @@ def sync_postgres_to_airtable_task(
         logger.info(f"  - Companies synced: {companies_synced}")
         logger.info(f"  - Ratings synced: {ratings_synced}")
         logger.info(f"  - Total failures: {total_failures}")
+        
+        # Step 4: Trigger CIN lookups AFTER companies have Airtable IDs
+        try:
+            from .services import CinOrchestrationService
+            
+            cin_orchestration = CinOrchestrationService()
+            triggered_count = cin_orchestration.trigger_cin_lookups_for_job(job_id, limit=1000)
+            
+            logger.info(f"Task {self.request.id}: Triggered {triggered_count} CIN lookup chains")
+                
+        except Exception as e:
+            # Don't fail the main task if CIN lookup triggering fails
+            logger.error(f"Task {self.request.id}: Error triggering CIN lookups: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
         
         return {
             'companies_created': companies_synced,  # For backward compatibility
@@ -465,4 +482,119 @@ def process_scrape_job_orchestrator(self, job_id: str, start_date: str, end_date
 
 
 # Deprecated functions removed - using canvas-based workflows exclusively
+
+
+# ============================================================================
+# ZaubaCorp CIN Lookup Tasks
+# ============================================================================
+
+@celery_app.task(bind=True, name='api.tasks.scrape_zaubacorp_task')
+def scrape_zaubacorp_task(self, company_id: int, company_name: str) -> Dict[str, Any]:
+    """
+    Thin orchestration task for scraping ZaubaCorp CIN.
+    
+    Delegates business logic to CinLookupService.
+    
+    Args:
+        company_id: Company ID in database
+        company_name: Company name to search
+        
+    Returns:
+        Dictionary with company_id, company_name, and html or error status
+    """
+    try:
+        logger.info(f"Task {self.request.id}: Scraping ZaubaCorp for company {company_id}: {company_name}")
+        
+        from .services import CinLookupService
+        service = CinLookupService()
+        
+        result = service.scrape_cin_html(company_id, company_name)
+        
+        logger.info(f"Task {self.request.id}: Scraping complete with status: {result.get('status')}")
+        return result
+        
+    except Exception as e:
+        logger.error(f"Task {self.request.id}: Error in scrape_zaubacorp_task: {str(e)}")
+        return {
+            'company_id': company_id,
+            'company_name': company_name,
+            'status': 'error'
+        }
+
+
+@celery_app.task(bind=True, name='api.tasks.extract_cin_task')
+def extract_cin_task(self, scrape_result: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Thin orchestration task for extracting CIN from ZaubaCorp HTML.
+    
+    Delegates business logic to CinLookupService.
+    
+    Args:
+        scrape_result: Result from scrape_zaubacorp_task
+        
+    Returns:
+        Dictionary with company_id, cin, and status
+    """
+    try:
+        company_id = scrape_result.get('company_id')
+        company_name = scrape_result.get('company_name')
+        
+        logger.info(f"Task {self.request.id}: Extracting CIN for company {company_id}: {company_name}")
+        
+        from .services import CinLookupService
+        service = CinLookupService()
+        
+        result = service.extract_cin_from_html(scrape_result)
+        
+        logger.info(f"Task {self.request.id}: Extraction complete with status: {result.get('status')}")
+        return result
+        
+    except Exception as e:
+        logger.error(f"Task {self.request.id}: Error in extract_cin_task: {str(e)}")
+        return {
+            'company_id': scrape_result.get('company_id'),
+            'cin': None,
+            'status': 'error'
+        }
+
+
+@celery_app.task(bind=True, name='api.tasks.update_company_cin_task')
+def update_company_cin_task(self, extraction_result: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Thin orchestration task for updating company CIN.
+    
+    Delegates business logic to CinLookupService.
+    
+    Args:
+        extraction_result: Result from extract_cin_task
+        
+    Returns:
+        Dictionary with update results
+    """
+    try:
+        company_id = extraction_result.get('company_id')
+        cin = extraction_result.get('cin')
+        status = extraction_result.get('status')
+        
+        logger.info(f"Task {self.request.id}: Updating CIN for company {company_id}: cin={cin}, status={status}")
+        
+        from .services import CinLookupService
+        service = CinLookupService()
+        
+        result = service.update_company_cin(extraction_result)
+        
+        logger.info(
+            f"Task {self.request.id}: Update complete - "
+            f"Postgres: {result['postgres_updated']}, "
+            f"Airtable: {result['airtable_updated']}"
+        )
+        return result
+        
+    except Exception as e:
+        logger.error(f"Task {self.request.id}: Error in update_company_cin_task: {str(e)}")
+        return {
+            'company_id': extraction_result.get('company_id'),
+            'postgres_updated': False,
+            'airtable_updated': False
+        }
 

@@ -322,7 +322,7 @@ class InfomericsPressScraper:
             logger.info(f"Parameters: {params}")
             
             # Make the request
-            response = self.session.get(self.base_url, params=params, timeout=30)
+            response = self.session.get(self.base_url, params=params, timeout=120)
             response.raise_for_status()
             
             logger.info(f"Response status: {response.status_code}")
@@ -423,4 +423,320 @@ class ScraperService:
             import traceback
             logger.error(traceback.format_exc())
             return None
+
+
+class ZaubaCorpScraper:
+    """
+    Scraper for ZaubaCorp to fetch CIN (Company Identification Number)
+    """
+    
+    BASE_URL = "https://www.zaubacorp.com/companysearchresults/"
+    
+    def __init__(self):
+        self.timeout = 30  # 30 seconds timeout
+    
+    def _slugify_company_name(self, company_name: str) -> str:
+        """
+        Convert company name to URL slug format used by ZaubaCorp.
+        
+        Aggressively cleans the name by removing suffixes, symbols, etc.
+        to increase match probability.
+        
+        Args:
+            company_name: Full company name
+            
+        Returns:
+            Cleaned and slugified name for URL in UPPERCASE with hyphens
+        """
+        import re
+        # Remove ALL content in square brackets (alternate/erstwhile names)
+        company_name = re.sub(r'\[.*?\]', '', company_name)
+        # Remove ALL content in parentheses (including erstwhile names)
+        company_name = re.sub(r'\(.*?\)', '', company_name)
+        
+        # Convert to uppercase first for consistent processing
+        company_name = company_name.upper()
+        
+        # Remove "and" and "&" and other symbols
+        company_name = company_name.replace(' AND ', ' ')
+        company_name = company_name.replace(' & ', ' ')
+        
+        # Remove common company suffixes to get core business name
+        # This increases match probability (ZaubaCorp might list with/without these)
+        suffixes_to_remove = [
+            'PRIVATE LIMITED',
+            'PRIVATE LTD',
+            'PVT LTD',
+            'PVT LTD.',
+            'PVT. LTD.',
+            'LIMITED',
+            'LTD',
+            'LTD.',
+            'PRIVATE',
+            'PVT',
+            'PVT.',
+            'LLP',
+        ]
+        
+        # Remove all suffixes iteratively (handles nested cases like "PRIVATE LIMITED")
+        changed = True
+        while changed:
+            changed = False
+            for suffix in suffixes_to_remove:
+                if company_name.endswith(' ' + suffix):
+                    company_name = company_name[:-len(suffix)].strip()
+                    changed = True
+                    break  # Start over with the new name
+        
+        # Replace spaces with hyphens
+        slug = company_name.replace(' ', '-')
+        
+        # Remove any double hyphens that might have been created
+        slug = re.sub(r'-+', '-', slug)
+        
+        # Remove leading/trailing hyphens
+        slug = slug.strip('-')
+        
+        return slug
+    
+    def extract_erstwhile_name(self, company_name: str) -> Optional[str]:
+        """
+        Extract the erstwhile/formerly name from brackets if present
+        
+        Args:
+            company_name: Full company name
+            
+        Returns:
+            Erstwhile company name or None if not present
+        """
+        import re
+        # Match parentheses with "Erstwhile" or "Formerly"
+        patterns = [
+            r'\(Erstwhile\s+([^)]+)\)',
+            r'\(erstwhile\s+([^)]+)\)',
+            r'\(Formerly\s+([^)]+)\)',
+            r'\(formerly\s+([^)]+)\)',
+            r'\[Erstwhile\s+([^\]]+)\]',
+            r'\[erstwhile\s+([^\]]+)\]',
+            r'\[Formerly\s+([^\]]+)\]',
+            r'\[formerly\s+([^\]]+)\]',
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, company_name)
+            if match:
+                erstwhile_name = match.group(1).strip()
+                logger.info(f"Extracted erstwhile name: {erstwhile_name} from {company_name}")
+                return erstwhile_name
+        
+        return None
+    
+    def scrape_company_search(self, company_name: str) -> Optional[str]:
+        """
+        Scrape ZaubaCorp search results for a company
+        
+        Args:
+            company_name: Company name to search for
+            
+        Returns:
+            HTML content or None on error
+        """
+        try:
+            slug = self._slugify_company_name(company_name)
+            url = f"{self.BASE_URL}{slug}"
+            
+            logger.info(f"Scraping ZaubaCorp: {url}")
+            
+            # Set headers to mimic a browser request
+            # Note: Don't set Accept-Encoding - let requests handle compression automatically
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1'
+            }
+            
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+            response.raise_for_status()
+            
+            # Use the response's detected encoding (requests auto-detects from Content-Type header)
+            html_text = response.text
+            logger.info(f"Successfully scraped ZaubaCorp for {company_name}: {len(html_text)} chars")
+            return html_text
+            
+        except requests.exceptions.Timeout:
+            logger.error(f"Timeout scraping ZaubaCorp for {company_name}")
+            return None
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error scraping ZaubaCorp for {company_name}: {str(e)}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error scraping ZaubaCorp for {company_name}: {str(e)}")
+            return None
+
+
+class ZaubaCorpCINExtractor:
+    """
+    Extract CIN from ZaubaCorp search results HTML
+    """
+    
+    def extract_cin(self, html_content: str, exact_company_name: str) -> tuple[Optional[str], str]:
+        """
+        Extract CIN from ZaubaCorp HTML for a specific company name
+        
+        Args:
+            html_content: HTML content from ZaubaCorp
+            exact_company_name: The exact company name to match
+            
+        Returns:
+            Tuple of (cin, status) where:
+            - cin: CIN string or None
+            - status: 'found', 'not_found', or 'multiple_matches'
+        """
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            
+            # Find the results table
+            # Based on sample HTML: <table id="results" class="table table-striped">
+            results_table = soup.find('table', {'id': 'results'})
+            
+            if not results_table:
+                logger.warning("No results table found in ZaubaCorp HTML")
+                return (None, 'not_found')
+            
+            # Find all table rows in tbody
+            tbody = results_table.find('tbody')
+            if not tbody:
+                logger.warning("No tbody found in results table")
+                return (None, 'not_found')
+            
+            rows = tbody.find_all('tr')
+            if not rows:
+                logger.warning("No rows found in results table")
+                return (None, 'not_found')
+            
+            logger.info(f"Found {len(rows)} results in ZaubaCorp table")
+            
+            # Extract all company matches
+            matches = []
+            for row in rows:
+                tds = row.find_all('td')
+                if len(tds) >= 2:
+                    # Column 0: CIN with link
+                    # Column 1: Company name with link
+                    cin_link = tds[0].find('a')
+                    name_link = tds[1].find('a')
+                    
+                    if cin_link and name_link:
+                        cin = cin_link.get_text().strip()
+                        name = name_link.get_text().strip()
+                        
+                        matches.append({
+                            'cin': cin,
+                            'name': name
+                        })
+            
+            if not matches:
+                logger.info(f"No matches found for company: {exact_company_name}")
+                return (None, 'no_results')  # Special status to trigger fallback
+            
+            # Normalize names for comparison (remove parentheses, brackets, extra spaces)
+            def normalize_name(name: str) -> str:
+                """Normalize company name for fuzzy matching"""
+                import re
+                # Remove square brackets and their contents (alternate/erstwhile names)
+                name = re.sub(r'\[.*?\]', '', name)
+                # Remove parentheses with "Erstwhile" or similar patterns inside
+                name = re.sub(r'\(.*?Erstwhile.*?\)', '', name, flags=re.IGNORECASE)
+                name = re.sub(r'\(.*?Formerly.*?\)', '', name, flags=re.IGNORECASE)
+                # Remove remaining parentheses but KEEP their contents  
+                name = re.sub(r'[()]', '', name)
+                # Remove "and" and "&"
+                name = name.replace(' and ', ' ').replace(' & ', ' ')
+                name = name.replace(' AND ', ' ')
+                # Remove extra spaces and convert to uppercase
+                name = ' '.join(name.upper().split())
+                return name
+            
+            def normalize_for_contains(name: str) -> str:
+                """More aggressive normalization for substring matching"""
+                import re
+                name = normalize_name(name)
+                # Remove common suffixes for better matching
+                suffixes = ['PRIVATE LIMITED', 'LIMITED', 'PRIVATE', 'LLP', 'PVT LTD', 'PVT', 'LTD']
+                for suffix in suffixes:
+                    if name.endswith(' ' + suffix):
+                        name = name[:-len(suffix)].strip()
+                return name
+            
+            query_normalized = normalize_name(exact_company_name)
+            
+            # Try exact case-insensitive match first
+            exact_matches = [
+                m for m in matches 
+                if m['name'].strip().upper() == exact_company_name.strip().upper()
+            ]
+            
+            if len(exact_matches) == 1:
+                logger.info(f"Found exact CIN match for {exact_company_name}: {exact_matches[0]['cin']}")
+                return (exact_matches[0]['cin'], 'found')
+            elif len(exact_matches) > 1:
+                logger.warning(f"Multiple exact matches found for {exact_company_name}: {[m['cin'] for m in exact_matches]}")
+                return (exact_matches[0]['cin'], 'multiple_matches')
+            
+            # Try normalized fuzzy match (handles parentheses, extra spaces, etc)
+            fuzzy_matches = [
+                m for m in matches 
+                if normalize_name(m['name']) == query_normalized
+            ]
+            
+            if len(fuzzy_matches) == 1:
+                logger.info(f"Found fuzzy CIN match for {exact_company_name}: {fuzzy_matches[0]['cin']} (matched: {fuzzy_matches[0]['name']})")
+                return (fuzzy_matches[0]['cin'], 'found')
+            elif len(fuzzy_matches) > 1:
+                logger.warning(f"Multiple fuzzy matches found for {exact_company_name}: {[m['cin'] for m in fuzzy_matches]}")
+                return (fuzzy_matches[0]['cin'], 'multiple_matches')
+            
+            # Try aggressive normalization for smart matching
+            # Remove suffixes like "PRIVATE LIMITED", "LIMITED", etc for core name comparison
+            query_smart = normalize_for_contains(exact_company_name)
+            smart_matches = [
+                m for m in matches 
+                if normalize_for_contains(m['name']) == query_smart
+            ]
+            
+            if len(smart_matches) == 1:
+                logger.info(f"Found smart match for {exact_company_name}: {smart_matches[0]['cin']} (matched: {smart_matches[0]['name']})")
+                return (smart_matches[0]['cin'], 'found')
+            elif len(smart_matches) > 1:
+                logger.warning(f"Multiple smart matches for {exact_company_name}: {[m['cin'] for m in smart_matches]}")
+                return (smart_matches[0]['cin'], 'multiple_matches')
+            
+            # Try substring/contains matching - check if any result contains our query
+            contains_matches = [
+                m for m in matches 
+                if query_smart in normalize_for_contains(m['name']) or 
+                   normalize_for_contains(m['name']) in query_smart
+            ]
+            
+            if len(contains_matches) == 1:
+                logger.info(f"Found contains match for {exact_company_name}: {contains_matches[0]['cin']} (matched: {contains_matches[0]['name']})")
+                return (contains_matches[0]['cin'], 'found')
+            elif len(contains_matches) > 1:
+                logger.warning(f"Multiple contains matches for {exact_company_name}: {[m['cin'] for m in contains_matches]}")
+                return (contains_matches[0]['cin'], 'multiple_matches')
+            else:
+                # No match found - log details for debugging
+                logger.info(f"No match for {exact_company_name}")
+                logger.info(f"  Query normalized: {query_normalized}")
+                logger.info(f"  Query smart: {query_smart}")
+                logger.info(f"  Found companies: {[m['name'] for m in matches]}")
+                return (None, 'not_found')
+                
+        except Exception as e:
+            logger.error(f"Error extracting CIN from ZaubaCorp HTML: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return (None, 'error')
 

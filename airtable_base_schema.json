@@ -105,6 +105,27 @@
                     "type": "singleLineText",
                     "id": "fldDVfbyjxd2nTuE1",
                     "name": "Source URL"
+                },
+                {
+                    "type": "createdTime",
+                    "options": {
+                        "result": {
+                            "type": "dateTime",
+                            "options": {
+                                "dateFormat": {
+                                    "name": "local",
+                                    "format": "l"
+                                },
+                                "timeFormat": {
+                                    "name": "12hour",
+                                    "format": "h:mma"
+                                },
+                                "timeZone": "client"
+                            }
+                        }
+                    },
+                    "id": "fldgAcQlrKywqyijG",
+                    "name": "Created"
                 }
             ],
             "views": [
@@ -126,6 +147,11 @@
                     "name": "Company Name"
                 },
                 {
+                    "type": "singleLineText",
+                    "id": "fldx8OX59LhHlQyfo",
+                    "name": "CIN"
+                },
+                {
                     "type": "multipleRecordLinks",
                     "options": {
                         "linkedTableId": "tblRlxbOYMW8Rag7f",
@@ -135,11 +161,6 @@
                     },
                     "id": "fldQsAcLrqtH1QTYy",
                     "name": "Credit Ratings"
-                },
-                {
-                    "type": "singleLineText",
-                    "id": "fldX7qZ4kobyZwBM0",
-                    "name": "Instruments"
                 },
                 {
                     "type": "rollup",
@@ -176,15 +197,25 @@
                     "name": "Most Recent Rating"
                 },
                 {
-                    "type": "multipleRecordLinks",
+                    "type": "createdTime",
                     "options": {
-                        "linkedTableId": "tbljbYRWsRBb85X5y",
-                        "isReversed": false,
-                        "prefersSingleRecordLink": false,
-                        "inverseLinkFieldId": "fldt6TiCCLO4hULhj"
+                        "result": {
+                            "type": "dateTime",
+                            "options": {
+                                "dateFormat": {
+                                    "name": "local",
+                                    "format": "l"
+                                },
+                                "timeFormat": {
+                                    "name": "12hour",
+                                    "format": "h:mma"
+                                },
+                                "timeZone": "client"
+                            }
+                        }
                     },
-                    "id": "fldwPKmqXBwsWB9Cr",
-                    "name": "Table 4"
+                    "id": "fldGYoBQhbK59GPVs",
+                    "name": "Created"
                 }
             ],
             "views": [
@@ -213,24 +244,16 @@
                 {
                     "type": "multipleLookupValues",
                     "options": {
-                        "isValid": true,
-                        "recordLinkFieldId": "fldt6TiCCLO4hULhj",
+                        "isValid": false,
+                        "recordLinkFieldId": null,
                         "fieldIdInLinkedTable": "fld5nhRH2hcspLfzl",
-                        "result": {
-                            "type": "singleLineText"
-                        }
+                        "result": null
                     },
                     "id": "fldf3uwDkfftw1UXv",
                     "name": "Company Name (from Notes)"
                 },
                 {
-                    "type": "multipleRecordLinks",
-                    "options": {
-                        "linkedTableId": "tblMsZnCUfG783lWI",
-                        "isReversed": false,
-                        "prefersSingleRecordLink": true,
-                        "inverseLinkFieldId": "fldwPKmqXBwsWB9Cr"
-                    },
+                    "type": "singleLineText",
                     "id": "fldt6TiCCLO4hULhj",
                     "name": "Company"
                 },

@@ -86,14 +86,17 @@ celery_app.conf.task_queues = (
 celery_app.conf.task_routes = {
     # Scraping tasks
     'api.tasks.scrape_date_range_task': {'queue': 'scraping'},
+    'api.tasks.scrape_zaubacorp_task': {'queue': 'scraping'},
     
     # Extraction tasks
     'api.tasks.extract_instruments_task': {'queue': 'extraction'},
+    'api.tasks.extract_cin_task': {'queue': 'extraction'},
     
     # Upload/sync tasks - PostgreSQL and Airtable operations
     'api.tasks.save_to_postgres_task': {'queue': 'uploading'},
     'api.tasks.sync_postgres_to_airtable_task': {'queue': 'uploading'},
     'api.tasks.upload_batch_to_airtable_task': {'queue': 'uploading'},
+    'api.tasks.update_company_cin_task': {'queue': 'uploading'},
     
     # Orchestrator and coordination tasks
     'api.tasks.batch_and_upload_task': {'queue': 'celery'},
@@ -121,6 +124,13 @@ celery_app.conf.task_annotations = {
         'retry_backoff_max': 600,
         'retry_jitter': True,
     },
+    'api.tasks.update_company_cin_task': {
+        'rate_limit': '5/s',  # Max 5 concurrent CIN updates per second
+        'max_retries': 3,
+        'retry_backoff': True,
+        'retry_backoff_max': 600,
+        'retry_jitter': True,
+    },
     # PostgreSQL save tasks - no rate limit needed (local database)
     'api.tasks.save_to_postgres_task': {
         'max_retries': 3,
@@ -132,6 +142,14 @@ celery_app.conf.task_annotations = {
         'max_retries': 3,
         'retry_backoff': True,
         'retry_backoff_max': 300,
+    },
+    # ZaubaCorp scraping - rate limited to be respectful
+    'api.tasks.scrape_zaubacorp_task': {
+        'rate_limit': '2/s',  # Max 2 requests per second to ZaubaCorp
+        'max_retries': 3,
+        'retry_backoff': True,
+        'retry_backoff_max': 600,
+        'retry_jitter': True,
     },
 }
 

@@ -595,3 +595,113 @@ def get_duplicate_stats(job_id: str) -> Dict[str, int]:
         logger.error(f"Error getting duplicate stats: {e}")
         return {'total_ratings': 0, 'synced_count': 0, 'failed_count': 0}
 
+
+def update_company_cin(
+    company_id: int,
+    cin: Optional[str],
+    status: str
+) -> bool:
+    """
+    Update CIN and lookup status for a company
+    
+    Args:
+        company_id: Company ID
+        cin: CIN value (can be None for not_found/error cases)
+        status: Lookup status ('found', 'not_found', 'multiple_matches', 'error')
+        
+    Returns:
+        True if successful
+    """
+    try:
+        with get_db_cursor() as cursor:
+            cursor.execute("""
+                UPDATE companies
+                SET 
+                    cin = %s,
+                    cin_lookup_status = %s::cin_lookup_status_enum,
+                    cin_updated_at = CURRENT_TIMESTAMP,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = %s;
+            """, (cin, status, company_id))
+            
+            logger.info(f"Updated CIN for company {company_id}: status={status}, cin={cin}")
+            return True
+    except Exception as e:
+        logger.error(f"Error updating company CIN: {e}")
+        return False
+
+
+def get_companies_needing_cin_lookup(job_id: Optional[str] = None, limit: int = 100) -> List[Dict[str, Any]]:
+    """
+    Get companies that need CIN lookup (status = 'pending')
+    
+    Args:
+        job_id: Optional job ID to filter companies from a specific job
+        limit: Maximum number of companies to return
+        
+    Returns:
+        List of company dictionaries with id and company_name
+    """
+    try:
+        with get_db_cursor(dict_cursor=True) as cursor:
+            if job_id:
+                # Use subquery to get distinct companies with their earliest created_at
+                cursor.execute("""
+                    SELECT c.id, c.company_name
+                    FROM companies c
+                    WHERE c.cin_lookup_status = 'pending'
+                      AND EXISTS (
+                          SELECT 1 FROM credit_ratings cr 
+                          WHERE cr.company_name = c.company_name 
+                          AND cr.job_id = %s
+                      )
+                    ORDER BY c.id
+                    LIMIT %s
+                """, (job_id, limit))
+            else:
+                cursor.execute("""
+                    SELECT id, company_name
+                    FROM companies
+                    WHERE cin_lookup_status = 'pending'
+                    ORDER BY id
+                    LIMIT %s
+                """, (limit,))
+            
+            return cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error getting companies needing CIN lookup: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        return []
+
+
+def get_company_by_id(company_id: int) -> Optional[Dict[str, Any]]:
+    """
+    Get company details by ID
+    
+    Args:
+        company_id: Company ID
+        
+    Returns:
+        Company dictionary or None
+    """
+    try:
+        with get_db_cursor(dict_cursor=True) as cursor:
+            cursor.execute("""
+                SELECT 
+                    id,
+                    company_name,
+                    cin,
+                    cin_lookup_status,
+                    airtable_record_id,
+                    created_at,
+                    updated_at
+                FROM companies
+                WHERE id = %s;
+            """, (company_id,))
+            
+            return cursor.fetchone()
+    except Exception as e:
+        logger.error(f"Error getting company by ID: {e}")
+        return None
+

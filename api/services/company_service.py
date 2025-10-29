@@ -138,4 +138,37 @@ class CompanyService:
             Airtable record ID or None if not found
         """
         return get_company_airtable_id(company_name)
+    
+    def update_company_cin_in_airtable(self, company_name: str, cin: str) -> bool:
+        """
+        Update CIN for a company in Airtable
+        
+        Args:
+            company_name: Name of the company
+            cin: CIN value to update
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            # Get Airtable ID from Postgres
+            airtable_id = get_company_airtable_id(company_name)
+            
+            if not airtable_id:
+                logger.warning(f"No Airtable ID found for company: {company_name}")
+                return False
+            
+            # Update in Airtable
+            success = self.airtable_client.update_company_cin(airtable_id, cin)
+            
+            if success:
+                logger.info(f"Successfully updated CIN for {company_name} in Airtable")
+            else:
+                logger.warning(f"Failed to update CIN for {company_name} in Airtable")
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"Error updating CIN in Airtable for {company_name}: {str(e)}")
+            return False
 
