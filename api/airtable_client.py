@@ -49,6 +49,8 @@ class AirtableClient:
         # Get table references
         self.companies_table = self.base.table(settings.COMPANIES_TABLE_ID)
         self.credit_ratings_table = self.base.table(settings.CREDIT_RATINGS_TABLE_ID)
+        self.infomerics_scraper_table = self.base.table(settings.INFOMERICS_SCRAPER_TABLE_ID)
+        self.contacts_table = self.base.table(settings.CONTACTS_TABLE_ID)
         
         logger.info("AirtableClient initialized")
     
@@ -262,4 +264,133 @@ class AirtableClient:
                     raise
         
         raise Exception(f"Failed to batch create ratings after {max_retries} retries")
+    
+    def update_scraper_status(
+        self,
+        record_id: str,
+        status: str
+    ) -> bool:
+        """
+        Update the status of a scraper record in the Infomerics Scraper table.
+        
+        Args:
+            record_id: Airtable record ID in Infomerics Scraper table
+            status: Status to set - one of: "Todo", "In progress", "Done", "Error"
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        if not record_id:
+            logger.warning("Cannot update scraper status: record_id is empty")
+            return False
+        
+        # Validate status value matches Airtable schema
+        valid_statuses = ["Todo", "In progress", "Done", "Error"]
+        if status not in valid_statuses:
+            logger.warning(f"Invalid status '{status}', must be one of {valid_statuses}")
+            return False
+        
+        try:
+            self.infomerics_scraper_table.update(record_id, {"Status": status})
+            logger.info(f"Updated Infomerics Scraper record {record_id} status to '{status}'")
+            return True
+        except Exception as e:
+            logger.error(f"Error updating scraper status for record {record_id}: {str(e)}")
+            return False
+    
+    def batch_create_contacts(
+        self,
+        contacts_data: List[Dict[str, Any]],
+        max_retries: int = 3
+    ) -> List[Dict[str, Any]]:
+        """
+        Batch create contacts in Airtable with retry logic.
+        
+        Args:
+            contacts_data: List of contact dictionaries with keys:
+                - name: Full name of the contact
+                - phone_number: Mobile number (optional)
+                - email: Email address (optional)
+                - address: Full address string (optional)
+                - company_airtable_id: Airtable ID of the company to link
+            max_retries: Maximum number of retry attempts
+            
+        Returns:
+            List of created records with 'id' and 'fields'
+            
+        Raises:
+            Exception: If batch creation fails after retries
+        """
+        if not contacts_data:
+            return []
+        
+        # Prepare records for batch creation
+        records_to_create = []
+        for contact in contacts_data:
+            fields = {
+                "Name": contact.get('name', ''),
+            }
+            
+            # Add optional fields
+            if contact.get('phone_number'):
+                fields["Phone Number"] = contact['phone_number']
+            
+            if contact.get('email'):
+                fields["Email"] = contact['email']
+            
+            if contact.get('address'):
+                fields["Address"] = contact['address']
+            
+            # Link to company
+            if contact.get('company_airtable_id'):
+                fields["Company Name"] = [contact['company_airtable_id']]
+            
+            records_to_create.append(fields)
+        
+        # Batch create with retry logic for rate limits
+        for attempt in range(max_retries):
+            try:
+                created_records = self.contacts_table.batch_create(records_to_create)
+                logger.info(f"Batch created {len(created_records)} contacts in Airtable")
+                return created_records
+            except Exception as e:
+                error_msg = str(e).lower()
+                is_rate_limit = '429' in error_msg or 'rate limit' in error_msg
+                
+                if is_rate_limit and attempt < max_retries - 1:
+                    wait_time = 2 ** attempt
+                    logger.warning(
+                        f"Rate limit hit, retrying in {wait_time}s "
+                        f"(attempt {attempt + 1}/{max_retries})"
+                    )
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    logger.error(f"Error batch creating contacts: {str(e)}")
+                    raise
+        
+        raise Exception(f"Failed to batch create contacts after {max_retries} retries")
+    
+    def update_contact(
+        self,
+        airtable_record_id: str,
+        fields: Dict[str, Any]
+    ) -> bool:
+        """
+        Update a contact record in Airtable
+        
+        Args:
+            airtable_record_id: Airtable record ID of the contact
+            fields: Dictionary of fields to update
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            self.contacts_table.update(airtable_record_id, fields)
+            logger.info(f"Updated contact {airtable_record_id} in Airtable")
+            return True
+        except Exception as e:
+            logger.error(f"Error updating contact {airtable_record_id}: {str(e)}")
+            return False
 

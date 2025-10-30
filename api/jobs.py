@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Job:
     """Job data structure"""
     
-    def __init__(self, job_id: str, start_date: str, end_date: str, parent_job_id: Optional[str] = None):
+    def __init__(self, job_id: str, start_date: str, end_date: str, parent_job_id: Optional[str] = None, airtable_record_id: Optional[str] = None):
         self.job_id = job_id
         self.status = JobStatus.QUEUED
         self.progress = 0
@@ -38,6 +38,7 @@ class Job:
         self.parent_job_id = parent_job_id  # ID of parent job if this is a sub-job
         self.sub_jobs: List[str] = []  # List of sub-job IDs if this is a parent job
         self.message: Optional[str] = None  # Optional message for job status
+        self.airtable_record_id = airtable_record_id  # Airtable record ID in Infomerics Scraper table
     
     def update_status(self, status: JobStatus) -> None:
         """Update job status"""
@@ -82,7 +83,8 @@ class Job:
             "end_date": self.end_date,
             "parent_job_id": self.parent_job_id,
             "sub_jobs": self.sub_jobs,
-            "message": self.message
+            "message": self.message,
+            "airtable_record_id": self.airtable_record_id
         }
     
     @classmethod
@@ -109,6 +111,7 @@ class Job:
         job.parent_job_id = data.get("parent_job_id")
         job.sub_jobs = data.get("sub_jobs", [])
         job.message = data.get("message")
+        job.airtable_record_id = data.get("airtable_record_id")
         return job
 
 
@@ -149,7 +152,7 @@ class JobManager:
         """Get Redis key for job"""
         return f"job:{job_id}"
     
-    def create_job(self, start_date: str, end_date: str, parent_job_id: Optional[str] = None) -> Job:
+    def create_job(self, start_date: str, end_date: str, parent_job_id: Optional[str] = None, airtable_record_id: Optional[str] = None) -> Job:
         """
         Create a new job
         
@@ -157,12 +160,13 @@ class JobManager:
             start_date: Start date in YYYY-MM-DD format
             end_date: End date in YYYY-MM-DD format
             parent_job_id: Optional parent job ID if this is a sub-job
+            airtable_record_id: Optional Airtable record ID in Infomerics Scraper table
             
         Returns:
             Created Job instance
         """
         job_id = str(uuid.uuid4())
-        job = Job(job_id, start_date, end_date, parent_job_id)
+        job = Job(job_id, start_date, end_date, parent_job_id, airtable_record_id)
         
         redis_client = self._get_redis()
         if redis_client:

@@ -705,3 +705,301 @@ def get_company_by_id(company_id: int) -> Optional[Dict[str, Any]]:
         logger.error(f"Error getting company by ID: {e}")
         return None
 
+
+# ============================================================================
+# CONTACTS DATABASE FUNCTIONS
+# ============================================================================
+
+def insert_contact_with_deduplication(
+    din: Optional[str],
+    full_name: str,
+    mobile_number: Optional[str],
+    email_address: Optional[str],
+    addresses: Optional[List[Dict[str, Any]]],
+    company_airtable_id: str
+) -> Tuple[bool, Optional[int], bool]:
+    """
+    Insert a contact with automatic deduplication based on phone or email.
+    If contact exists (by phone or email), update it.
+    
+    Args:
+        din: Director Identification Number
+        full_name: Full name of the contact
+        mobile_number: Mobile number
+        email_address: Email address
+        addresses: List of address dictionaries
+        company_airtable_id: Airtable record ID of the company
+        
+    Returns:
+        Tuple of (success, contact_id, is_new_record)
+    """
+    try:
+        import json
+        
+        # Convert addresses to JSONB
+        addresses_json = json.dumps(addresses) if addresses else None
+        
+        # Find company_id from airtable_record_id
+        company_id = None
+        with get_db_cursor() as cursor:
+            cursor.execute("""
+                SELECT id FROM companies WHERE airtable_record_id = %s;
+            """, (company_airtable_id,))
+            result = cursor.fetchone()
+            if result:
+                company_id = result[0]
+        
+        with get_db_cursor() as cursor:
+            # Try to insert, on conflict update
+            # Conflict can occur on mobile_number or email_address
+            cursor.execute("""
+                WITH existing_contact AS (
+                    SELECT id FROM contacts 
+                    WHERE (mobile_number = %s AND mobile_number IS NOT NULL)
+                       OR (email_address = %s AND email_address IS NOT NULL)
+                    LIMIT 1
+                ),
+                inserted AS (
+                    INSERT INTO contacts 
+                    (din, full_name, mobile_number, email_address, addresses, 
+                     company_id, company_airtable_id)
+                    SELECT %s, %s, %s, %s, %s::jsonb, %s, %s
+                    WHERE NOT EXISTS (SELECT 1 FROM existing_contact)
+                    RETURNING id, true as is_new
+                ),
+                updated AS (
+                    UPDATE contacts
+                    SET 
+                        din = COALESCE(%s, din),
+                        full_name = %s,
+                        mobile_number = COALESCE(%s, mobile_number),
+                        email_address = COALESCE(%s, email_address),
+                        addresses = COALESCE(%s::jsonb, addresses),
+                        company_id = COALESCE(%s, company_id),
+                        company_airtable_id = %s,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = (SELECT id FROM existing_contact)
+                    RETURNING id, false as is_new
+                )
+                SELECT id, is_new FROM inserted
+                UNION ALL
+                SELECT id, is_new FROM updated;
+            """, (
+                mobile_number, email_address,  # Check for existing
+                din, full_name, mobile_number, email_address, addresses_json, company_id, company_airtable_id,  # Insert
+                din, full_name, mobile_number, email_address, addresses_json, company_id, company_airtable_id  # Update
+            ))
+            
+            result = cursor.fetchone()
+            if result:
+                contact_id, is_new = result
+                return (True, contact_id, is_new)
+            else:
+                logger.warning("Contact insertion/update returned no result")
+                return (False, None, False)
+                
+    except Exception as e:
+        logger.error(f"Error inserting/updating contact: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        return (False, None, False)
+
+
+def get_contact_by_phone_or_email(
+    mobile_number: Optional[str],
+    email_address: Optional[str]
+) -> Optional[Dict[str, Any]]:
+    """
+    Check if a contact exists by phone number or email address
+    
+    Args:
+        mobile_number: Mobile number to check
+        email_address: Email address to check
+        
+    Returns:
+        Contact dictionary or None
+    """
+    try:
+        with get_db_cursor(dict_cursor=True) as cursor:
+            cursor.execute("""
+                SELECT 
+                    id,
+                    din,
+                    full_name,
+                    mobile_number,
+                    email_address,
+                    company_airtable_id,
+                    airtable_record_id,
+                    created_at
+                FROM contacts
+                WHERE (mobile_number = %s AND mobile_number IS NOT NULL)
+                   OR (email_address = %s AND email_address IS NOT NULL)
+                LIMIT 1;
+            """, (mobile_number, email_address))
+            
+            return cursor.fetchone()
+    except Exception as e:
+        logger.error(f"Error checking contact existence: {e}")
+        return None
+
+
+def get_contacts_by_company(company_airtable_id: str) -> List[Dict[str, Any]]:
+    """
+    Get all contacts for a specific company
+    
+    Args:
+        company_airtable_id: Airtable record ID of the company
+        
+    Returns:
+        List of contact dictionaries
+    """
+    try:
+        with get_db_cursor(dict_cursor=True) as cursor:
+            cursor.execute("""
+                SELECT 
+                    id,
+                    din,
+                    full_name,
+                    mobile_number,
+                    email_address,
+                    addresses,
+                    company_airtable_id,
+                    airtable_record_id,
+                    created_at,
+                    updated_at
+                FROM contacts
+                WHERE company_airtable_id = %s
+                ORDER BY created_at DESC;
+            """, (company_airtable_id,))
+            
+            return cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error getting contacts by company: {e}")
+        return []
+
+
+def get_contacts_without_airtable_id(
+    company_airtable_id: Optional[str] = None,
+    limit: int = 100
+) -> List[Dict[str, Any]]:
+    """
+    Get contacts that haven't been synced to Airtable yet
+    
+    Args:
+        company_airtable_id: Optional filter by company
+        limit: Maximum number of contacts to return
+        
+    Returns:
+        List of contact dictionaries
+    """
+    try:
+        with get_db_cursor(dict_cursor=True) as cursor:
+            if company_airtable_id:
+                cursor.execute("""
+                    SELECT 
+                        id,
+                        din,
+                        full_name,
+                        mobile_number,
+                        email_address,
+                        addresses,
+                        company_airtable_id,
+                        created_at
+                    FROM contacts
+                    WHERE airtable_record_id IS NULL
+                      AND company_airtable_id = %s
+                      AND sync_failed = FALSE
+                    ORDER BY created_at DESC
+                    LIMIT %s;
+                """, (company_airtable_id, limit))
+            else:
+                cursor.execute("""
+                    SELECT 
+                        id,
+                        din,
+                        full_name,
+                        mobile_number,
+                        email_address,
+                        addresses,
+                        company_airtable_id,
+                        created_at
+                    FROM contacts
+                    WHERE airtable_record_id IS NULL
+                      AND sync_failed = FALSE
+                    ORDER BY created_at DESC
+                    LIMIT %s;
+                """, (limit,))
+            
+            return cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error getting contacts without Airtable ID: {e}")
+        return []
+
+
+def batch_update_contact_airtable_ids(
+    contact_mapping: Dict[int, str]
+) -> int:
+    """
+    Batch update Airtable record IDs for contacts
+    
+    Args:
+        contact_mapping: Dictionary mapping contact_id -> airtable_record_id
+        
+    Returns:
+        Number of contacts updated
+    """
+    if not contact_mapping:
+        return 0
+    
+    try:
+        updated_count = 0
+        with get_db_cursor() as cursor:
+            for contact_id, airtable_id in contact_mapping.items():
+                cursor.execute("""
+                    UPDATE contacts
+                    SET 
+                        airtable_record_id = %s,
+                        synced_at = CURRENT_TIMESTAMP,
+                        sync_failed = FALSE,
+                        sync_error = NULL,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = %s;
+                """, (airtable_id, contact_id))
+                updated_count += cursor.rowcount
+        
+        logger.info(f"Updated {updated_count} contacts with Airtable IDs")
+        return updated_count
+    except Exception as e:
+        logger.error(f"Error batch updating contact Airtable IDs: {e}")
+        return 0
+
+
+def mark_contact_sync_failed(
+    contact_id: int,
+    error_message: str
+) -> bool:
+    """
+    Mark a contact as failed to sync to Airtable
+    
+    Args:
+        contact_id: Contact ID
+        error_message: Error message
+        
+    Returns:
+        True if successful
+    """
+    try:
+        with get_db_cursor() as cursor:
+            cursor.execute("""
+                UPDATE contacts
+                SET 
+                    sync_failed = TRUE,
+                    sync_error = %s,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = %s;
+            """, (error_message, contact_id))
+            return True
+    except Exception as e:
+        logger.error(f"Error marking contact sync as failed: {e}")
+        return False
+

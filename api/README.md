@@ -7,6 +7,7 @@ Production-grade FastAPI application for scraping Infomerics press releases and 
 - **Asynchronous Job Processing**: Submit scraping jobs and track their progress
 - **Secure API**: API key authentication and rate limiting
 - **Airtable Integration**: Automatic upsert of Companies and Credit Ratings
+- **Airtable Status Tracking**: Automatic status updates in Infomerics Scraper table
 - **Docker Support**: Containerized deployment
 - **Production-Ready**: Comprehensive error handling, logging, and monitoring
 
@@ -67,6 +68,23 @@ curl -X POST "http://localhost:8000/infomerics/scrape" \
   }'
 ```
 
+**Request with Airtable Status Tracking:**
+```bash
+curl -X POST "http://localhost:8000/infomerics/scrape" \
+  -H "X-API-Key: your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "start_date": "2025-10-01",
+    "end_date": "2025-10-15",
+    "airtable_record_id": "recXXXXXXXXXXXXXX"
+  }'
+```
+
+**Request Parameters:**
+- `start_date` (required): Start date in YYYY-MM-DD format
+- `end_date` (required): End date in YYYY-MM-DD format  
+- `airtable_record_id` (optional): Airtable record ID from Infomerics Scraper table for status tracking
+
 **Response:**
 ```json
 {
@@ -76,6 +94,11 @@ curl -X POST "http://localhost:8000/infomerics/scrape" \
   "created_at": "2025-10-21T10:30:00"
 }
 ```
+
+**Airtable Status Flow (when airtable_record_id is provided):**
+1. **"In progress"** - Set immediately when request is received
+2. **"Done"** - Set when job completes successfully
+3. **"Error"** - Set when job fails
 
 ### GET /infomerics/jobs/{job_id}
 
@@ -105,6 +128,67 @@ curl -X GET "http://localhost:8000/infomerics/jobs/550e8400-e29b-41d4-a716-44665
   "end_date": "2025-10-15"
 }
 ```
+
+### POST /contacts/fetch
+
+Fetch director and signatory contacts from Attestr API using CIN (Company Identification Number).
+
+**Request:**
+```bash
+curl -X POST "http://localhost:8000/contacts/fetch" \
+  -H "X-API-Key: your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cin": "U74999TG2017PTC118280",
+    "company_airtable_id": "recXXXXXXXXXXXXXX",
+    "max_contacts": 10
+  }'
+```
+
+**Request Parameters:**
+- `cin` (required): Company Identification Number
+- `company_airtable_id` (required): Airtable record ID of the company from Companies table
+- `max_contacts` (optional): Maximum number of contacts to fetch (1-100, default: 100)
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Successfully processed 2 contacts: 1 new, 1 updated, 2 synced to Airtable",
+  "cin": "U74999TG2017PTC118280",
+  "business_name": "Acme Corp Private Limited",
+  "total_contacts_fetched": 2,
+  "new_contacts": 1,
+  "updated_contacts": 1,
+  "synced_to_airtable": 2,
+  "failed_syncs": 0,
+  "contacts": [
+    {
+      "indexId": "01234567",
+      "fullName": "GITANJALI RAHEJA",
+      "mobileNumber": "+911234567890",
+      "emailAddress": "gitanjali.raheja@acme.com",
+      "addresses": [
+        {
+          "line1": "3-1-764/1 Pathola Gate",
+          "state": "Telangana",
+          "country": "India",
+          "zip": "500027",
+          "fullAddress": "3-1-764/1 Pathola Gate, Telangana, India, 500027"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Features:**
+- Automatic deduplication by phone number or email address
+- Stores contacts in PostgreSQL with sync tracking
+- Syncs to Airtable Contacts table with company linkage
+- Updates existing contacts if duplicates are found
+
+**Note:** Requires `ATTESTR_API_KEY` to be configured in environment variables. See [CONTACT_FETCH_FEATURE.md](../CONTACT_FETCH_FEATURE.md) for detailed documentation.
 
 ### GET /health
 
@@ -161,6 +245,13 @@ curl -X GET "http://localhost:8000/health"
 - `Instrument Amount` ← instrument_amount
 - `Date` ← date (parsed to YYYY-MM-DD)
 - `Source URL` ← url
+
+**Infomerics Scraper Table** (`tbliVxZjw5Uzpfxc5`):
+- `Status` ← Updated automatically based on job lifecycle
+  - "Todo" - Initial state
+  - "In progress" - Job started
+  - "Done" - Job completed successfully
+  - "Error" - Job failed
 
 ## Security Features
 

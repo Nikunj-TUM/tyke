@@ -216,6 +216,22 @@
                     },
                     "id": "fldGYoBQhbK59GPVs",
                     "name": "Created"
+                },
+                {
+                    "type": "singleLineText",
+                    "id": "fldtnyzaZ23d5lSBn",
+                    "name": "Contacts"
+                },
+                {
+                    "type": "multipleRecordLinks",
+                    "options": {
+                        "linkedTableId": "tbljbYRWsRBb85X5y",
+                        "isReversed": false,
+                        "prefersSingleRecordLink": false,
+                        "inverseLinkFieldId": "fldLBvl13d0X0zQqo"
+                    },
+                    "id": "fldzxBT3faSaswcup",
+                    "name": "Contacts 2"
                 }
             ],
             "views": [
@@ -237,25 +253,43 @@
                     "name": "Name"
                 },
                 {
+                    "type": "multipleRecordLinks",
+                    "options": {
+                        "linkedTableId": "tblMsZnCUfG783lWI",
+                        "isReversed": false,
+                        "prefersSingleRecordLink": true,
+                        "inverseLinkFieldId": "fldzxBT3faSaswcup"
+                    },
+                    "id": "fldLBvl13d0X0zQqo",
+                    "name": "Company Name"
+                },
+                {
+                    "type": "multipleLookupValues",
+                    "options": {
+                        "isValid": true,
+                        "recordLinkFieldId": "fldLBvl13d0X0zQqo",
+                        "fieldIdInLinkedTable": "fldx8OX59LhHlQyfo",
+                        "result": {
+                            "type": "singleLineText"
+                        }
+                    },
+                    "id": "fldyklUmGdDuQ8v2a",
+                    "name": "CIN (from Company Name)"
+                },
+                {
                     "type": "phoneNumber",
                     "id": "fldqxhVjiYLoaWPaZ",
                     "name": "Phone Number"
                 },
                 {
-                    "type": "multipleLookupValues",
-                    "options": {
-                        "isValid": false,
-                        "recordLinkFieldId": null,
-                        "fieldIdInLinkedTable": "fld5nhRH2hcspLfzl",
-                        "result": null
-                    },
-                    "id": "fldf3uwDkfftw1UXv",
-                    "name": "Company Name (from Notes)"
+                    "type": "email",
+                    "id": "fldHn1hYKHsuszabJ",
+                    "name": "Email"
                 },
                 {
                     "type": "singleLineText",
-                    "id": "fldt6TiCCLO4hULhj",
-                    "name": "Company"
+                    "id": "fldyDcCMfP4UlSJ4f",
+                    "name": "Address"
                 },
                 {
                     "type": "singleSelect",

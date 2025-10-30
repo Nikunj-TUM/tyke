@@ -304,12 +304,46 @@ services:
     networks:
       - infomerics-network
 
+  # WhatsApp Service (Node.js with whatsapp-web.js)
+  whatsapp-service:
+    build:
+      context: ./whatsapp-service
+      dockerfile: Dockerfile
+    container_name: infomerics-whatsapp
+    ports:
+      - "3000:3000"  # For QR code and health checks
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+      - MESSAGE_QUEUE=whatsapp_messages
+      - STATUS_QUEUE=whatsapp_status
+      - PORT=3000
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      # Persist WhatsApp session data
+      - whatsapp_data:/app/.wwebjs_auth
+      - whatsapp_cache:/app/.wwebjs_cache
+    networks:
+      - infomerics-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
 volumes:
   postgres_data:
   rabbitmq_data:
   redis_data:
   flower_data:
   pgadmin_data:
+  whatsapp_data:
+  whatsapp_cache:
 
 networks:
   infomerics-network:

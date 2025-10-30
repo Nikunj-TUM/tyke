@@ -296,6 +296,9 @@ def finalize_postgres_job_task(
     try:
         logger.info(f"Task {self.request.id}: Finalizing job {job_id}")
         
+        # Get job to check if it has an airtable_record_id
+        job = job_manager.get_job(job_id)
+        
         # Update this job with final statistics
         job_manager.update_job(
             job_id,
@@ -308,10 +311,18 @@ def finalize_postgres_job_task(
             completed_at=datetime.now().isoformat()
         )
         
+        # Update Airtable status to "Done" if this is not a sub-job
+        if job and job.airtable_record_id and not job.parent_job_id:
+            try:
+                airtable_client = AirtableClient()
+                airtable_client.update_scraper_status(job.airtable_record_id, "Done")
+                logger.info(f"Updated Airtable record {job.airtable_record_id} to 'Done'")
+            except Exception as e:
+                logger.warning(f"Failed to update Airtable status to 'Done': {str(e)}")
+        
         logger.info(f"Task {self.request.id}: Job {job_id} finalized successfully")
         
         # Check if this is a sub-job and update parent if needed
-        job = job_manager.get_job(job_id)
         if job and job.parent_job_id:
             logger.info(
                 f"Task {self.request.id}: Job {job_id} is a sub-job of {job.parent_job_id}. "
@@ -326,6 +337,17 @@ def finalize_postgres_job_task(
                     f"Task {self.request.id}: Parent job {job.parent_job_id} has been updated "
                     f"(all sub-jobs processed)"
                 )
+                
+                # Update Airtable status for parent job
+                parent_job = job_manager.get_job(job.parent_job_id)
+                if parent_job and parent_job.airtable_record_id:
+                    try:
+                        airtable_client = AirtableClient()
+                        status = "Done" if parent_job.status == JobStatus.COMPLETED else "Error"
+                        airtable_client.update_scraper_status(parent_job.airtable_record_id, status)
+                        logger.info(f"Updated parent Airtable record {parent_job.airtable_record_id} to '{status}'")
+                    except Exception as e:
+                        logger.warning(f"Failed to update parent Airtable status: {str(e)}")
             else:
                 logger.info(
                     f"Task {self.request.id}: Parent job {job.parent_job_id} still has "
@@ -343,6 +365,9 @@ def finalize_postgres_job_task(
         import traceback
         logger.error(traceback.format_exc())
         
+        # Get job to check if it has an airtable_record_id
+        job = job_manager.get_job(job_id)
+        
         # Mark this job as failed
         job_manager.update_job(
             job_id,
@@ -350,10 +375,30 @@ def finalize_postgres_job_task(
             message=f"Finalization failed: {str(e)}"
         )
         
+        # Update Airtable status to "Error" if this is not a sub-job
+        if job and job.airtable_record_id and not job.parent_job_id:
+            try:
+                airtable_client = AirtableClient()
+                airtable_client.update_scraper_status(job.airtable_record_id, "Error")
+                logger.info(f"Updated Airtable record {job.airtable_record_id} to 'Error'")
+            except Exception as ae:
+                logger.warning(f"Failed to update Airtable status to 'Error': {str(ae)}")
+        
         # If this is a sub-job, also check parent (to mark it as partially failed)
-        job = job_manager.get_job(job_id)
         if job and job.parent_job_id:
-            job_manager.check_and_update_parent_completion(job.parent_job_id)
+            parent_updated = job_manager.check_and_update_parent_completion(job.parent_job_id)
+            
+            # Update parent Airtable status if parent was updated
+            if parent_updated:
+                parent_job = job_manager.get_job(job.parent_job_id)
+                if parent_job and parent_job.airtable_record_id:
+                    try:
+                        airtable_client = AirtableClient()
+                        status = "Done" if parent_job.status == JobStatus.COMPLETED else "Error"
+                        airtable_client.update_scraper_status(parent_job.airtable_record_id, status)
+                        logger.info(f"Updated parent Airtable record {parent_job.airtable_record_id} to '{status}'")
+                    except Exception as ae:
+                        logger.warning(f"Failed to update parent Airtable status: {str(ae)}")
         
         raise
 

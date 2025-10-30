@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     # Airtable Table IDs (from schema)
     COMPANIES_TABLE_ID: str = "tblMsZnCUfG783lWI"
     CREDIT_RATINGS_TABLE_ID: str = "tblRlxbOYMW8Rag7f"
+    INFOMERICS_SCRAPER_TABLE_ID: str = "tbliVxZjw5Uzpfxc5"
+    CONTACTS_TABLE_ID: str = "tbljbYRWsRBb85X5y"
     
     # Rate Limiting
     RATE_LIMIT_REQUESTS: int = 50
@@ -70,6 +72,11 @@ class Settings(BaseSettings):
     SCRAPER_WORKER_CONCURRENCY: int = 5
     UPLOAD_WORKER_CONCURRENCY: int = 10
     MAX_DATE_CHUNK_DAYS: int = 30
+    
+    # Attestr API Configuration
+    ATTESTR_API_KEY: str = ""
+    ATTESTR_API_URL: str = "https://api.attestr.com/api/v2/public/leadx/mca-cin-contact"
+    ATTESTR_MAX_CONTACTS: int = 100  # Default max contacts to fetch
     
     # Feature Flags
     USE_CELERY: bool = True
