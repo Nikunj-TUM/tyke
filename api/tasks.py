@@ -281,7 +281,10 @@ def finalize_postgres_job_task(
     job_id: str
 ) -> Dict[str, Any]:
     """
-    Finalize job by updating job status with PostgreSQL metrics
+    Finalize job by updating job status with PostgreSQL metrics.
+    
+    If this is a sub-job, checks if all sibling sub-jobs are complete and
+    updates the parent job accordingly.
     
     Args:
         sync_result: Result from sync_postgres_to_airtable_task
@@ -293,7 +296,7 @@ def finalize_postgres_job_task(
     try:
         logger.info(f"Task {self.request.id}: Finalizing job {job_id}")
         
-        # Update job with final statistics
+        # Update this job with final statistics
         job_manager.update_job(
             job_id,
             status=JobStatus.COMPLETED,
@@ -301,10 +304,33 @@ def finalize_postgres_job_task(
             companies_created=sync_result.get('companies_created', 0),
             ratings_created=sync_result.get('ratings_created', 0),
             uploaded_to_airtable=sync_result.get('ratings_created', 0),
-            sync_failures=sync_result.get('sync_failures', 0)
+            sync_failures=sync_result.get('sync_failures', 0),
+            completed_at=datetime.now().isoformat()
         )
         
         logger.info(f"Task {self.request.id}: Job {job_id} finalized successfully")
+        
+        # Check if this is a sub-job and update parent if needed
+        job = job_manager.get_job(job_id)
+        if job and job.parent_job_id:
+            logger.info(
+                f"Task {self.request.id}: Job {job_id} is a sub-job of {job.parent_job_id}. "
+                f"Checking parent completion..."
+            )
+            
+            # Check if all sibling sub-jobs are complete
+            parent_updated = job_manager.check_and_update_parent_completion(job.parent_job_id)
+            
+            if parent_updated:
+                logger.info(
+                    f"Task {self.request.id}: Parent job {job.parent_job_id} has been updated "
+                    f"(all sub-jobs processed)"
+                )
+            else:
+                logger.info(
+                    f"Task {self.request.id}: Parent job {job.parent_job_id} still has "
+                    f"sub-jobs in progress"
+                )
         
         return {
             'status': 'completed',
@@ -314,7 +340,21 @@ def finalize_postgres_job_task(
         
     except Exception as e:
         logger.error(f"Task {self.request.id}: Error finalizing job: {e}")
-        job_manager.update_job(job_id, status=JobStatus.FAILED)
+        import traceback
+        logger.error(traceback.format_exc())
+        
+        # Mark this job as failed
+        job_manager.update_job(
+            job_id,
+            status=JobStatus.FAILED,
+            message=f"Finalization failed: {str(e)}"
+        )
+        
+        # If this is a sub-job, also check parent (to mark it as partially failed)
+        job = job_manager.get_job(job_id)
+        if job and job.parent_job_id:
+            job_manager.check_and_update_parent_completion(job.parent_job_id)
+        
         raise
 
 
@@ -412,8 +452,12 @@ def process_scrape_job_orchestrator(self, job_id: str, start_date: str, end_date
     """
     Orchestrator task for the scraping pipeline using PostgreSQL deduplication.
     
-    Workflow: scrape -> extract -> save to postgres -> sync to airtable -> finalize
-    Uses Celery's chain and group primitives for non-blocking execution.
+    For large date ranges (>MAX_DATE_CHUNK_DAYS), creates independent sub-jobs that
+    are processed as if they were separate API calls, enabling true distributed processing.
+    
+    Workflow:
+    - Small range: scrape -> extract -> save -> sync -> finalize
+    - Large range: create sub-jobs -> each processes independently in parallel
     
     Args:
         job_id: Job ID for tracking
@@ -434,39 +478,80 @@ def process_scrape_job_orchestrator(self, job_id: str, start_date: str, end_date
         end = datetime.strptime(end_date, '%Y-%m-%d')
         date_range_days = (end - start).days
         
-        # Build workflow using Celery canvas primitives
+        # Build workflow based on date range size
         if date_range_days > settings.MAX_DATE_CHUNK_DAYS:
-            # Large date range: split into chunks and process in parallel
-            logger.info(f"Task {self.request.id}: Splitting date range into chunks")
+            # Large date range: create independent sub-jobs
+            logger.info(
+                f"Task {self.request.id}: Date range spans {date_range_days} days. "
+                f"Splitting into {settings.MAX_DATE_CHUNK_DAYS}-day independent sub-jobs"
+            )
             chunks = split_date_range(start_date, end_date, settings.MAX_DATE_CHUNK_DAYS)
+            logger.info(f"Task {self.request.id}: Creating {len(chunks)} sub-jobs for parallel processing")
             
-            # Parallel scraping of chunks
-            scrape_tasks = group([
-                scrape_date_range_task.s(chunk_start, chunk_end)
-                for chunk_start, chunk_end in chunks
-            ])
-            
-            # Chain: scrape (parallel) -> process and sync
-            workflow = chain(
-                    scrape_tasks,
-                    process_scrape_results_with_postgres_task.s(job_id, is_chunked=True)
+            # Create sub-jobs for each chunk
+            sub_job_ids = []
+            for i, (chunk_start, chunk_end) in enumerate(chunks, 1):
+                # Create a sub-job
+                sub_job = job_manager.create_job(
+                    start_date=chunk_start,
+                    end_date=chunk_end,
+                    parent_job_id=job_id
                 )
+                sub_job_ids.append(sub_job.job_id)
+                
+                logger.info(
+                    f"Task {self.request.id}: Created sub-job {i}/{len(chunks)}: "
+                    f"{sub_job.job_id} ({chunk_start} to {chunk_end})"
+                )
+                
+                # Queue the complete workflow chain for this sub-job
+                # Each sub-job is processed exactly like a normal job
+                workflow = chain(
+                    scrape_date_range_task.s(chunk_start, chunk_end),
+                    extract_instruments_task.s(),
+                    save_to_postgres_task.s(sub_job.job_id),
+                    sync_postgres_to_airtable_task.s(sub_job.job_id),
+                    finalize_postgres_job_task.s(sub_job.job_id)
+                )
+                workflow.apply_async()
+                
+                logger.info(f"Task {self.request.id}: Queued workflow for sub-job {sub_job.job_id}")
+            
+            # Update parent job with sub-job information
+            job_manager.update_job(
+                job_id,
+                status=JobStatus.RUNNING,
+                progress=10,
+                message=f"Processing {len(chunks)} sub-jobs in parallel"
+            )
+            
+            logger.info(
+                f"Task {self.request.id}: Successfully queued {len(chunks)} independent "
+                f"sub-jobs for parent job {job_id}"
+            )
+            
+            return {
+                'status': 'chunked',
+                'job_id': job_id,
+                'sub_jobs': sub_job_ids,
+                'chunks_created': len(chunks)
+            }
         else:
             # Small date range: single chain workflow
-            logger.info(f"Task {self.request.id}: Processing single date range")
+            logger.info(f"Task {self.request.id}: Processing single date range ({date_range_days} days)")
             workflow = chain(
-                    scrape_date_range_task.s(start_date, end_date),
-                    extract_instruments_task.s(),
-                    save_to_postgres_task.s(job_id),
-                    sync_postgres_to_airtable_task.s(job_id),
-                    finalize_postgres_job_task.s(job_id)
-                )
-        
-        # Execute the workflow asynchronously
-        workflow.apply_async()
-        
-        logger.info(f"Task {self.request.id}: Workflow initiated for job {job_id}")
-        return {'status': 'workflow_initiated', 'job_id': job_id}
+                scrape_date_range_task.s(start_date, end_date),
+                extract_instruments_task.s(),
+                save_to_postgres_task.s(job_id),
+                sync_postgres_to_airtable_task.s(job_id),
+                finalize_postgres_job_task.s(job_id)
+            )
+            
+            # Execute the workflow asynchronously
+            workflow.apply_async()
+            
+            logger.info(f"Task {self.request.id}: Workflow initiated for job {job_id}")
+            return {'status': 'workflow_initiated', 'job_id': job_id}
         
     except Exception as e:
         error_msg = f"Orchestrator failed: {str(e)}"
@@ -476,7 +561,8 @@ def process_scrape_job_orchestrator(self, job_id: str, start_date: str, end_date
         job_manager.update_job(
             job_id,
             status=JobStatus.FAILED,
-            progress=0
+            progress=0,
+            message=f"Orchestrator failed: {str(e)}"
         )
         raise
 

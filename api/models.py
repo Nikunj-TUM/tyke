@@ -77,6 +77,9 @@ class JobStatusResponse(BaseModel):
     completed_at: Optional[str] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
+    parent_job_id: Optional[str] = None
+    sub_jobs: List[str] = []
+    message: Optional[str] = None
 
 
 class HealthResponse(BaseModel):
