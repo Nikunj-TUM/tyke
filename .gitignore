@@ -42,7 +42,6 @@ MANIFEST
 logs/
 
 # Data files
-*.json
 !airtable_base_schema.json
 *.csv
 *.xlsx
