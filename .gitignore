@@ -63,3 +63,4 @@ api/.env
 
 .md/
 test_scripts/*
+test_scripts/
