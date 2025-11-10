@@ -9,6 +9,10 @@ from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
 from bs4 import BeautifulSoup
+from urllib.parse import urlencode
+
+from api.config import settings
+from api.bright_data_client import BrightDataClient, BrightDataConfig
 
 logger = logging.getLogger(__name__)
 
@@ -278,26 +282,48 @@ class HTMLCreditRatingExtractor:
 
 class InfomericsPressScraper:
     """
-    Scraper for Infomerics press release pages
-    DUPLICATED FROM scrape_press_release_page.py - DO NOT MODIFY
+    Scraper for Infomerics press release pages.
+    
+    Supports two modes:
+    1. Bright Data Web Unlocker API (when USE_BRIGHT_DATA=True) - bypasses anti-bot measures
+    2. Direct requests (when USE_BRIGHT_DATA=False) - simple direct HTTP requests
     """
     
     def __init__(self):
         self.base_url = "https://www.infomerics.com/latest-press-release_date_wise.php"
-        self.session = requests.Session()
-        # Set user agent to avoid blocking
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        })
-        # Disable SSL verification for this specific site if needed
-        self.session.verify = False
-        # Suppress SSL warnings
-        import urllib3
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        self.use_bright_data = settings.USE_BRIGHT_DATA
+        
+        if self.use_bright_data:
+            # Initialize Bright Data client
+            logger.info("Using Bright Data Web Unlocker API for Infomerics scraping")
+            bright_data_config = BrightDataConfig(
+                api_key=settings.BRIGHT_DATA_API_KEY,
+                zone=settings.BRIGHT_DATA_ZONE,
+                country=settings.BRIGHT_DATA_COUNTRY,
+                max_retries=settings.BRIGHT_DATA_MAX_RETRIES,
+                retry_backoff=settings.BRIGHT_DATA_RETRY_BACKOFF,
+                timeout=120
+            )
+            self.bright_data_client = BrightDataClient(bright_data_config)
+        else:
+            # Use direct requests
+            logger.info("Using direct requests for Infomerics scraping")
+            self.session = requests.Session()
+            # Set user agent to avoid blocking
+            self.session.headers.update({
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            })
+            # Disable SSL verification for this specific site if needed
+            self.session.verify = False
+            # Suppress SSL warnings
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     def scrape_date_range(self, from_date: str, to_date: str) -> Optional[Dict[str, Any]]:
         """
-        Scrape press releases for a given date range
+        Scrape press releases for a given date range.
+        
+        Uses Bright Data API or direct requests based on USE_BRIGHT_DATA setting.
         
         Args:
             from_date: Start date in format YYYY-MM-DD
@@ -318,34 +344,62 @@ class InfomericsPressScraper:
             }
             
             logger.info(f"Scraping Infomerics data from {from_date} to {to_date}...")
-            logger.info(f"URL: {self.base_url}")
+            logger.info(f"Base URL: {self.base_url}")
             logger.info(f"Parameters: {params}")
             
-            # Make the request
-            response = self.session.get(self.base_url, params=params, timeout=120)
-            response.raise_for_status()
-            
-            logger.info(f"Response status: {response.status_code}")
-            logger.info(f"Response size: {len(response.text)} characters")
-            
-            # Create response data structure similar to bright_data format
-            response_data = {
-                'status_code': response.status_code,
-                'headers': dict(response.headers),
-                'body': response.text,
-                'url': response.url,
-                'from_date': from_date,
-                'to_date': to_date,
-                'scraped_at': datetime.now().isoformat()
-            }
+            if self.use_bright_data:
+                # Use Bright Data Web Unlocker API
+                # Construct full URL with query parameters
+                full_url = f"{self.base_url}?{urlencode(params)}"
+                
+                logger.info(f"Fetching via Bright Data: {full_url}")
+                html_content = self.bright_data_client.fetch_url(
+                    url=full_url,
+                    method="GET"
+                )
+                
+                logger.info(f"Successfully fetched via Bright Data")
+                logger.info(f"Response size: {len(html_content)} characters")
+                
+                # Create response data structure for compatibility
+                response_data = {
+                    'status_code': 200,
+                    'headers': {},
+                    'body': html_content,
+                    'url': full_url,
+                    'from_date': from_date,
+                    'to_date': to_date,
+                    'scraped_at': datetime.now().isoformat(),
+                    'method': 'bright_data'
+                }
+                
+            else:
+                # Use direct requests
+                logger.info(f"Fetching via direct request")
+                response = self.session.get(self.base_url, params=params, timeout=120)
+                response.raise_for_status()
+                
+                logger.info(f"Response status: {response.status_code}")
+                logger.info(f"Response size: {len(response.text)} characters")
+                
+                # Create response data structure
+                response_data = {
+                    'status_code': response.status_code,
+                    'headers': dict(response.headers),
+                    'body': response.text,
+                    'url': response.url,
+                    'from_date': from_date,
+                    'to_date': to_date,
+                    'scraped_at': datetime.now().isoformat(),
+                    'method': 'direct'
+                }
             
             return response_data
             
-        except requests.RequestException as e:
-            logger.error(f"Error making request: {str(e)}")
-            return None
         except Exception as e:
             logger.error(f"Error during scraping: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
             return None
     
     def _validate_date_format(self, date_str: str) -> None:
@@ -427,13 +481,33 @@ class ScraperService:
 
 class ZaubaCorpScraper:
     """
-    Scraper for ZaubaCorp to fetch CIN (Company Identification Number)
+    Scraper for ZaubaCorp to fetch CIN (Company Identification Number).
+    
+    Supports two modes:
+    1. Bright Data Web Unlocker API (when USE_BRIGHT_DATA=True) - bypasses anti-bot measures
+    2. Direct requests (when USE_BRIGHT_DATA=False) - simple direct HTTP requests
     """
     
     BASE_URL = "https://www.zaubacorp.com/companysearchresults/"
     
     def __init__(self):
         self.timeout = 30  # 30 seconds timeout
+        self.use_bright_data = settings.USE_BRIGHT_DATA
+        
+        if self.use_bright_data:
+            # Initialize Bright Data client
+            logger.info("Using Bright Data Web Unlocker API for ZaubaCorp scraping")
+            bright_data_config = BrightDataConfig(
+                api_key=settings.BRIGHT_DATA_API_KEY,
+                zone=settings.BRIGHT_DATA_ZONE,
+                country=settings.BRIGHT_DATA_COUNTRY,
+                max_retries=settings.BRIGHT_DATA_MAX_RETRIES,
+                retry_backoff=settings.BRIGHT_DATA_RETRY_BACKOFF,
+                timeout=self.timeout
+            )
+            self.bright_data_client = BrightDataClient(bright_data_config)
+        else:
+            logger.info("Using direct requests for ZaubaCorp scraping")
     
     def _slugify_company_name(self, company_name: str) -> str:
         """
@@ -533,7 +607,9 @@ class ZaubaCorpScraper:
     
     def scrape_company_search(self, company_name: str) -> Optional[str]:
         """
-        Scrape ZaubaCorp search results for a company
+        Scrape ZaubaCorp search results for a company.
+        
+        Uses Bright Data API or direct requests based on USE_BRIGHT_DATA setting.
         
         Args:
             company_name: Company name to search for
@@ -547,32 +623,41 @@ class ZaubaCorpScraper:
             
             logger.info(f"Scraping ZaubaCorp: {url}")
             
-            # Set headers to mimic a browser request
-            # Note: Don't set Accept-Encoding - let requests handle compression automatically
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.5',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1'
-            }
+            if self.use_bright_data:
+                # Use Bright Data Web Unlocker API
+                logger.info(f"Fetching ZaubaCorp via Bright Data for: {company_name}")
+                html_text = self.bright_data_client.fetch_url(
+                    url=url,
+                    method="GET"
+                )
+                logger.info(f"Successfully scraped ZaubaCorp via Bright Data for {company_name}: {len(html_text)} chars")
+                
+            else:
+                # Use direct requests
+                # Set headers to mimic a browser request
+                # Note: Don't set Accept-Encoding - let requests handle compression automatically
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                    'Connection': 'keep-alive',
+                    'Upgrade-Insecure-Requests': '1'
+                }
+                
+                logger.info(f"Fetching ZaubaCorp via direct request for: {company_name}")
+                response = requests.get(url, headers=headers, timeout=self.timeout)
+                response.raise_for_status()
+                
+                # Use the response's detected encoding (requests auto-detects from Content-Type header)
+                html_text = response.text
+                logger.info(f"Successfully scraped ZaubaCorp via direct request for {company_name}: {len(html_text)} chars")
             
-            response = requests.get(url, headers=headers, timeout=self.timeout)
-            response.raise_for_status()
-            
-            # Use the response's detected encoding (requests auto-detects from Content-Type header)
-            html_text = response.text
-            logger.info(f"Successfully scraped ZaubaCorp for {company_name}: {len(html_text)} chars")
             return html_text
             
-        except requests.exceptions.Timeout:
-            logger.error(f"Timeout scraping ZaubaCorp for {company_name}")
-            return None
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error scraping ZaubaCorp for {company_name}: {str(e)}")
-            return None
         except Exception as e:
-            logger.error(f"Unexpected error scraping ZaubaCorp for {company_name}: {str(e)}")
+            logger.error(f"Error scraping ZaubaCorp for {company_name}: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
             return None
 
 

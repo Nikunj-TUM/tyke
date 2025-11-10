@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to scrape Infomerics press release pages and extract company data.
-Makes GET requests to the Infomerics website and processes the HTML using extract_data_press_release_page.py
+Supports both Bright Data Web Unlocker API and direct requests.
 """
 
 import requests
@@ -10,31 +10,79 @@ import sys
 import os
 from datetime import datetime
 from typing import Optional, Dict, Any
-import time
+from urllib.parse import urlencode
+
+# Import parent directory modules
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from api.bright_data_client import BrightDataClient, BrightDataConfig
 
 # Import the extraction module
 from extract_data_press_release_page import HTMLCreditRatingExtractor
 
 
 class InfomericsPressScraper:
-    """Scraper for Infomerics press release pages"""
+    """
+    Scraper for Infomerics press release pages.
     
-    def __init__(self):
+    Supports two modes:
+    1. Bright Data Web Unlocker API - set use_bright_data=True and provide API credentials
+    2. Direct requests - set use_bright_data=False for simple HTTP requests
+    """
+    
+    def __init__(
+        self, 
+        use_bright_data: bool = False,
+        bright_data_api_key: Optional[str] = None,
+        bright_data_zone: str = "web_unlocker1",
+        bright_data_country: str = "in"
+    ):
+        """
+        Initialize the scraper.
+        
+        Args:
+            use_bright_data: If True, use Bright Data API; if False, use direct requests
+            bright_data_api_key: API key for Bright Data (required if use_bright_data=True)
+            bright_data_zone: Zone identifier for Bright Data
+            bright_data_country: Country code for proxy location
+        """
         self.base_url = "https://www.infomerics.com/latest-press-release_date_wise.php"
-        self.session = requests.Session()
-        # Set user agent to avoid blocking
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        })
-        # Disable SSL verification for this specific site if needed
-        self.session.verify = False
-        # Suppress SSL warnings
-        import urllib3
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        self.use_bright_data = use_bright_data
+        
+        if self.use_bright_data:
+            # Initialize Bright Data client
+            if not bright_data_api_key:
+                raise ValueError("bright_data_api_key is required when use_bright_data=True")
+            
+            print("Using Bright Data Web Unlocker API")
+            bright_data_config = BrightDataConfig(
+                api_key=bright_data_api_key,
+                zone=bright_data_zone,
+                country=bright_data_country,
+                max_retries=3,
+                retry_backoff=2,
+                timeout=120
+            )
+            self.bright_data_client = BrightDataClient(bright_data_config)
+        else:
+            # Use direct requests
+            print("Using direct requests")
+            self.session = requests.Session()
+            # Set user agent to avoid blocking
+            self.session.headers.update({
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            })
+            # Disable SSL verification for this specific site if needed
+            self.session.verify = False
+            # Suppress SSL warnings
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     def scrape_date_range(self, from_date: str, to_date: str) -> Optional[Dict[str, Any]]:
         """
-        Scrape press releases for a given date range
+        Scrape press releases for a given date range.
+        
+        Uses Bright Data API or direct requests based on initialization.
         
         Args:
             from_date: Start date in format YYYY-MM-DD
@@ -55,34 +103,61 @@ class InfomericsPressScraper:
             }
             
             print(f"Scraping Infomerics data from {from_date} to {to_date}...")
-            print(f"URL: {self.base_url}")
+            print(f"Base URL: {self.base_url}")
             print(f"Parameters: {params}")
             
-            # Make the request
-            response = self.session.get(self.base_url, params=params, timeout=30)
-            response.raise_for_status()
-            
-            print(f"Response status: {response.status_code}")
-            print(f"Response size: {len(response.text)} characters")
-            
-            # Create response data structure similar to bright_data format
-            response_data = {
-                'status_code': response.status_code,
-                'headers': dict(response.headers),
-                'body': response.text,
-                'url': response.url,
-                'from_date': from_date,
-                'to_date': to_date,
-                'scraped_at': datetime.now().isoformat()
-            }
+            if self.use_bright_data:
+                # Use Bright Data Web Unlocker API
+                full_url = f"{self.base_url}?{urlencode(params)}"
+                
+                print(f"Fetching via Bright Data: {full_url}")
+                html_content = self.bright_data_client.fetch_url(
+                    url=full_url,
+                    method="GET"
+                )
+                
+                print(f"Successfully fetched via Bright Data")
+                print(f"Response size: {len(html_content)} characters")
+                
+                # Create response data structure for compatibility
+                response_data = {
+                    'status_code': 200,
+                    'headers': {},
+                    'body': html_content,
+                    'url': full_url,
+                    'from_date': from_date,
+                    'to_date': to_date,
+                    'scraped_at': datetime.now().isoformat(),
+                    'method': 'bright_data'
+                }
+                
+            else:
+                # Use direct requests
+                print(f"Fetching via direct request")
+                response = self.session.get(self.base_url, params=params, timeout=30)
+                response.raise_for_status()
+                
+                print(f"Response status: {response.status_code}")
+                print(f"Response size: {len(response.text)} characters")
+                
+                # Create response data structure
+                response_data = {
+                    'status_code': response.status_code,
+                    'headers': dict(response.headers),
+                    'body': response.text,
+                    'url': response.url,
+                    'from_date': from_date,
+                    'to_date': to_date,
+                    'scraped_at': datetime.now().isoformat(),
+                    'method': 'direct'
+                }
             
             return response_data
             
-        except requests.RequestException as e:
-            print(f"Error making request: {str(e)}")
-            return None
         except Exception as e:
             print(f"Error during scraping: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return None
     
     def _validate_date_format(self, date_str: str) -> None:
@@ -156,15 +231,32 @@ class InfomericsPressScraper:
 
 def main(from_date: str, to_date: str):
     """
-    Main function to scrape and extract data for given date range
+    Main function to scrape and extract data for given date range.
+    
+    Reads configuration from environment variables:
+    - USE_BRIGHT_DATA: Set to 'true' to use Bright Data API
+    - BRIGHT_DATA_API_KEY: Your Bright Data API key
+    - BRIGHT_DATA_ZONE: Zone identifier (default: web_unlocker1)
+    - BRIGHT_DATA_COUNTRY: Country code (default: in)
     
     Args:
         from_date: Start date in format YYYY-MM-DD
         to_date: End date in format YYYY-MM-DD
     """
     try:
-        # Initialize scraper
-        scraper = InfomericsPressScraper()
+        # Read configuration from environment variables
+        use_bright_data = os.getenv('USE_BRIGHT_DATA', 'false').lower() == 'true'
+        bright_data_api_key = os.getenv('BRIGHT_DATA_API_KEY', '')
+        bright_data_zone = os.getenv('BRIGHT_DATA_ZONE', 'web_unlocker1')
+        bright_data_country = os.getenv('BRIGHT_DATA_COUNTRY', 'in')
+        
+        # Initialize scraper with appropriate mode
+        scraper = InfomericsPressScraper(
+            use_bright_data=use_bright_data,
+            bright_data_api_key=bright_data_api_key if use_bright_data else None,
+            bright_data_zone=bright_data_zone,
+            bright_data_country=bright_data_country
+        )
         
         # Scrape the data
         response_data = scraper.scrape_date_range(from_date, to_date)

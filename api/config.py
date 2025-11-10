@@ -78,6 +78,14 @@ class Settings(BaseSettings):
     ATTESTR_API_URL: str = "https://api.attestr.com/api/v2/public/leadx/mca-cin-contact"
     ATTESTR_MAX_CONTACTS: int = 100  # Default max contacts to fetch
     
+    # Bright Data Web Unlocker Configuration
+    USE_BRIGHT_DATA: bool = False  # Toggle between Bright Data API and direct requests
+    BRIGHT_DATA_API_KEY: str = ""  # Required when USE_BRIGHT_DATA=True
+    BRIGHT_DATA_ZONE: str = "web_unlocker1"  # Zone identifier from Bright Data dashboard
+    BRIGHT_DATA_COUNTRY: str = "in"  # Two-letter ISO country code (in=India)
+    BRIGHT_DATA_MAX_RETRIES: int = 3  # Maximum retry attempts on failure
+    BRIGHT_DATA_RETRY_BACKOFF: int = 2  # Exponential backoff base in seconds
+    
     # Feature Flags
     USE_CELERY: bool = True
     USE_POSTGRES_DEDUPLICATION: bool = True
