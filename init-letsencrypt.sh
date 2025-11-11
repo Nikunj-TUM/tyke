@@ -21,6 +21,7 @@ print_info() {
     echo -e "${GREEN}[INFO]${NC} $1"
 }
 
+
 print_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
@@ -106,11 +107,11 @@ openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
 
 # Create initial Nginx configuration (using default.conf)
 print_info "Setting up initial Nginx configuration..."
-cp ./nginx/default.conf "$NGINX_CONF_DIR/default.conf"
+sed "s/\${DOMAIN}/$DOMAIN/g" ./nginx/default.conf > "$NGINX_CONF_DIR/default.conf"
 
 # Start Nginx
 print_info "Starting Nginx..."
-docker-compose -f $COMPOSE_FILE up -d nginx
+docker compose -f $COMPOSE_FILE up -d nginx
 
 # Wait for Nginx to start
 print_info "Waiting for Nginx to be ready..."
@@ -122,7 +123,7 @@ rm -rf "$CERTBOT_DIR/conf/live/$DOMAIN"
 
 # Request the real certificate
 print_info "Requesting Let's Encrypt certificate for $DOMAIN..."
-docker-compose -f $COMPOSE_FILE run --rm certbot certonly \
+docker compose -f $COMPOSE_FILE run --rm certbot certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
     --email $LETSENCRYPT_EMAIL \
@@ -141,7 +142,7 @@ if [ $? -eq 0 ]; then
     
     # Reload Nginx
     print_info "Reloading Nginx..."
-    docker-compose -f $COMPOSE_FILE exec nginx nginx -s reload
+    docker compose -f $COMPOSE_FILE exec nginx nginx -s reload
     
     print_info "✅ SSL setup complete!"
     print_info "Your site is now available at: https://$DOMAIN"
@@ -156,7 +157,7 @@ fi
 
 # Show certificate information
 print_info "Certificate information:"
-docker-compose -f $COMPOSE_FILE run --rm certbot certificates
+docker compose -f $COMPOSE_FILE run --rm certbot certificates
 
 print_info "🎉 All done! SSL is now active."
 print_info "Certificates will auto-renew via the certbot service."
