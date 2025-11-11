@@ -1,0 +1,397 @@
+# ⚠️ PRODUCTION CONFIGURATION ⚠️
+# This file is for PRODUCTION deployment only!
+# For development, use: docker-compose.yml
+# 
+# To deploy: docker-compose -f docker-compose.prod.yml up -d
+#
+# Security features:
+# - Nginx reverse proxy with SSL/TLS
+# - No exposed internal ports (all via Nginx)
+# - Strong authentication required
+# - Production environment variables
+
+services:
+  # Nginx Reverse Proxy with SSL
+  nginx:
+    image: nginx:alpine
+    container_name: infomerics-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - infomerics-network
+    depends_on:
+      - api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Certbot for SSL certificates
+  certbot:
+    image: certbot/certbot
+    container_name: infomerics-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - infomerics-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: infomerics-postgres
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    networks:
+      - infomerics-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:4.1-management-alpine
+    container_name: infomerics-rabbitmq
+    expose:
+      - "5672"
+      - "15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    networks:
+      - infomerics-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Result Backend
+  redis:
+    image: redis:7-alpine
+    container_name: infomerics-redis
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - infomerics-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $${REDIS_PASSWORD} ping || redis-cli ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: sh -c "redis-server --appendonly yes $${REDIS_PASSWORD:+--requirepass} $${REDIS_PASSWORD}"
+
+  # FastAPI Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: infomerics-scraper-api
+    expose:
+      - "8000"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - API_KEY=${API_KEY}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - USE_CELERY=true
+      - USE_BRIGHT_DATA=${USE_BRIGHT_DATA:-false}
+      - BRIGHT_DATA_API_KEY=${BRIGHT_DATA_API_KEY}
+      - ATTESTR_API_KEY=${ATTESTR_API_KEY}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - infomerics-network
+
+  # Celery Worker - Scraping Queue
+  celery-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "celery -A api.celery_app worker -Q scraping --loglevel=info --concurrency=$${CELERY_SCRAPER_CONCURRENCY:-5} -n scraper@%h --max-tasks-per-child=1000"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - USE_CELERY=true
+      - CELERY_SCRAPER_CONCURRENCY=${CELERY_SCRAPER_CONCURRENCY:-5}
+      - USE_BRIGHT_DATA=${USE_BRIGHT_DATA:-true}
+      - BRIGHT_DATA_API_KEY=${BRIGHT_DATA_API_KEY}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_SCRAPER_REPLICAS:-1}
+
+  # Celery Worker - Extraction Queue
+  celery-extractor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "celery -A api.celery_app worker -Q extraction --loglevel=info --concurrency=$${CELERY_EXTRACTOR_CONCURRENCY:-3} -n extractor@%h --max-tasks-per-child=500"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - USE_CELERY=true
+      - CELERY_EXTRACTOR_CONCURRENCY=${CELERY_EXTRACTOR_CONCURRENCY:-3}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_EXTRACTOR_REPLICAS:-1}
+
+  # Celery Worker - Upload Queue
+  celery-uploader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "celery -A api.celery_app worker -Q uploading --loglevel=info --concurrency=$${CELERY_UPLOADER_CONCURRENCY:-10} -n uploader@%h --max-tasks-per-child=2000"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - USE_CELERY=true
+      - CELERY_UPLOADER_CONCURRENCY=${CELERY_UPLOADER_CONCURRENCY:-10}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_UPLOADER_REPLICAS:-1}
+
+  # Celery Worker - General Queue (Orchestrator)
+  celery-general:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "celery -A api.celery_app worker -Q celery --loglevel=info --concurrency=$${CELERY_GENERAL_CONCURRENCY:-4} -n general@%h --max-tasks-per-child=1000"
+    environment:
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - USE_CELERY=true
+      - CELERY_GENERAL_CONCURRENCY=${CELERY_GENERAL_CONCURRENCY:-4}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - infomerics-network
+    deploy:
+      replicas: ${CELERY_GENERAL_REPLICAS:-1}
+
+  # Flower Monitoring Dashboard
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: infomerics-flower
+    command: celery -A api.celery_app --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672// flower --port=5555 --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:15672/api/ --persistent=true --auto_refresh=true --max_tasks=10000 --basic_auth=${FLOWER_USER}:${FLOWER_PASSWORD}
+    expose:
+      - "5555"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      celery-scraper:
+        condition: service_started
+      celery-extractor:
+        condition: service_started
+      celery-uploader:
+        condition: service_started
+      celery-general:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    volumes:
+      - flower_data:/data
+    networks:
+      - infomerics-network
+
+  # WhatsApp Service (Node.js with whatsapp-web.js)
+  whatsapp-service:
+    build:
+      context: ./whatsapp-service
+      dockerfile: Dockerfile
+    container_name: infomerics-whatsapp
+    expose:
+      - "3000"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASSWORD}
+      - MESSAGE_QUEUE=whatsapp_messages
+      - STATUS_QUEUE=whatsapp_status
+      - PORT=3000
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - whatsapp_data:/app/.wwebjs_auth
+      - whatsapp_cache:/app/.wwebjs_cache
+    networks:
+      - infomerics-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  redis_data:
+  flower_data:
+  whatsapp_data:
+  whatsapp_cache:
+  nginx_logs:
+
+networks:
+  infomerics-network:
+    driver: bridge
+
