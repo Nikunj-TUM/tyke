@@ -92,10 +92,18 @@ echo -e "${BLUE}4. Queue Tests${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Check if queues exist
-run_test "Scraping queue exists" "curl -s -u guest:guest http://localhost:15672/api/queues/%2F/scraping | grep -q scraping"
-run_test "Extraction queue exists" "curl -s -u guest:guest http://localhost:15672/api/queues/%2F/extraction | grep -q extraction"
-run_test "Uploading queue exists" "curl -s -u guest:guest http://localhost:15672/api/queues/%2F/uploading | grep -q uploading"
-run_test "Celery queue exists" "curl -s -u guest:guest http://localhost:15672/api/queues/%2F/celery | grep -q celery"
+# Load credentials from .env if available
+if [ -f .env ]; then
+    source .env
+fi
+RABBITMQ_USER=${RABBITMQ_USER:-guest}
+RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-guest}
+RABBITMQ_MANAGEMENT_PORT=${RABBITMQ_MANAGEMENT_PORT:-15672}
+
+run_test "Scraping queue exists" "curl -s -u $RABBITMQ_USER:$RABBITMQ_PASSWORD http://localhost:$RABBITMQ_MANAGEMENT_PORT/api/queues/%2F/scraping | grep -q scraping"
+run_test "Extraction queue exists" "curl -s -u $RABBITMQ_USER:$RABBITMQ_PASSWORD http://localhost:$RABBITMQ_MANAGEMENT_PORT/api/queues/%2F/extraction | grep -q extraction"
+run_test "Uploading queue exists" "curl -s -u $RABBITMQ_USER:$RABBITMQ_PASSWORD http://localhost:$RABBITMQ_MANAGEMENT_PORT/api/queues/%2F/uploading | grep -q uploading"
+run_test "Celery queue exists" "curl -s -u $RABBITMQ_USER:$RABBITMQ_PASSWORD http://localhost:$RABBITMQ_MANAGEMENT_PORT/api/queues/%2F/celery | grep -q celery"
 
 echo ""
 echo -e "${BLUE}5. Redis Connection Test${NC}"

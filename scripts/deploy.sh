@@ -11,7 +11,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-COMPOSE_FILE="docker-compose.prod.yml"
+COMPOSE_FILE="docker-compose.yml"
+COMPOSE_PROFILES="--profile https"
 
 print_header() {
     echo -e "${BLUE}================================${NC}"
@@ -44,27 +45,27 @@ COMMAND=${1:-help}
 case $COMMAND in
     "build")
         print_header "Building Docker Images"
-        docker-compose -f $COMPOSE_FILE build
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES build
         print_info "✅ Build complete!"
         ;;
         
     "start")
         print_header "Starting Services"
-        docker-compose -f $COMPOSE_FILE up -d
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES up -d
         sleep 5
-        docker-compose -f $COMPOSE_FILE ps
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES ps
         print_info "✅ Services started!"
         ;;
         
     "stop")
         print_header "Stopping Services"
-        docker-compose -f $COMPOSE_FILE down
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES down
         print_info "✅ Services stopped!"
         ;;
         
     "restart")
         print_header "Restarting Services"
-        docker-compose -f $COMPOSE_FILE restart
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES restart
         print_info "✅ Services restarted!"
         ;;
         
@@ -75,16 +76,16 @@ case $COMMAND in
         git pull
         
         print_info "Building new images..."
-        docker-compose -f $COMPOSE_FILE build
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES build
         
         print_info "Restarting services..."
-        docker-compose -f $COMPOSE_FILE up -d
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES up -d
         
         print_info "Waiting for services to be ready..."
         sleep 10
         
         print_info "Checking service status..."
-        docker-compose -f $COMPOSE_FILE ps
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES ps
         
         print_info "✅ Update complete!"
         ;;
@@ -93,16 +94,16 @@ case $COMMAND in
         SERVICE=${2:-}
         if [ -z "$SERVICE" ]; then
             print_info "Showing all logs (Ctrl+C to exit)..."
-            docker-compose -f $COMPOSE_FILE logs -f
+            docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES logs -f
         else
             print_info "Showing logs for $SERVICE (Ctrl+C to exit)..."
-            docker-compose -f $COMPOSE_FILE logs -f $SERVICE
+            docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES logs -f $SERVICE
         fi
         ;;
         
     "status")
         print_header "Service Status"
-        docker-compose -f $COMPOSE_FILE ps
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES ps
         echo ""
         print_info "To view logs: ./scripts/deploy.sh logs [service]"
         ;;
@@ -151,7 +152,7 @@ EOF
         
         # Check if containers are running
         print_info "Container status:"
-        docker-compose -f $COMPOSE_FILE ps
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES ps
         echo ""
         
         # Check API health
@@ -180,7 +181,7 @@ EOF
         read -p "Continue? (y/N) " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            docker-compose -f $COMPOSE_FILE down
+            docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES down
             docker system prune -f
             print_info "✅ Cleanup complete!"
         else

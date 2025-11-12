@@ -28,10 +28,10 @@ class WhatsAppService:
     def _connect(self):
         """Establish RabbitMQ connection"""
         try:
-            credentials = pika.PlainCredentials('guest', 'guest')
+            credentials = pika.PlainCredentials(settings.RABBITMQ_USER, settings.RABBITMQ_PASSWORD)
             parameters = pika.ConnectionParameters(
                 host=settings.RABBITMQ_HOST,
-                port=5672,
+                port=settings.RABBITMQ_PORT,
                 credentials=credentials,
                 heartbeat=600,
                 blocked_connection_timeout=300
@@ -255,10 +255,10 @@ class WhatsAppStatusListener:
     def _connect(self):
         """Establish RabbitMQ connection"""
         try:
-            credentials = pika.PlainCredentials('guest', 'guest')
+            credentials = pika.PlainCredentials(settings.RABBITMQ_USER, settings.RABBITMQ_PASSWORD)
             parameters = pika.ConnectionParameters(
                 host=settings.RABBITMQ_HOST,
-                port=5672,
+                port=settings.RABBITMQ_PORT,
                 credentials=credentials,
                 heartbeat=600,
                 blocked_connection_timeout=300

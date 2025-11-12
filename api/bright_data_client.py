@@ -21,7 +21,6 @@ class BrightDataConfig:
     """Configuration for Bright Data Web Unlocker API"""
     api_key: str
     zone: str = "web_unlocker1"
-    country: str = "in"
     max_retries: int = 3
     retry_backoff: int = 2
     timeout: int = 120
@@ -79,13 +78,12 @@ class BrightDataClient:
             'Content-Type': 'application/json'
         })
         
-        logger.info(f"Initialized Bright Data client with zone: {config.zone}, country: {config.country}")
+        logger.info(f"Initialized Bright Data client with zone: {config.zone}")
     
     def fetch_url(
         self,
         url: str,
         method: str = "GET",
-        country: Optional[str] = None,
         format: str = "raw",
         data_format: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
@@ -99,7 +97,6 @@ class BrightDataClient:
         Args:
             url: Target URL to fetch (must include protocol: http/https)
             method: HTTP method (GET, POST, etc.). Default: GET
-            country: Two-letter ISO country code for proxy location. Default: from config
             format: Response format - 'raw' returns HTML string, 'json' returns structured data. Default: raw
             data_format: Additional format transformation ('markdown', 'screenshot', None). Default: None
             headers: Optional custom headers to send with the request
@@ -119,15 +116,12 @@ class BrightDataClient:
         if not url.startswith(('http://', 'https://')):
             raise ValueError(f"URL must include protocol (http:// or https://): {url}")
         
-        country = country or self.config.country
-        
         # Build request payload according to Bright Data API spec
         payload: Dict[str, Any] = {
             "zone": self.config.zone,
             "url": url,
             "format": format,
-            "method": method.upper(),
-            "country": country
+            "method": method.upper()
         }
         
         # Add optional parameters

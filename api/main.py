@@ -614,5 +614,11 @@ async def send_bulk_whatsapp_messages(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import os
+    
+    # Allow host and port to be configured via environment variables
+    host = os.getenv("API_HOST", "0.0.0.0")
+    port = int(os.getenv("API_PORT", "8000"))
+    
+    uvicorn.run(app, host=host, port=port)
 

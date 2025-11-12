@@ -19,10 +19,11 @@ class Settings(BaseSettings):
     AIRTABLE_BASE_ID: str = "appYourBaseId"  # Will be set from env
     
     # Airtable Table IDs (from schema)
-    COMPANIES_TABLE_ID: str = "tblMsZnCUfG783lWI"
-    CREDIT_RATINGS_TABLE_ID: str = "tblRlxbOYMW8Rag7f"
-    INFOMERICS_SCRAPER_TABLE_ID: str = "tbliVxZjw5Uzpfxc5"
-    CONTACTS_TABLE_ID: str = "tbljbYRWsRBb85X5y"
+    # These can be overridden via environment variables if your schema changes
+    COMPANIES_TABLE_ID: str = os.getenv("COMPANIES_TABLE_ID", "tblMsZnCUfG783lWI")
+    CREDIT_RATINGS_TABLE_ID: str = os.getenv("CREDIT_RATINGS_TABLE_ID", "tblRlxbOYMW8Rag7f")
+    INFOMERICS_SCRAPER_TABLE_ID: str = os.getenv("INFOMERICS_SCRAPER_TABLE_ID", "tbliVxZjw5Uzpfxc5")
+    CONTACTS_TABLE_ID: str = os.getenv("CONTACTS_TABLE_ID", "tbljbYRWsRBb85X5y")
     
     # Rate Limiting
     RATE_LIMIT_REQUESTS: int = 50
@@ -44,9 +45,9 @@ class Settings(BaseSettings):
     # RabbitMQ Configuration
     RABBITMQ_HOST: str = "rabbitmq"
     RABBITMQ_PORT: int = 5672
-    RABBITMQ_USER: str = "guest"
-    RABBITMQ_PASSWORD: str = "guest"
-    RABBITMQ_VHOST: str = "/"
+    RABBITMQ_USER: str = os.getenv("RABBITMQ_USER", "guest")
+    RABBITMQ_PASSWORD: str = os.getenv("RABBITMQ_PASSWORD", "guest")
+    RABBITMQ_VHOST: str = os.getenv("RABBITMQ_VHOST", "/")
     
     # Redis Configuration
     REDIS_HOST: str = "redis"
@@ -57,9 +58,9 @@ class Settings(BaseSettings):
     # PostgreSQL Configuration
     POSTGRES_HOST: str = "postgres"
     POSTGRES_PORT: int = 5432
-    POSTGRES_DB: str = "infomerics"
-    POSTGRES_USER: str = "infomerics_user"
-    POSTGRES_PASSWORD: str = "infomerics_password"
+    POSTGRES_DB: str = os.getenv("POSTGRES_DB", "infomerics")
+    POSTGRES_USER: str = os.getenv("POSTGRES_USER", "infomerics_user")
+    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "change_this_password")
     
     # Celery Configuration
     CELERY_TASK_TRACK_STARTED: bool = True
@@ -82,7 +83,6 @@ class Settings(BaseSettings):
     USE_BRIGHT_DATA: bool = False  # Toggle between Bright Data API and direct requests
     BRIGHT_DATA_API_KEY: str = ""  # Required when USE_BRIGHT_DATA=True
     BRIGHT_DATA_ZONE: str = "web_unlocker1"  # Zone identifier from Bright Data dashboard
-    BRIGHT_DATA_COUNTRY: str = "in"  # Two-letter ISO country code (in=India)
     BRIGHT_DATA_MAX_RETRIES: int = 3  # Maximum retry attempts on failure
     BRIGHT_DATA_RETRY_BACKOFF: int = 2  # Exponential backoff base in seconds
     

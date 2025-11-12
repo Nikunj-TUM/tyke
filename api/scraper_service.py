@@ -299,7 +299,6 @@ class InfomericsPressScraper:
             bright_data_config = BrightDataConfig(
                 api_key=settings.BRIGHT_DATA_API_KEY,
                 zone=settings.BRIGHT_DATA_ZONE,
-                country=settings.BRIGHT_DATA_COUNTRY,
                 max_retries=settings.BRIGHT_DATA_MAX_RETRIES,
                 retry_backoff=settings.BRIGHT_DATA_RETRY_BACKOFF,
                 timeout=120
@@ -500,7 +499,6 @@ class ZaubaCorpScraper:
             bright_data_config = BrightDataConfig(
                 api_key=settings.BRIGHT_DATA_API_KEY,
                 zone=settings.BRIGHT_DATA_ZONE,
-                country=settings.BRIGHT_DATA_COUNTRY,
                 max_retries=settings.BRIGHT_DATA_MAX_RETRIES,
                 retry_backoff=settings.BRIGHT_DATA_RETRY_BACKOFF,
                 timeout=self.timeout

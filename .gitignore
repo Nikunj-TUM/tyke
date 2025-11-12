@@ -45,3 +45,5 @@ backups/
 
 #md
 *.md
+docker-compose.yml
+infomerics_backup.dump

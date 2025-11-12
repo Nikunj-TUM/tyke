@@ -34,8 +34,7 @@ class InfomericsPressScraper:
         self, 
         use_bright_data: bool = False,
         bright_data_api_key: Optional[str] = None,
-        bright_data_zone: str = "web_unlocker1",
-        bright_data_country: str = "in"
+        bright_data_zone: str = "web_unlocker1"
     ):
         """
         Initialize the scraper.
@@ -44,7 +43,6 @@ class InfomericsPressScraper:
             use_bright_data: If True, use Bright Data API; if False, use direct requests
             bright_data_api_key: API key for Bright Data (required if use_bright_data=True)
             bright_data_zone: Zone identifier for Bright Data
-            bright_data_country: Country code for proxy location
         """
         self.base_url = "https://www.infomerics.com/latest-press-release_date_wise.php"
         self.use_bright_data = use_bright_data
@@ -58,7 +56,6 @@ class InfomericsPressScraper:
             bright_data_config = BrightDataConfig(
                 api_key=bright_data_api_key,
                 zone=bright_data_zone,
-                country=bright_data_country,
                 max_retries=3,
                 retry_backoff=2,
                 timeout=120
@@ -237,7 +234,6 @@ def main(from_date: str, to_date: str):
     - USE_BRIGHT_DATA: Set to 'true' to use Bright Data API
     - BRIGHT_DATA_API_KEY: Your Bright Data API key
     - BRIGHT_DATA_ZONE: Zone identifier (default: web_unlocker1)
-    - BRIGHT_DATA_COUNTRY: Country code (default: in)
     
     Args:
         from_date: Start date in format YYYY-MM-DD
@@ -248,14 +244,12 @@ def main(from_date: str, to_date: str):
         use_bright_data = os.getenv('USE_BRIGHT_DATA', 'false').lower() == 'true'
         bright_data_api_key = os.getenv('BRIGHT_DATA_API_KEY', '')
         bright_data_zone = os.getenv('BRIGHT_DATA_ZONE', 'web_unlocker1')
-        bright_data_country = os.getenv('BRIGHT_DATA_COUNTRY', 'in')
         
         # Initialize scraper with appropriate mode
         scraper = InfomericsPressScraper(
             use_bright_data=use_bright_data,
             bright_data_api_key=bright_data_api_key if use_bright_data else None,
-            bright_data_zone=bright_data_zone,
-            bright_data_country=bright_data_country
+            bright_data_zone=bright_data_zone
         )
         
         # Scrape the data

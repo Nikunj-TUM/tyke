@@ -3,8 +3,8 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: infomerics-postgres
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -14,6 +14,7 @@ services:
       - ./migrations:/docker-entrypoint-initdb.d:ro
     networks:
       - infomerics-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
@@ -21,12 +22,16 @@ services:
       retries: 5
       start_period: 10s
 
-  # pgAdmin - PostgreSQL Web UI
+  # pgAdmin - PostgreSQL Web UI (optional, for development only)
+  # Enable by setting ENABLE_PGADMIN=true in .env and starting with: docker compose --profile pgadmin up -d
+  # Or simply start it manually with: docker compose up -d pgadmin
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: infomerics-pgadmin
+    expose:
+      - "80"
     ports:
-      - "5050:80"
+      - "${PGADMIN_PORT:-5050}:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@infomerics.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
@@ -40,53 +45,63 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
+    profiles:
+      - dev
+      - pgadmin
 
   # RabbitMQ Message Broker
   rabbitmq:
     image: rabbitmq:4.1-management-alpine
     container_name: infomerics-rabbitmq
-    ports:
-      - "5672:5672"      # AMQP port
-      - "15672:15672"    # Management UI
+    expose:
+      - "5672"
+      - "15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro  # RabbitMQ 4.x configuration
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     networks:
       - infomerics-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 30s
 
   # Redis Result Backend
   redis:
     image: redis:7-alpine
     container_name: infomerics-redis
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
     networks:
       - infomerics-network
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping 2>/dev/null || redis-cli ping"]
       interval: 30s
       timeout: 10s
       retries: 5
-    command: redis-server --appendonly yes
+      start_period: 10s
+    command: sh -c "redis-server --appendonly yes $${REDIS_PASSWORD:+--requirepass \"$$REDIS_PASSWORD\"}"
 
   # FastAPI Application
+  # This is the ONLY service that should be exposed directly (or via nginx in production)
   api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: infomerics-scraper-api
     ports:
-      - "8000:8000"
+      - "${API_PORT:-8000}:8000"
     environment:
       - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
       - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
@@ -94,9 +109,18 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
       - USE_CELERY=true
+      - USE_BRIGHT_DATA=${USE_BRIGHT_DATA:-false}
+      - BRIGHT_DATA_API_KEY=${BRIGHT_DATA_API_KEY}
+      - ATTESTR_API_KEY=${ATTESTR_API_KEY}
     env_file:
       - .env
     depends_on:
@@ -108,14 +132,11 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health', timeout=5)"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    volumes:
-      # Mount API code for development (comment out for production)
-      - ./api:/app/api:ro
     networks:
       - infomerics-network
 
@@ -124,8 +145,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # Use %h (hostname) for unique worker names when scaling
-    # Each container gets a unique hostname from Docker Compose
     command: sh -c "celery -A api.celery_app worker -Q scraping --loglevel=info --concurrency=$${CELERY_SCRAPER_CONCURRENCY:-5} -n scraper@%h --max-tasks-per-child=1000"
     environment:
       - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
@@ -133,10 +152,18 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
       - USE_CELERY=true
       - CELERY_SCRAPER_CONCURRENCY=${CELERY_SCRAPER_CONCURRENCY:-5}
+      - USE_BRIGHT_DATA=${USE_BRIGHT_DATA:-false}
+      - BRIGHT_DATA_API_KEY=${BRIGHT_DATA_API_KEY}
     env_file:
       - .env
     depends_on:
@@ -147,8 +174,6 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
-    volumes:
-      - ./api:/app/api:ro
     networks:
       - infomerics-network
     deploy:
@@ -159,7 +184,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # Use %h (hostname) for unique worker names when scaling
     command: sh -c "celery -A api.celery_app worker -Q extraction --loglevel=info --concurrency=$${CELERY_EXTRACTOR_CONCURRENCY:-3} -n extractor@%h --max-tasks-per-child=500"
     environment:
       - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
@@ -167,8 +191,14 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
       - USE_CELERY=true
       - CELERY_EXTRACTOR_CONCURRENCY=${CELERY_EXTRACTOR_CONCURRENCY:-3}
     env_file:
@@ -181,8 +211,6 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
-    volumes:
-      - ./api:/app/api:ro
     networks:
       - infomerics-network
     deploy:
@@ -193,7 +221,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # Use %h (hostname) for unique worker names when scaling
     command: sh -c "celery -A api.celery_app worker -Q uploading --loglevel=info --concurrency=$${CELERY_UPLOADER_CONCURRENCY:-10} -n uploader@%h --max-tasks-per-child=2000"
     environment:
       - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
@@ -201,8 +228,14 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
       - USE_CELERY=true
       - CELERY_UPLOADER_CONCURRENCY=${CELERY_UPLOADER_CONCURRENCY:-10}
     env_file:
@@ -215,8 +248,6 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
-    volumes:
-      - ./api:/app/api:ro
     networks:
       - infomerics-network
     deploy:
@@ -227,7 +258,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # Use %h (hostname) for unique worker names when scaling
     command: sh -c "celery -A api.celery_app worker -Q celery --loglevel=info --concurrency=$${CELERY_GENERAL_CONCURRENCY:-4} -n general@%h --max-tasks-per-child=1000"
     environment:
       - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
@@ -235,8 +265,14 @@ services:
       - ENVIRONMENT=${ENVIRONMENT:-development}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
       - USE_CELERY=true
       - CELERY_GENERAL_CONCURRENCY=${CELERY_GENERAL_CONCURRENCY:-4}
     env_file:
@@ -249,8 +285,6 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
-    volumes:
-      - ./api:/app/api:ro
     networks:
       - infomerics-network
     deploy:
@@ -262,14 +296,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: infomerics-flower
-    # Flower auto-discovers workers through RabbitMQ broker
-    # persistent=true stores state, broker_api enables real-time worker discovery
-    command: celery -A api.celery_app --broker=amqp://guest:guest@rabbitmq:5672// flower --port=5555 --broker_api=http://guest:guest@rabbitmq:15672/api/ --persistent=true --auto_refresh=true --max_tasks=10000
-    ports:
-      - "5555:5555"
+    command: celery -A api.celery_app --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672// flower --port=5555 --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:15672/api/ --persistent=true --auto_refresh=true --max_tasks=10000 --basic_auth=${FLOWER_USER}:${FLOWER_PASSWORD}
+    expose:
+      - "5555"
     environment:
       - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - POSTGRES_HOST=postgres
       - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
       - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
@@ -292,14 +327,12 @@ services:
         condition: service_started
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5555"]
+      test: ["CMD-SHELL", "curl -f http://localhost:5555 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 45s
     volumes:
-      - ./api:/app/api:ro
-      # Mount for persistent data
       - flower_data:/data
     networks:
       - infomerics-network
@@ -310,12 +343,12 @@ services:
       context: ./whatsapp-service
       dockerfile: Dockerfile
     container_name: infomerics-whatsapp
-    ports:
-      - "3000:3000"  # For QR code and health checks
+    expose:
+      - "3000"
     environment:
       - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASS=guest
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASSWORD}
       - MESSAGE_QUEUE=whatsapp_messages
       - STATUS_QUEUE=whatsapp_status
       - PORT=3000
@@ -324,17 +357,61 @@ services:
         condition: service_healthy
     restart: unless-stopped
     volumes:
-      # Persist WhatsApp session data
       - whatsapp_data:/app/.wwebjs_auth
       - whatsapp_cache:/app/.wwebjs_cache
     networks:
       - infomerics-network
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
+
+  # Nginx Reverse Proxy (optional, for HTTPS in production)
+  # Enable by setting ENABLE_HTTPS=true in .env and starting with: docker compose --profile https up -d
+  # Or start it manually with: docker compose up -d nginx certbot
+  nginx:
+    image: nginx:alpine
+    container_name: infomerics-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - infomerics-network
+    depends_on:
+      - api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:80/health || nginx -t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    profiles:
+      - prod
+      - https
+
+  # Certbot for SSL certificates (optional, for HTTPS in production)
+  # Automatically renews SSL certificates every 12 hours
+  certbot:
+    image: certbot/certbot
+    container_name: infomerics-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - infomerics-network
+    profiles:
+      - prod
+      - https
 
 volumes:
   postgres_data:
@@ -344,8 +421,8 @@ volumes:
   pgadmin_data:
   whatsapp_data:
   whatsapp_cache:
+  nginx_logs:
 
 networks:
   infomerics-network:
     driver: bridge
-
