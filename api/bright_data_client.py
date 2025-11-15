@@ -120,8 +120,7 @@ class BrightDataClient:
         payload: Dict[str, Any] = {
             "zone": self.config.zone,
             "url": url,
-            "format": format,
-            "method": method.upper()
+            "format": format
         }
         
         # Add optional parameters
@@ -142,7 +141,7 @@ class BrightDataClient:
                 logger.info(
                     f"Fetching URL via Bright Data (attempt {attempt}/{self.config.max_retries}): {url[:100]}"
                 )
-                logger.debug(f"Bright Data request payload: {payload}")
+                logger.info(f"Bright Data request payload: {payload}")
                 
                 # Make API request
                 response = self.session.post(
@@ -154,7 +153,18 @@ class BrightDataClient:
                 # Handle different HTTP status codes
                 if response.status_code == 200:
                     logger.info(f"Successfully fetched URL via Bright Data: {url[:100]}")
-                    logger.debug(f"Response size: {len(response.text)} characters")
+                    logger.info(f"Response size: {len(response.text)} characters")
+                    logger.info(f"Response headers: {dict(response.headers)}")
+                    
+                    # Check for empty response - this may indicate an issue
+                    if len(response.text) == 0:
+                        logger.warning(f"Bright Data returned empty response for URL: {url[:100]}")
+                        logger.warning(f"Response headers: {dict(response.headers)}")
+                        # Check for Bright Data error headers
+                        error_headers = {k: v for k, v in response.headers.items() if 'x-' in k.lower() or 'brd-' in k.lower()}
+                        if error_headers:
+                            logger.error(f"Bright Data error headers found: {error_headers}")
+                    
                     return response.text
                 
                 elif response.status_code == 401:

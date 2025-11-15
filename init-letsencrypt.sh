@@ -22,7 +22,6 @@ print_info() {
     echo -e "${GREEN}[INFO]${NC} $1"
 }
 
-
 print_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
@@ -39,6 +38,10 @@ if [ ! -f .env ]; then
 fi
 
 source .env
+
+# Clean up any stale certbot containers
+print_info "Cleaning up any stale certbot containers..."
+docker ps -a --filter "ancestor=certbot/certbot" --format "{{.ID}}" | xargs -r docker rm -f 2>/dev/null || true
 
 # Check if DOMAIN is set
 if [ -z "$DOMAIN" ]; then
@@ -93,6 +96,13 @@ if [ -d "$CERTBOT_DIR/conf/live/$DOMAIN" ]; then
         rm -rf "$CERTBOT_DIR/conf/renewal/$DOMAIN.conf"
     else
         print_info "Using existing certificate"
+        # Still need to set up nginx config
+        print_info "Setting up production Nginx configuration..."
+        sed "s/\${DOMAIN}/$DOMAIN/g" ./nginx/app.conf.template > "$NGINX_CONF_DIR/app.conf"
+        rm -f "$NGINX_CONF_DIR/default.conf"
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES exec nginx nginx -s reload 2>/dev/null || \
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES restart nginx
+        print_info "✅ Nginx configured for HTTPS"
         exit 0
     fi
 fi
@@ -122,44 +132,62 @@ sleep 5
 print_info "Removing dummy certificate..."
 rm -rf "$CERTBOT_DIR/conf/live/$DOMAIN"
 
+# First, try to delete any existing certificate
+print_info "Removing any existing certificates for $DOMAIN..."
+docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES run --rm --entrypoint certbot certbot delete \
+    --cert-name $DOMAIN \
+    --non-interactive 2>/dev/null || true
+
 # Request the real certificate
 print_info "Requesting Let's Encrypt certificate for $DOMAIN..."
-docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES run --rm certbot certonly \
+docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES run --rm --entrypoint certbot certbot certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
     --email $LETSENCRYPT_EMAIL \
     --agree-tos \
     --no-eff-email \
-    --force-renewal \
+    --non-interactive \
     -d $DOMAIN
 
-if [ $? -eq 0 ]; then
+# Check if certificate was obtained (check directory existence, not exit code)
+if [ -d "$CERTBOT_DIR/conf/live/$DOMAIN" ]; then
     print_info "Certificate obtained successfully!"
     
     # Create production Nginx configuration from template
     print_info "Setting up production Nginx configuration..."
-    envsubst '${DOMAIN}' < ./nginx/app.conf.template > "$NGINX_CONF_DIR/app.conf"
-    rm "$NGINX_CONF_DIR/default.conf"
+    sed "s/\${DOMAIN}/$DOMAIN/g" ./nginx/app.conf.template > "$NGINX_CONF_DIR/app.conf"
+    rm -f "$NGINX_CONF_DIR/default.conf"
     
-    # Reload Nginx
-    print_info "Reloading Nginx..."
-    docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES exec nginx nginx -s reload
-    
-    print_info "✅ SSL setup complete!"
-    print_info "Your site is now available at: https://$DOMAIN"
+    # Test nginx configuration before reloading
+    print_info "Testing Nginx configuration..."
+    if docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES exec nginx nginx -t; then
+        # Reload Nginx
+        print_info "Reloading Nginx..."
+        docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES exec nginx nginx -s reload
+        
+        print_info "✅ SSL setup complete!"
+        print_info "Your site is now available at: https://$DOMAIN"
+    else
+        print_error "Nginx configuration test failed!"
+        print_info "Keeping HTTP configuration active"
+        exit 1
+    fi
 else
     print_error "Certificate request failed!"
+    print_info "Certificate directory not found: $CERTBOT_DIR/conf/live/$DOMAIN"
     print_info "Please check:"
     print_info "  1. DNS is pointing to this server"
     print_info "  2. Port 80 is accessible from the internet"
     print_info "  3. Domain name is correct"
+    print_info ""
+    print_info "Debug: Check certbot logs with:"
+    print_info "  docker compose --profile https run --rm --entrypoint certbot certbot --version"
     exit 1
 fi
 
 # Show certificate information
 print_info "Certificate information:"
-docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES run --rm certbot certificates
+docker compose -f $COMPOSE_FILE $COMPOSE_PROFILES run --rm --entrypoint certbot certbot certificates
 
 print_info "🎉 All done! SSL is now active."
 print_info "Certificates will auto-renew via the certbot service."
-

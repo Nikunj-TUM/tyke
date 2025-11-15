@@ -15,7 +15,7 @@ ENV/
 
 # SSL certificates and Nginx config (generated)
 certbot/
-nginx/conf.d/*.conf
+nginx/conf.d/app.conf
 !nginx/conf.d/.gitkeep
 
 # Logs
