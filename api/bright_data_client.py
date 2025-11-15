@@ -23,7 +23,7 @@ class BrightDataConfig:
     zone: str = "web_unlocker1"
     max_retries: int = 3
     retry_backoff: int = 2
-    timeout: int = 120
+    timeout: int = 180  # Increased to 180 seconds (3 minutes) for slow-loading pages
 
 
 class BrightDataError(Exception):
@@ -87,7 +87,9 @@ class BrightDataClient:
         format: str = "raw",
         data_format: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
-        body: Optional[str] = None
+        body: Optional[str] = None,
+        wait_for_navigation: Optional[int] = None,
+        additional_params: Optional[Dict[str, Any]] = None
     ) -> str:
         """
         Fetch URL content through Bright Data Web Unlocker API.
@@ -101,6 +103,8 @@ class BrightDataClient:
             data_format: Additional format transformation ('markdown', 'screenshot', None). Default: None
             headers: Optional custom headers to send with the request
             body: Optional request body for POST requests
+            wait_for_navigation: Time in milliseconds to wait for navigation to complete. Default: None (uses Bright Data default)
+            additional_params: Additional parameters to pass to Bright Data API
             
         Returns:
             str: HTML content of the fetched page
@@ -133,6 +137,13 @@ class BrightDataClient:
         if body:
             payload["body"] = body
         
+        if wait_for_navigation:
+            payload["wait_for_navigation"] = wait_for_navigation
+        
+        # Add any additional parameters
+        if additional_params:
+            payload.update(additional_params)
+        
         # Implement retry logic with exponential backoff
         last_exception = None
         
@@ -152,18 +163,42 @@ class BrightDataClient:
                 
                 # Handle different HTTP status codes
                 if response.status_code == 200:
+                    # Check for Bright Data error headers even on 200 status
+                    error_code = response.headers.get('x-brd-error-code') or response.headers.get('x-luminati-error-code')
+                    error_msg_header = response.headers.get('x-brd-error') or response.headers.get('x-luminati-error')
+                    
+                    if error_code:
+                        # Bright Data returned an error even with 200 status
+                        logger.error(f"Bright Data error on 200 response: {error_code}")
+                        logger.error(f"Error message: {error_msg_header}")
+                        logger.error(f"Response headers: {dict(response.headers)}")
+                        
+                        # Treat navigation_timeout and other errors as retryable
+                        error_details = {
+                            'error_code': error_code,
+                            'error_message': error_msg_header,
+                            'url': url[:100]
+                        }
+                        
+                        last_exception = BrightDataError(
+                            f"Bright Data navigation error: {error_code} - {error_msg_header}"
+                        )
+                        
+                        # Retry on navigation timeout and similar errors
+                        if attempt < self.config.max_retries:
+                            wait_time = self.config.retry_backoff ** attempt
+                            logger.info(f"Retrying due to Bright Data error in {wait_time} seconds...")
+                            time.sleep(wait_time)
+                            continue
+                        else:
+                            raise last_exception
+                    
                     logger.info(f"Successfully fetched URL via Bright Data: {url[:100]}")
                     logger.info(f"Response size: {len(response.text)} characters")
-                    logger.info(f"Response headers: {dict(response.headers)}")
                     
-                    # Check for empty response - this may indicate an issue
+                    # Warn if empty but no error headers
                     if len(response.text) == 0:
                         logger.warning(f"Bright Data returned empty response for URL: {url[:100]}")
-                        logger.warning(f"Response headers: {dict(response.headers)}")
-                        # Check for Bright Data error headers
-                        error_headers = {k: v for k, v in response.headers.items() if 'x-' in k.lower() or 'brd-' in k.lower()}
-                        if error_headers:
-                            logger.error(f"Bright Data error headers found: {error_headers}")
                     
                     return response.text
                 

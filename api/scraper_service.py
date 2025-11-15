@@ -301,7 +301,7 @@ class InfomericsPressScraper:
                 zone=settings.BRIGHT_DATA_ZONE,
                 max_retries=settings.BRIGHT_DATA_MAX_RETRIES,
                 retry_backoff=settings.BRIGHT_DATA_RETRY_BACKOFF,
-                timeout=120
+                timeout=180  # 3 minutes timeout for slow pages
             )
             self.bright_data_client = BrightDataClient(bright_data_config)
         else:
@@ -354,7 +354,11 @@ class InfomericsPressScraper:
                 logger.info(f"Fetching via Bright Data: {full_url}")
                 html_content = self.bright_data_client.fetch_url(
                     url=full_url,
-                    method="GET"
+                    method="GET",
+                    wait_for_navigation=120000,  # Wait 120 seconds for navigation
+                    additional_params={
+                        "wait": 5000  # Additional 5 seconds wait after load
+                    }
                 )
                 
                 logger.info(f"Successfully fetched via Bright Data")
