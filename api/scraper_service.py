@@ -352,13 +352,11 @@ class InfomericsPressScraper:
                 full_url = f"{self.base_url}?{urlencode(params)}"
                 
                 logger.info(f"Fetching via Bright Data: {full_url}")
+                # Note: Bright Data Web Unlocker API handles navigation automatically
+                # The timeout parameter in the config controls the overall request timeout
                 html_content = self.bright_data_client.fetch_url(
                     url=full_url,
-                    method="GET",
-                    wait_for_navigation=120000,  # Wait 120 seconds for navigation
-                    additional_params={
-                        "wait": 5000  # Additional 5 seconds wait after load
-                    }
+                    method="GET"
                 )
                 
                 logger.info(f"Successfully fetched via Bright Data")

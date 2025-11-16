@@ -137,12 +137,9 @@ class BrightDataClient:
         if body:
             payload["body"] = body
         
-        if wait_for_navigation:
-            payload["wait_for_navigation"] = wait_for_navigation
-        
-        # Add any additional parameters
-        if additional_params:
-            payload.update(additional_params)
+        # Note: wait_for_navigation and additional_params are kept in the function signature
+        # for potential future use, but are not currently sent to Bright Data API
+        # as the Web Unlocker handles navigation automatically
         
         # Implement retry logic with exponential backoff
         last_exception = None
