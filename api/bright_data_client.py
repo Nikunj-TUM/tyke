@@ -23,7 +23,7 @@ class BrightDataConfig:
     zone: str = "web_unlocker1"
     max_retries: int = 3
     retry_backoff: int = 2
-    timeout: int = 180  # Increased to 180 seconds (3 minutes) for slow-loading pages
+    timeout: int = 600  # Increased to 10 minutes for slow-loading pages
 
 
 class BrightDataError(Exception):

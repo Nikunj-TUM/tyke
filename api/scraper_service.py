@@ -301,7 +301,7 @@ class InfomericsPressScraper:
                 zone=settings.BRIGHT_DATA_ZONE,
                 max_retries=settings.BRIGHT_DATA_MAX_RETRIES,
                 retry_backoff=settings.BRIGHT_DATA_RETRY_BACKOFF,
-                timeout=180  # 3 minutes timeout for slow pages
+                timeout=600  # 10 minutes timeout for slow pages
             )
             self.bright_data_client = BrightDataClient(bright_data_config)
         else:
