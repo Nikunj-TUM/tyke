@@ -3,11 +3,13 @@ const amqp = require('amqplib');
 const qrcode = require('qrcode-terminal');
 const QRCode = require('qrcode');
 const express = require('express');
+const MultiInstanceManager = require('./multi-instance-manager');
 
 // Configuration
 const RABBITMQ_URL = `amqp://${process.env.RABBITMQ_USER || 'guest'}:${process.env.RABBITMQ_PASS || 'guest'}@${process.env.RABBITMQ_HOST || 'rabbitmq'}:5672`;
 const MESSAGE_QUEUE = process.env.MESSAGE_QUEUE || 'whatsapp_messages';
 const STATUS_QUEUE = process.env.STATUS_QUEUE || 'whatsapp_status';
+const ENABLE_MULTI_INSTANCE = process.env.ENABLE_MULTI_INSTANCE === 'true';
 
 // Express app for health checks and QR code display
 const app = express();
@@ -17,6 +19,9 @@ let currentQR = null;
 let isReady = false;
 let clientInfo = null;
 let initializationError = null;
+
+// Multi-instance manager
+let instanceManager = null;
 
 // Initialize WhatsApp client
 console.log('Creating WhatsApp client...');
@@ -188,12 +193,57 @@ app.get('/qr', async (req, res) => {
 
 // Status endpoint
 app.get('/status', (req, res) => {
-    res.json({
-        connected: isReady,
-        qr_pending: !!currentQR,
-        client_info: clientInfo,
-        error: initializationError
-    });
+    if (ENABLE_MULTI_INSTANCE && instanceManager) {
+        const instances = instanceManager.getActiveInstances();
+        res.json({
+            multi_instance_mode: true,
+            total_instances: instances.length,
+            instances: instances
+        });
+    } else {
+        res.json({
+            multi_instance_mode: false,
+            connected: isReady,
+            qr_pending: !!currentQR,
+            client_info: clientInfo,
+            error: initializationError
+        });
+    }
+});
+
+// Get QR code for specific instance
+app.get('/instances/:instanceId/qr', async (req, res) => {
+    if (!ENABLE_MULTI_INSTANCE || !instanceManager) {
+        return res.status(400).json({ error: 'Multi-instance mode not enabled' });
+    }
+
+    const instanceId = parseInt(req.params.instanceId);
+    const qrCode = instanceManager.getQRCode(instanceId);
+
+    if (qrCode) {
+        try {
+            const qrImage = await QRCode.toDataURL(qrCode);
+            res.json({
+                qr_code: qrCode,
+                qr_image: qrImage,
+                message: 'Scan this QR code with WhatsApp'
+            });
+        } catch (error) {
+            res.type('text/plain').send(qrCode);
+        }
+    } else {
+        res.status(404).json({ message: 'QR not available for this instance' });
+    }
+});
+
+// List all instances
+app.get('/instances', (req, res) => {
+    if (!ENABLE_MULTI_INSTANCE || !instanceManager) {
+        return res.status(400).json({ error: 'Multi-instance mode not enabled' });
+    }
+
+    const instances = instanceManager.getActiveInstances();
+    res.json({ instances });
 });
 
 // Start Express server
@@ -213,20 +263,135 @@ async function initialize() {
         return;
     }
     
-    // Start message processor
-    processMessages();
-    
-    // Initialize WhatsApp client
-    console.log('Initializing WhatsApp client...');
-    try {
-        whatsappClient.initialize();
-    } catch (error) {
-        console.error('Error initializing WhatsApp client:', error);
-        initializationError = error.message;
+    if (ENABLE_MULTI_INSTANCE) {
+        console.log('Starting in MULTI-INSTANCE mode');
+        
+        // Initialize multi-instance manager
+        instanceManager = new MultiInstanceManager(rabbitChannel, STATUS_QUEUE);
+        
+        // Fetch and initialize all instances
+        const instances = await instanceManager.fetchInstances();
+        console.log(`Found ${instances.length} instances to initialize`);
+        
+        for (const instance of instances) {
+            await instanceManager.initializeClient(instance);
+        }
+        
+        // Poll for new instances every 30 seconds
+        setInterval(async () => {
+            await instanceManager.pollForNewInstances();
+        }, 30000);
+        
+        // Start multi-instance message processor
+        processMultiInstanceMessages();
+    } else {
+        console.log('Starting in SINGLE-INSTANCE mode (legacy)');
+        
+        // Start message processor
+        processMessages();
+        
+        // Initialize WhatsApp client
+        console.log('Initializing WhatsApp client...');
+        try {
+            whatsappClient.initialize();
+        } catch (error) {
+            console.error('Error initializing WhatsApp client:', error);
+            initializationError = error.message;
+        }
     }
 }
 
-// RabbitMQ message processor
+// Multi-instance message processor
+async function processMultiInstanceMessages() {
+    try {
+        console.log(`Waiting for messages in queue: ${MESSAGE_QUEUE} (multi-instance mode)`);
+        
+        rabbitChannel.consume(MESSAGE_QUEUE, async (msg) => {
+            if (msg !== null) {
+                try {
+                    const messageData = JSON.parse(msg.content.toString());
+                    console.log('Received message:', messageData);
+                    
+                    const { instance_id, phone_number, message, contact_name, message_id } = messageData;
+                    
+                    if (!instance_id) {
+                        console.error('No instance_id in message, rejecting');
+                        publishStatus({
+                            status: 'message_failed',
+                            message_id: message_id,
+                            error: 'No instance_id provided',
+                            phone_number: phone_number
+                        });
+                        rabbitChannel.nack(msg, false, false);
+                        return;
+                    }
+                    
+                    // Get client for this instance
+                    const client = instanceManager.getClient(instance_id);
+                    
+                    if (!client) {
+                        console.error(`Instance ${instance_id} not ready, rejecting message`);
+                        publishStatus({
+                            status: 'message_failed',
+                            message_id: message_id,
+                            instance_id: instance_id,
+                            error: 'Instance not ready or not found',
+                            phone_number: phone_number
+                        });
+                        rabbitChannel.nack(msg, false, true); // Requeue
+                        return;
+                    }
+                    
+                    console.log(`Sending message via instance ${instance_id} to ${phone_number}...`);
+                    
+                    // Send WhatsApp message
+                    const result = await instanceManager.sendMessage(instance_id, phone_number, message);
+                    
+                    console.log(`Message sent successfully via instance ${instance_id} to ${contact_name || phone_number}`);
+                    
+                    // Publish success status
+                    publishStatus({
+                        status: 'message_sent',
+                        message_id: message_id,
+                        instance_id: instance_id,
+                        phone_number: phone_number,
+                        contact_name: contact_name,
+                        sent_at: new Date().toISOString()
+                    });
+                    
+                    // Acknowledge message
+                    rabbitChannel.ack(msg);
+                    
+                    // Small delay to avoid rate limiting
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                    
+                    const messageData = JSON.parse(msg.content.toString());
+                    publishStatus({
+                        status: 'message_failed',
+                        message_id: messageData.message_id,
+                        instance_id: messageData.instance_id,
+                        phone_number: messageData.phone_number,
+                        error: error.message
+                    });
+                    
+                    // Reject and don't requeue on processing error
+                    rabbitChannel.nack(msg, false, false);
+                }
+            }
+        }, {
+            noAck: false
+        });
+        
+    } catch (error) {
+        console.error('Error in multi-instance message processor:', error);
+        setTimeout(processMultiInstanceMessages, 5000);
+    }
+}
+
+// RabbitMQ message processor (legacy single-instance)
 async function processMessages() {
     try {
         console.log(`Waiting for messages in queue: ${MESSAGE_QUEUE}`);
@@ -315,7 +480,9 @@ async function processMessages() {
 process.on('SIGINT', async () => {
     console.log('Shutting down gracefully...');
     try {
-        if (whatsappClient) {
+        if (ENABLE_MULTI_INSTANCE && instanceManager) {
+            await instanceManager.cleanup();
+        } else if (whatsappClient) {
             await whatsappClient.destroy();
         }
         if (rabbitChannel) {
@@ -333,7 +500,9 @@ process.on('SIGINT', async () => {
 process.on('SIGTERM', async () => {
     console.log('Received SIGTERM, shutting down...');
     try {
-        if (whatsappClient) {
+        if (ENABLE_MULTI_INSTANCE && instanceManager) {
+            await instanceManager.cleanup();
+        } else if (whatsappClient) {
             await whatsappClient.destroy();
         }
         if (rabbitChannel) {

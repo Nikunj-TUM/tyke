@@ -352,8 +352,16 @@ services:
       - MESSAGE_QUEUE=whatsapp_messages
       - STATUS_QUEUE=whatsapp_status
       - PORT=3000
+      - ENABLE_MULTI_INSTANCE=${ENABLE_MULTI_INSTANCE:-true}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     depends_on:
       rabbitmq:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     restart: unless-stopped
     volumes:
@@ -367,6 +375,28 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tyke-frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:8000
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - infomerics-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
 
   # Nginx Reverse Proxy (optional, for HTTPS in production)
   # Enable by setting ENABLE_HTTPS=true in .env and starting with: docker compose --profile https up -d

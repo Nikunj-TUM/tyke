@@ -29,10 +29,14 @@ from .models import (
     WhatsAppBulkSendRequest,
     WhatsAppBulkSendResponse
 )
-from .auth import verify_api_key
+from .api_key_auth import verify_api_key
 from .jobs import job_manager, Job
 from .airtable_client import AirtableClient
 from .scraper_service import ScraperService
+
+# Import new routers
+from .routers import users, organizations, crm, whatsapp_instances, campaigns
+from .middleware import TenantContextMiddleware
 
 # Import Celery tasks if enabled
 if settings.USE_CELERY:
@@ -80,11 +84,14 @@ async def lifespan(app: FastAPI):
 
 # Create FastAPI app
 app = FastAPI(
-    title="Infomerics Scraper API",
-    description="API for scraping Infomerics press releases and storing in Airtable",
-    version="1.0.0",
+    title="Multi-tenant CRM SaaS Platform",
+    description="Multi-tenant CRM with WhatsApp outreach and credit rating scraper",
+    version="2.0.0",
     lifespan=lifespan
 )
+
+# Add tenant context middleware (MUST be before routers)
+app.add_middleware(TenantContextMiddleware)
 
 # Add CORS middleware
 cors_origins = settings.CORS_ORIGINS.split(",") if settings.CORS_ORIGINS != "*" else ["*"]
@@ -99,6 +106,13 @@ app.add_middleware(
 # Add rate limiting
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Include new routers
+app.include_router(users.router)
+app.include_router(organizations.router)
+app.include_router(crm.router)
+app.include_router(whatsapp_instances.router)
+app.include_router(campaigns.router)
 
 
 async def process_scrape_job(job: Job) -> None:
